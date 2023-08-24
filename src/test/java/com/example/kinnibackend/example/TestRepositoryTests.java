@@ -10,7 +10,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-public class TestRepositoryTest {
+public class TestRepositoryTests {
 
     @Autowired
     private TestRepository testRepository;
