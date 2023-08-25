@@ -16,7 +16,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class TestServiceTest {
+public class TestServiceTests {
 
     @Autowired
     private TestService testService;
