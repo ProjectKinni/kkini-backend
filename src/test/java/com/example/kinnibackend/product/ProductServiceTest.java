@@ -1,9 +1,9 @@
 package com.example.kinnibackend.product;
 
-import com.example.kinnibackend.product.dto.ProductCardListResponseDTO;
-import com.example.kinnibackend.product.dto.ProductMainCardResponseDTO;
-import com.example.kinnibackend.product.repository.ProductJPARepository;
-import com.example.kinnibackend.product.service.ProductService;
+import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
+import com.example.kinnibackend.dto.product.ProductMainCardResponseDTO;
+import com.example.kinnibackend.repository.product.ProductJPARepository;
+import com.example.kinnibackend.service.product.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;

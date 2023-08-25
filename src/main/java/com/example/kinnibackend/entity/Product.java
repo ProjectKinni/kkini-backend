@@ -1,7 +1,7 @@
-package com.example.kinnibackend.product.entity;
+package com.example.kinnibackend.entity;
 
-import com.example.kinnibackend.product.dto.ProductCardListResponseDTO;
-import com.example.kinnibackend.product.dto.ProductMainCardResponseDTO;
+import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
+import com.example.kinnibackend.dto.product.ProductMainCardResponseDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,11 +20,11 @@ public class Product {
     @Column(name = "product_id", nullable = false)
     private Long productId;
 
-    @Column(name = "is_kkini", nullable = false)
-    private boolean isKkini;
-
     @Column(name = "category_name")
     private String categoryName;
+
+    @Column(name = "is_kkini", nullable = false)
+    private boolean isKkini;
 
     @Column(name = "hashtag_id")
     private Long hashtagId;
@@ -48,7 +48,7 @@ public class Product {
     private int productPrice;
 
     @Column(name = "total_amount")
-    private Double totalAmount;
+    private Double totalAmount; // 변수명 변경 예정
 
     @Column(name = "calorie")
     private Double calorie;

@@ -1,7 +1,7 @@
-package com.example.kinnibackend.search.controller;
+package com.example.kinnibackend.controller.search;
 
-import com.example.kinnibackend.product.dto.ProductCardListResponseDTO;
-import com.example.kinnibackend.search.service.SearchService;
+import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
+import com.example.kinnibackend.service.search.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package com.example.kinnibackend.product.dto;
+package com.example.kinnibackend.dto.product;
 
 import lombok.*;
 

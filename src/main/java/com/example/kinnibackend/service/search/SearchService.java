@@ -1,8 +1,8 @@
-package com.example.kinnibackend.search.service;
+package com.example.kinnibackend.service.search;
 
-import com.example.kinnibackend.product.dto.ProductCardListResponseDTO;
-import com.example.kinnibackend.product.entity.Product;
-import com.example.kinnibackend.product.repository.ProductJPARepository;
+import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
+import com.example.kinnibackend.entity.Product;
+import com.example.kinnibackend.repository.product.ProductJPARepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

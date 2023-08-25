@@ -1,6 +1,5 @@
-package com.example.kinnibackend.product.dto;
+package com.example.kinnibackend.dto.product;
 
-import com.example.kinnibackend.product.entity.Product;
 import lombok.*;
 
 @Getter

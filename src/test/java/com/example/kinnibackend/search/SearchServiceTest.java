@@ -1,10 +1,8 @@
 package com.example.kinnibackend.search;
 
-import com.example.kinnibackend.product.dto.ProductCardListResponseDTO;
-import com.example.kinnibackend.product.entity.Product;
-import com.example.kinnibackend.search.service.SearchService;
+import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
+import com.example.kinnibackend.service.search.SearchService;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
