@@ -44,9 +44,6 @@ public class Product {
     @Column(name = "average_rating", nullable = false)
     private float averageRating;
 
-    @Column(name = "product_price", nullable = false)
-    private int productPrice;
-
     @Column(name = "total_amount")
     private Double totalAmount; // 변수명 변경 예정
 
