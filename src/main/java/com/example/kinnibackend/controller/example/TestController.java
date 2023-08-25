@@ -1,8 +1,8 @@
-package com.example.kinnibackend.example.controller;
+package com.example.kinnibackend.controller.example;
 
-import com.example.kinnibackend.example.dto.CreateTestRequestDTO;
-import com.example.kinnibackend.example.dto.TestResponseDTO;
-import com.example.kinnibackend.example.service.TestService;
+import com.example.kinnibackend.dto.example.CreateTestRequestDTO;
+import com.example.kinnibackend.dto.example.TestResponseDTO;
+import com.example.kinnibackend.service.example.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

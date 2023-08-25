@@ -1,4 +1,4 @@
-package com.example.kinnibackend.common.config;
+package com.example.kinnibackend.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

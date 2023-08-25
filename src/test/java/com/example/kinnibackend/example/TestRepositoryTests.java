@@ -1,7 +1,7 @@
 package com.example.kinnibackend.example;
 
-import com.example.kinnibackend.example.entity.Test;
-import com.example.kinnibackend.example.repository.TestRepository;
+import com.example.kinnibackend.entity.Test;
+import com.example.kinnibackend.repository.example.TestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
