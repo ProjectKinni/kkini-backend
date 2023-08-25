@@ -1,4 +1,4 @@
-package com.example.kinnibackend.example.entity;
+package com.example.kinnibackend.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

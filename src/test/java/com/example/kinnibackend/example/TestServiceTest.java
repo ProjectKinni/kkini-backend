@@ -1,10 +1,10 @@
 package com.example.kinnibackend.example;
 
-import com.example.kinnibackend.example.dto.CreateTestRequestDTO;
-import com.example.kinnibackend.example.dto.TestResponseDTO;
-import com.example.kinnibackend.example.entity.Test;
-import com.example.kinnibackend.example.repository.TestRepository;
-import com.example.kinnibackend.example.service.TestService;
+import com.example.kinnibackend.dto.example.CreateTestRequestDTO;
+import com.example.kinnibackend.dto.example.TestResponseDTO;
+import com.example.kinnibackend.entity.Test;
+import com.example.kinnibackend.repository.example.TestRepository;
+import com.example.kinnibackend.service.example.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;

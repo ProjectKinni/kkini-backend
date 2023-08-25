@@ -1,4 +1,4 @@
-package com.example.kinnibackend.example.dto;
+package com.example.kinnibackend.dto.example;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
