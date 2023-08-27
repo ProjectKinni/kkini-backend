@@ -6,10 +6,12 @@ import com.example.kinnibackend.service.search.SearchService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,7 +33,7 @@ public class SearchServiceTest {
         String categoryName = "육가공";
 
         // when
-        List<ProductCardListResponseDTO> results = searchService.searchProductsByName(null, categoryName);
+        List<ProductCardListResponseDTO> results = searchService.searchProductsByNameAndCategory(null, categoryName);
 
         // then
         assertFalse(results.isEmpty());
@@ -45,7 +47,7 @@ public class SearchServiceTest {
         String productName = "훈제";
 
         // when
-        List<ProductCardListResponseDTO> results = searchService.searchProductsByName(productName, null);
+        List<ProductCardListResponseDTO> results = searchService.searchProductsByNameAndCategory(productName, null);
 
         // then
         assertFalse(results.isEmpty());
@@ -56,7 +58,7 @@ public class SearchServiceTest {
     @Transactional
     public void getKkiniProductsTest() {
         // when
-        List<ProductCardListResponseDTO> results = searchService.getProductsByKkiniType("kkini");
+        List<ProductCardListResponseDTO> results = searchService.getProductsByKkiniType(true);
 
         // then
         assertFalse(results.isEmpty());
@@ -67,24 +69,12 @@ public class SearchServiceTest {
     @Transactional
     public void getKkiniGreenProductsTest() {
         // when
-        List<ProductCardListResponseDTO> results = searchService.getProductsByKkiniType("kkini-green");
+        List<ProductCardListResponseDTO> results = searchService.getProductsByKkiniType(false);
 
         // then
         assertFalse(results.isEmpty());
         assertFalse(results.stream().anyMatch(product -> "훈제 오리".equals(product.getProductName())));
         assertTrue(results.stream().anyMatch(product -> "오봉산꽃부각".equals(product.getProductName())));
-    }
-
-    @Test // 잘못된 타입 예외 테스트
-    @Transactional
-    public void getProductsByInvalidKkiniTypeTest() {
-        // given
-        String invalidType = "invalid";
-
-        // then
-        assertThrows(IllegalArgumentException.class, () -> {
-            searchService.getProductsByKkiniType(invalidType);
-        });
     }
 
     @Test

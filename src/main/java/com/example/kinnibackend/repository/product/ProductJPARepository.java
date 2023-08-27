@@ -2,7 +2,7 @@ package com.example.kinnibackend.repository.product;
 
 import com.example.kinnibackend.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -10,15 +10,11 @@ import java.util.List;
 @Repository
 public interface ProductJPARepository extends JpaRepository<Product, Long> {
 
-    List<Product> findByProductNameContainingOrderByAverageRatingDesc(String productName);
+    @Query("SELECT p FROM Product p WHERE REPLACE(p.productName, ' ', '') LIKE %?1%")
+    List<Product> findByProductNameWithoutSpaces(String productName);
 
-    List<Product> findByCategoryNameOrderByAverageRatingDesc(@Param("categoryName") String categoryName);
+    @Query("SELECT p FROM Product p WHERE REPLACE(p.categoryName, ' ', '') LIKE %?1%")
+    List<Product> findByCategoryNameWithoutSpaces(String categoryName);
 
-    List<Product> findByCategoryNameContaining(String categoryName);
-
-    List<Product> findByIsKkiniTrueOrIsKkiniFalse();
-
-    List<Product> findByIsKkiniFalse();
-
-    List<Product> findByCategoryName(String categoryName);
+    List<Product> findByIsKkini(boolean isKkini);
 }

@@ -9,7 +9,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -17,42 +20,34 @@ public class SearchService {
     private final ProductJPARepository productJPARepository;
 
     // 상품 검색시, 카테고리 / 이름으로 검색
-    public List<ProductCardListResponseDTO> searchProductsByName(String productName, String categoryName) {
+    public List<ProductCardListResponseDTO> searchProductsByNameAndCategory(String productName, String categoryName) {
         List<ProductCardListResponseDTO> productList;
 
-        // 1. 카테고리로 검색
-        if (categoryName != null && !categoryName.trim().isEmpty()) {
-            productList = productJPARepository.findByCategoryNameOrderByAverageRatingDesc(categoryName)
+        // 띄어쓰기 제거
+        productName = (productName != null) ? productName.replaceAll("\\s+", "") : null;
+        categoryName = (categoryName != null) ? categoryName.replaceAll("\\s+", "") : null;
+
+        productList = searchByCriteria(categoryName, productJPARepository::findByCategoryNameWithoutSpaces);
+        if (!productList.isEmpty()) {
+            return productList;
+        }
+
+        productList = searchByCriteria(productName, productJPARepository::findByProductNameWithoutSpaces);
+        if (!productList.isEmpty()) {
+            return productList;
+        }
+
+        productList = searchByCriteria(productName, productJPARepository::findByCategoryNameWithoutSpaces);
+        return productList;
+    }
+
+    private List<ProductCardListResponseDTO> searchByCriteria(String criteria, Function<String, List<Product>> searchFunction) {
+        if (criteria != null && !criteria.trim().isEmpty()) {
+            return searchFunction.apply(criteria)
                     .stream()
                     .map(Product::toProductCardListResponseDTO)
                     .collect(Collectors.toList());
-
-            if (!productList.isEmpty()) {
-                return productList;
-            }
         }
-
-        // 2. 상품명으로 검색
-        if (productName != null && !productName.trim().isEmpty()) {
-            productList = productJPARepository.findByProductNameContainingOrderByAverageRatingDesc(productName)
-                    .stream()
-                    .map(Product::toProductCardListResponseDTO)
-                    .collect(Collectors.toList());
-
-            if (!productList.isEmpty()) {
-                return productList;
-            }
-
-            // 2.1. 상품명으로 카테고리 검색
-            List<Product> productsWithCategoryName = productJPARepository.findByCategoryNameContaining(productName);
-            if (!productsWithCategoryName.isEmpty()) {
-                productList = productsWithCategoryName.stream()
-                        .map(Product::toProductCardListResponseDTO)
-                        .collect(Collectors.toList());
-                return productList;
-            }
-        }
-
         return Collections.emptyList();
     }
 
@@ -64,13 +59,26 @@ public class SearchService {
 
         String modifiedName = name.replace(" ", "%");
 
+        // 상품명으로 검색
         List<String> productNames = productJPARepository
-                .findByProductNameContainingOrderByAverageRatingDesc(modifiedName)
+                .findByProductNameWithoutSpaces(modifiedName)
                 .stream()
                 .map(Product::getProductName)
                 .collect(Collectors.toList());
 
-        return productNames;
+        // 카테고리명으로 검색 (이 부분은 Product 엔터티와 연관된 카테고리 엔터티나 메서드에 따라 다를 수 있습니다.)
+        List<String> categoryNames = productJPARepository
+                .findByCategoryNameWithoutSpaces(modifiedName)
+                .stream()
+                .map(Product::getCategoryName) // Product 엔터티에 getCategoryName 메서드가 있다고 가정
+                .collect(Collectors.toList());
+
+        // 상품명과 카테고리명을 합친 후 중복 제거
+        List<String> combinedNames = Stream.concat(productNames.stream(), categoryNames.stream())
+                .distinct()
+                .collect(Collectors.toList());
+
+        return combinedNames;
     }
 
     /// 상품의 상세정보 조회시, 사용(상품리스트->상품 상세)
@@ -81,15 +89,13 @@ public class SearchService {
     }
 
     // 끼니인지, 끼니 그린인지 체크
-    public List<ProductCardListResponseDTO> getProductsByKkiniType(String type) {
+    public List<ProductCardListResponseDTO> getProductsByKkiniType(boolean isKkini) {
         List<Product> products;
 
-        if ("kkini".equals(type)) {
-            products = productJPARepository.findByIsKkiniTrueOrIsKkiniFalse();
-        } else if ("kkini-green".equals(type)) {
-            products = productJPARepository.findByIsKkiniFalse();
+        if (isKkini) {
+            products = productJPARepository.findByIsKkini(true);
         } else {
-            throw new IllegalArgumentException("Invalid kkini type");
+            products = productJPARepository.findByIsKkini(false);
         }
 
         return products.stream()
@@ -99,7 +105,7 @@ public class SearchService {
 
     // 상품 리스트에서 카테고리 체크시, 해당 카테고리 리스트 상품 반환
     public List<ProductCardListResponseDTO> filterProductsByCategory(String categoryName) {
-        List<Product> filteredProducts = productJPARepository.findByCategoryName(categoryName);
+        List<Product> filteredProducts = productJPARepository.findByCategoryNameWithoutSpaces(categoryName);
 
         // Product 객체를 ProductCardListResponseDTO 객체로 변환
         List<ProductCardListResponseDTO> responseDTOs = new ArrayList<>();
@@ -217,4 +223,3 @@ public class SearchService {
                 .collect(Collectors.toList());
     }
 }
-
