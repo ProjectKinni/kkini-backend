@@ -1,12 +1,14 @@
 package com.example.kinnibackend.search;
 
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
+import com.example.kinnibackend.repository.product.ProductJPARepository;
 import com.example.kinnibackend.service.search.SearchService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
@@ -14,23 +16,89 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
+@Sql(scripts = "/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class SearchServiceTest {
     @Autowired
     private SearchService searchService;
 
+    @Autowired
+    private ProductJPARepository productJPARepository;
+
     @Test
     @Transactional
-    public void searchProductsByNameTest() {
+    public void searchProductsByCategoryNameTest() {
         // given
-        String searchName = "통밀";
+        String categoryName = "육가공";
 
         // when
-        List<ProductCardListResponseDTO> result = searchService.searchProductsByName(searchName);
+        List<ProductCardListResponseDTO> results = searchService.searchProductsByName(null, categoryName);
 
         // then
-        assertNotNull(result);
+        assertFalse(results.isEmpty());
+        assertTrue(results.stream().anyMatch(product -> "육가공".equals(product.getCategoryName())));
+    }
+
+    @Test
+    @Transactional
+    public void searchProductsByProductNameTest() {
+        // given
+        String productName = "훈제";
+
+        // when
+        List<ProductCardListResponseDTO> results = searchService.searchProductsByName(productName, null);
+
+        // then
+        assertFalse(results.isEmpty());
+        assertTrue(results.stream().anyMatch(product -> product.getProductName().contains("훈제")));
+    }
+
+    @Test
+    @Transactional
+    public void getKkiniProductsTest() {
+        // when
+        List<ProductCardListResponseDTO> results = searchService.getProductsByKkiniType("kkini");
+
+        // then
+        assertFalse(results.isEmpty());
+        assertTrue(results.stream().anyMatch(product -> "훈제 오리".equals(product.getProductName())));
+    }
+
+    @Test
+    @Transactional
+    public void getKkiniGreenProductsTest() {
+        // when
+        List<ProductCardListResponseDTO> results = searchService.getProductsByKkiniType("kkini-green");
+
+        // then
+        assertFalse(results.isEmpty());
+        assertFalse(results.stream().anyMatch(product -> "훈제 오리".equals(product.getProductName())));
+        assertTrue(results.stream().anyMatch(product -> "오봉산꽃부각".equals(product.getProductName())));
+    }
+
+    @Test // 잘못된 타입 예외 테스트
+    @Transactional
+    public void getProductsByInvalidKkiniTypeTest() {
+        // given
+        String invalidType = "invalid";
+
+        // then
+        assertThrows(IllegalArgumentException.class, () -> {
+            searchService.getProductsByKkiniType(invalidType);
+        });
+    }
+
+    @Test
+    @Transactional
+    public void testFilterProductsByCategory() {
+        // Given
+        String categoryName = "육가공";
+
+        // When
+        List<ProductCardListResponseDTO> result = searchService.filterProductsByCategory(categoryName);
+
+        // Then
         assertFalse(result.isEmpty());
-        assertTrue(result.stream().anyMatch(product -> product.getProductName().contains(searchName)));
+        assertTrue(result.stream().allMatch(product -> "육가공".equals(product.getCategoryName())));
     }
 
     @Test
