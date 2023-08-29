@@ -1,5 +1,6 @@
 package com.example.kinnibackend.dto.product;
 
+import com.example.kinnibackend.entity.Product;
 import lombok.*;
 
 @Getter
@@ -27,4 +28,26 @@ public class ProductCardListResponseDTO {
     private Double sodium; // 나트륨
     private Double saturatedFat; // 포화지방
     private Double fat; // 지방
+
+    public static ProductCardListResponseDTO toProduct(Product product) {
+        return ProductCardListResponseDTO.builder()
+                .productId(product.getProductId())
+                .isKkini(product.isKkini())
+                .categoryName(product.getCategoryName())
+                .vendorId(product.getVendorId())
+                .vendorName(product.getVendorName())
+                .productName(product.getProductName())
+                .productImage(product.getProductImage())
+                .averageRating(product.getAverageRating())
+                .totalAmount(product.getTotalAmount())
+                .calorie(product.getCalorie())
+                .sugar(product.getSugar())
+                .transFat(product.getTransFat())
+                .carb(product.getCarb())
+                .protein(product.getProtein())
+                .sodium(product.getSodium())
+                .saturatedFat(product.getSaturatedFat())
+                .fat(product.getFat())
+                .build();
+    }
 }

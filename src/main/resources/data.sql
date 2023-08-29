@@ -21,7 +21,7 @@ INSERT INTO Product(category_name, is_kkini, vendor_id, vendor_name, product_nam
    90, 30, 0, 0, 2, 22, 0.7, 0, 1.5),
   ('육가공', FALSE, 3, '쿠캣', '훈제 연어', 'https://sitem.ssgcdn.com/43/46/09/item/1000059094643_i2_290.jpg', 3.91,
    95, 30, 0, 0, 0, 25, 0.8, 0.1, 2),
-  ('육가공', TRUE, 4, '오아시스마켓', '훈제 오리', 'https://sitem.ssgcdn.com/77/33/23/item/1000034233377_i2_290.jpg', 4.65,
+  ('간식', TRUE, 4, '오아시스마켓', '훈제 오리', 'https://sitem.ssgcdn.com/77/33/23/item/1000034233377_i2_290.jpg', 4.65,
    100, 60, 0, 0, 5, 23, 1, 0.2, 2.5),
   ('육가공', TRUE, 4, '오아시스마켓', '훈제 오리', 'https://sitem.ssgcdn.com/77/33/23/item/1000034233377_i2_290.jpg', 4.65,
    100, 60, 0, 0, 5, 23, 1, 0.2, 2.5),
