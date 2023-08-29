@@ -1,17 +1,16 @@
 package com.example.kinnibackend.search;
 
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
-import com.example.kinnibackend.repository.product.ProductJPARepository;
+import com.example.kinnibackend.exception.search.InvalidSearchTermException;
+import com.example.kinnibackend.repository.product.ProductRepository;
 import com.example.kinnibackend.service.search.SearchService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,34 +19,33 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Sql(scripts = "/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class SearchServiceTest {
+
     @Autowired
     private SearchService searchService;
 
-    @Autowired
-    private ProductJPARepository productJPARepository;
-
     @Test
     @Transactional
-    public void searchProductsByCategoryNameTest() {
+    public void searchProductsByCategoryName() {
         // given
-        String categoryName = "육가공";
+        String categoryName = "간식";
 
         // when
-        List<ProductCardListResponseDTO> results = searchService.searchProductsByNameAndCategory(null, categoryName);
+        List<ProductCardListResponseDTO> results = searchService.searchProducts(categoryName);
 
+        System.out.println(results);
         // then
         assertFalse(results.isEmpty());
-        assertTrue(results.stream().anyMatch(product -> "육가공".equals(product.getCategoryName())));
+        assertTrue(results.stream().anyMatch(product -> "간식".equals(product.getCategoryName())));
     }
 
     @Test
     @Transactional
-    public void searchProductsByProductNameTest() {
+    public void searchProductsByProductName() {
         // given
         String productName = "훈제";
 
         // when
-        List<ProductCardListResponseDTO> results = searchService.searchProductsByNameAndCategory(productName, null);
+        List<ProductCardListResponseDTO> results = searchService.searchProducts(productName);
 
         // then
         assertFalse(results.isEmpty());
@@ -56,44 +54,7 @@ public class SearchServiceTest {
 
     @Test
     @Transactional
-    public void getKkiniProductsTest() {
-        // when
-        List<ProductCardListResponseDTO> results = searchService.getProductsByKkiniType(true);
-
-        // then
-        assertFalse(results.isEmpty());
-        assertTrue(results.stream().anyMatch(product -> "훈제 오리".equals(product.getProductName())));
-    }
-
-    @Test
-    @Transactional
-    public void getKkiniGreenProductsTest() {
-        // when
-        List<ProductCardListResponseDTO> results = searchService.getProductsByKkiniType(false);
-
-        // then
-        assertFalse(results.isEmpty());
-        assertFalse(results.stream().anyMatch(product -> "훈제 오리".equals(product.getProductName())));
-        assertTrue(results.stream().anyMatch(product -> "오봉산꽃부각".equals(product.getProductName())));
-    }
-
-    @Test
-    @Transactional
-    public void testFilterProductsByCategory() {
-        // Given
-        String categoryName = "육가공";
-
-        // When
-        List<ProductCardListResponseDTO> result = searchService.filterProductsByCategory(categoryName);
-
-        // Then
-        assertFalse(result.isEmpty());
-        assertTrue(result.stream().allMatch(product -> "육가공".equals(product.getCategoryName())));
-    }
-
-    @Test
-    @Transactional
-    public void getItemByIdTest() {
+    public void getItemById() {
         // given
         Long productId = 1L;
 
@@ -105,148 +66,30 @@ public class SearchServiceTest {
         assertEquals(productId, result.getProductId());
     }
 
+    // 예외 처리 테스트
     @Test
-    @Transactional
-    public void autoCompleteNamesTest() {
-        // given
-        String searchName = "훈제";
-
-        // when
-        List<String> results = searchService.autoCompleteNames(searchName);
-
-        // then
-        assertTrue(results.contains("훈제 오리"));
-        assertTrue(results.contains("훈제 연어"));
-        assertTrue(results.contains("훈제란"));
-        assertFalse(results.contains("통밀식빵"));
+    public void searchProducts_InvalidSearchTerm_ThrowsException() {
+        assertThrows(InvalidSearchTermException.class, () -> {
+            searchService.searchProducts(null);
+        });
+        assertThrows(InvalidSearchTermException.class, () -> {
+            searchService.searchProducts("");
+        });
     }
 
     @Test
-    @Transactional
-    public void filterLowCalorieProductsTest() {
-        // When
-        List<ProductCardListResponseDTO> lowCalorieProducts = searchService.filterProductsByCriteria("저칼로리");
-
-        // Then
-        assertNotNull(lowCalorieProducts);
-        assertFalse(lowCalorieProducts.isEmpty());
-
-        for(ProductCardListResponseDTO product : lowCalorieProducts){
-            System.out.println(product.getProductName() + product.getCalorie());
-        }
-        // 모든 반환된 상품이 저칼로리 조건을 만족하는지 확인
-        assertTrue(lowCalorieProducts.stream().allMatch(product -> product.getCalorie() <= product.getTotalAmount() * 2));
-
+    public void autoCompleteNames_TooShortName_ThrowsException() {
+        assertThrows(InvalidSearchTermException.class, () -> {
+            searchService.autoCompleteNames("훈");
+        });
     }
 
+    // 통합 테스트
     @Test
-    @Transactional
-    public void filterSugarFreeProductsTest() {
-        // When
-        List<ProductCardListResponseDTO> products = searchService.filterProductsByCriteria("슈가프리");
-
-        // Then
-        assertTrue(products.stream().allMatch(product -> product.getSugar() / product.getTotalAmount() * 0.05 <= 5));
-        assertTrue(products.stream().anyMatch(product -> product.getProductName().equals("생오징어")));
-    }
-
-    @Test
-    @Transactional
-    public void filterLowSugarProductsTest() {
-        // When
-        List<ProductCardListResponseDTO> products = searchService.filterProductsByCriteria("로우슈가");
-
-        for(ProductCardListResponseDTO product : products){
-            System.out.println(product.getProductName() + product.getSugar());
-        }
-        // Then
-        assertTrue(products.stream().allMatch(product -> product.getSugar() <= product.getTotalAmount() * 0.05));
-        assertTrue(products.stream().anyMatch(product -> product.getProductName().equals("생오징어")));
-
-    }
-
-    @Test
-    @Transactional
-    public void filterByLowCarbTest() {
-        // When
-        List<ProductCardListResponseDTO> products = searchService.filterProductsByCriteria("저탄수화물");
-
-        for(ProductCardListResponseDTO product : products){
-            System.out.println(product.getProductName() + product.getCarb());
-        }
-
-        // Then
-        assertTrue(products.stream().allMatch(product -> product.getCarb() >= product.getTotalAmount() * 0.11
-                && product.getCarb() <= product.getTotalAmount() * 0.20));
-        assertTrue(products.stream().anyMatch(product -> product.getProductName().equals("다시마부각")));
-
-    }
-
-    @Test
-    @Transactional
-    public void filterByKetoTest() {
-        // When
-        List<ProductCardListResponseDTO> products = searchService.filterProductsByCriteria("키토");
-
-        // Then
-        assertTrue(products.stream().allMatch(product -> product.getCarb() <= product.getTotalAmount() * 0.10));
-    }
-
-    @Test
-    @Transactional
-    public void filterByTransFatTest() {
-        // When
-        List<ProductCardListResponseDTO> products = searchService.filterProductsByCriteria("트랜스 지방");
-
-        // Then
-        assertTrue(products.stream().allMatch(product -> product.getTransFat() <= 1));
-    }
-
-    @Test
-    @Transactional
-    public void filterByHighProteinTest() {
-        // When
-        List<ProductCardListResponseDTO> products = searchService.filterProductsByCriteria("고단백");
-
-        for(ProductCardListResponseDTO product : products){
-            System.out.println(product.getProductName() + product.getProtein());
-        }
-
-        // Then
-        assertTrue(products.stream().allMatch(product -> product.getProtein() >= product.getTotalAmount() * 0.20));
-        assertTrue(products.stream().anyMatch(product -> product.getProductName().equals("통밀식빵")));
-    }
-
-    @Test
-    @Transactional
-    public void filterByLowSodiumTest() {
-        // When
-        List<ProductCardListResponseDTO> products = searchService.filterProductsByCriteria("저나트륨");
-
-        for(ProductCardListResponseDTO product : products){
-            System.out.println(product.getProductName() + product.getSodium());
-        }
-        // Then
-        assertTrue(products.stream().allMatch(product -> product.getSodium() <= product.getTotalAmount() * 2));
-    }
-
-    @Test
-    @Transactional
-    public void filterBySaturatedFatTest() {
-        // When
-        List<ProductCardListResponseDTO> products = searchService.filterProductsByCriteria("포화지방");
-
-        // Then
-        assertTrue(products.stream().allMatch(product -> product.getSaturatedFat() <= product.getTotalAmount() * 0.02));
-    }
-
-    @Test
-    @Transactional
-    public void filterByLowFatTest() {
-        // When
-        List<ProductCardListResponseDTO> products = searchService.filterProductsByCriteria("저지방");
-
-        // Then
-        assertTrue(products.stream().allMatch(product -> product.getFat() <= product.getTotalAmount() * 0.04));
+    public void searchService_IntegrationTest() {
+        String searchTerm = "통밀식빵";
+        List<ProductCardListResponseDTO> results = searchService.searchProducts(searchTerm);
+        assertFalse(results.isEmpty());
+        assertEquals(searchTerm, results.get(0).getProductName());
     }
 }

@@ -3,6 +3,8 @@ package com.example.kinnibackend.controller.search;
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
 import com.example.kinnibackend.service.search.SearchService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,47 +14,29 @@ import java.util.List;
 @RestController
 @RequestMapping("/search")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class SearchController {
 
+    @Autowired
     private final SearchService searchService;
 
+    // 검색
     @GetMapping("/products")
-    public ResponseEntity<?> searchProductsByNameAndCategory(
-            @RequestParam(required = false) String productName,
-            @RequestParam(required = false) String categoryName) {
-        return createResponse(searchService.searchProductsByNameAndCategory(productName, categoryName), "해당 상품이 없습니다");
+    public ResponseEntity<List<ProductCardListResponseDTO>> searchProducts(@RequestParam String searchTerm) {
+        List<ProductCardListResponseDTO> products = searchService.searchProducts(searchTerm);
+        return ResponseEntity.ok(products);
     }
 
+    // 자동완성
     @GetMapping("/autocomplete")
     public ResponseEntity<List<String>> autoCompleteNames(@RequestParam String name) {
         return ResponseEntity.ok(searchService.autoCompleteNames(name));
     }
 
-    @GetMapping("/kkini-products/{isKkini}")
-    public ResponseEntity<List<ProductCardListResponseDTO>> getProductsByKkiniType(@PathVariable boolean isKkini) {
-        return ResponseEntity.ok(searchService.getProductsByKkiniType(isKkini));
-    }
-
-    @GetMapping("/products/categoryChecked")
-    public ResponseEntity<?> searchProductsByCategory(@RequestParam String categoryName) {
-        return createResponse(searchService.filterProductsByCategory(categoryName), "해당 카테고리의 상품이 없습니다");
-    }
-
-    @GetMapping("/products/filtered-products")
-    public ResponseEntity<List<ProductCardListResponseDTO>> getFilteredProducts(@RequestParam String criteria) {
-        return ResponseEntity.ok(searchService.filterProductsByCriteria(criteria));
-    }
-
+    // 상품리스트 -> 상품 상세 정보
     @GetMapping("/products/{productId}")
     public ResponseEntity<ProductCardListResponseDTO> getProductById(@PathVariable Long productId) {
         ProductCardListResponseDTO product = searchService.getProductById(productId);
         return (product != null) ? ResponseEntity.ok(product) : ResponseEntity.notFound().build();
-    }
-
-    private <T> ResponseEntity<?> createResponse(List<T> data, String emptyMessage) {
-        if (data.isEmpty()) {
-            return ResponseEntity.ok(Collections.singletonMap("message", emptyMessage));
-        }
-        return ResponseEntity.ok(data);
     }
 }

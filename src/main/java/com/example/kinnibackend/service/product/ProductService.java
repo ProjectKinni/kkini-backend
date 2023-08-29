@@ -1,6 +1,6 @@
 package com.example.kinnibackend.service.product;
 
-import com.example.kinnibackend.repository.product.ProductJPARepository;
+import com.example.kinnibackend.repository.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ProductService {
 
-    private final ProductJPARepository productJPARepository;
+    private final ProductRepository productRepository;
 
 }

@@ -8,13 +8,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductJPARepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p WHERE REPLACE(p.productName, ' ', '') LIKE %?1%")
-    List<Product> findByProductNameWithoutSpaces(String productName);
+    List<Product> findByProductName(String productName);
 
     @Query("SELECT p FROM Product p WHERE REPLACE(p.categoryName, ' ', '') LIKE %?1%")
-    List<Product> findByCategoryNameWithoutSpaces(String categoryName);
-
-    List<Product> findByIsKkini(boolean isKkini);
+    List<Product> findByCategoryName(String categoryName);
 }

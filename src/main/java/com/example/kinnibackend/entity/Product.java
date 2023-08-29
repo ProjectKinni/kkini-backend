@@ -89,39 +89,4 @@ public class Product {
     public void preUpdate(){
         this.updatedAt = LocalDateTime.now();
     }
-
-    public ProductCardListResponseDTO toProductCardListResponseDTO() {
-        return ProductCardListResponseDTO.builder()
-                .productId(this.productId)
-                .isKkini(this.isKkini)
-                .categoryName(this.categoryName)
-                .vendorId(this.vendorId)
-                .vendorName(this.vendorName)
-                .productName(this.productName)
-                .productImage(productImage)
-                .averageRating(this.averageRating)
-                .totalAmount(this.totalAmount)
-                .calorie(this.calorie)
-                .sugar(this.sugar)
-                .transFat(this.transFat)
-                .carb(this.carb)
-                .protein(this.protein)
-                .sodium(this.sodium)
-                .saturatedFat(this.saturatedFat)
-                .fat(this.fat)
-                .build();
-    }
-    public ProductMainCardResponseDTO toProductMainCardResponseDTO() {
-        return ProductMainCardResponseDTO.builder()
-                .productId(this.productId)
-                .isKkini(this.isKkini)
-                .categoryName(this.categoryName)
-                .hashtagId(this.hashtagId)
-                .vendorId(this.vendorId)
-                .vendorName(this.vendorName)
-                .productName(this.productName)
-                .productImage(productImage)
-                .averageRating(this.averageRating)
-                .build();
-    }
 }
