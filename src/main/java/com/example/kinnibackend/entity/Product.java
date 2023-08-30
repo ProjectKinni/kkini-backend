@@ -1,7 +1,5 @@
 package com.example.kinnibackend.entity;
 
-import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
-import com.example.kinnibackend.dto.product.ProductMainCardResponseDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -24,13 +22,13 @@ public class Product {
     private String categoryName;
 
     @Column(name = "is_kkini", nullable = false)
-    private boolean isKkini;
+    private Boolean isKkini;
 
     @Column(name = "hashtag_id")
     private Long hashtagId;
 
     @Column(name = "vendor_id", nullable = false)
-    private int vendorId;
+    private Integer vendorId;
 
     @Column(name = "vendor_name", nullable = false)
     private String vendorName;
@@ -42,7 +40,7 @@ public class Product {
     private String productImage;
 
     @Column(name = "average_rating", nullable = false)
-    private float averageRating;
+    private Float averageRating;
 
     @Column(name = "total_amount")
     private Double totalAmount; // 변수명 변경 예정
