@@ -2,7 +2,6 @@ package com.example.kinnibackend.search;
 
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
 import com.example.kinnibackend.exception.search.InvalidSearchTermException;
-import com.example.kinnibackend.repository.product.ProductRepository;
 import com.example.kinnibackend.service.search.SearchService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;

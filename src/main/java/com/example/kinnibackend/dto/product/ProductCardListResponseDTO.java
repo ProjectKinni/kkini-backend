@@ -8,16 +8,16 @@ import lombok.*;
 @Builder
 @ToString
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class ProductCardListResponseDTO {
     private Long productId;
-    private boolean isKkini;
+    private Boolean isKkini;
     private String categoryName;
-    private int vendorId;
+    private Integer vendorId;
     private String vendorName;
     private String productName;
     private String productImage;
-    private float averageRating;
+    private Float averageRating;
 
     private Double totalAmount;
     private Double calorie;
@@ -29,10 +29,10 @@ public class ProductCardListResponseDTO {
     private Double saturatedFat; // 포화지방
     private Double fat; // 지방
 
-    public static ProductCardListResponseDTO toProduct(Product product) {
+    public static ProductCardListResponseDTO fromEntity(Product product) {
         return ProductCardListResponseDTO.builder()
                 .productId(product.getProductId())
-                .isKkini(product.isKkini())
+                .isKkini(product.getIsKkini())
                 .categoryName(product.getCategoryName())
                 .vendorId(product.getVendorId())
                 .vendorName(product.getVendorName())

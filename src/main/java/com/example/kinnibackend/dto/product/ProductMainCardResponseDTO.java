@@ -11,19 +11,19 @@ import lombok.*;
 @NoArgsConstructor
 public class ProductMainCardResponseDTO {
     private Long productId;
-    private boolean isKkini;
+    private Boolean isKkini;
     private String categoryName;
     private Long hashtagId;
-    private int vendorId;
+    private Integer vendorId;
     private String vendorName;
     private String productName;
     private String productImage;
-    private float averageRating;
+    private Float averageRating;
 
-    public static ProductMainCardResponseDTO toProduct(Product product) {
+    public static ProductMainCardResponseDTO toEntity(Product product) {
         return ProductMainCardResponseDTO.builder()
                 .productId(product.getProductId())
-                .isKkini(product.isKkini())
+                .isKkini(product.getIsKkini())
                 .categoryName(product.getCategoryName())
                 .hashtagId(product.getHashtagId())
                 .vendorId(product.getVendorId())

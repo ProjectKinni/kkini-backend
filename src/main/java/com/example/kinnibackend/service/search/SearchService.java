@@ -11,10 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -31,28 +29,26 @@ public class SearchService {
 
         searchTerm = searchTerm.replaceAll("\\s+", "");
 
-        List<ProductCardListResponseDTO> productList;
+        List<Product> productsByName = productRepository.findByProductName(searchTerm);
+        List<Product> productsByCategory = productRepository.findByCategoryName(searchTerm);
 
-        // 이름으로 검색
-        productList = productRepository.findByProductName(searchTerm)
-                .stream()
-                .map(ProductCardListResponseDTO::toProduct)
-                .collect(Collectors.toList());
+        List<ProductCardListResponseDTO> productList = new ArrayList<>();
+
+        for (Product product : productsByName) {
+            productList.add(ProductCardListResponseDTO.fromEntity(product));
+        }
 
         if (!productList.isEmpty()) {
             return productList;
         }
 
-        // 카테고리로 검색
-        productList = productRepository.findByCategoryName(searchTerm)
-                .stream()
-                .map(ProductCardListResponseDTO::toProduct)
-                .collect(Collectors.toList());
+        for (Product product : productsByCategory) {
+            productList.add(ProductCardListResponseDTO.fromEntity(product));
+        }
 
         if (!productList.isEmpty()) {
             return productList;
         }
-
         throw new ProductNotFoundException("상품을 찾을 수 없습니다.");
     }
 
@@ -64,37 +60,38 @@ public class SearchService {
 
         String modifiedName = name.replace(" ", "%"); // 공백을 %로 대체
 
-        List<String> productNames = productRepository.findByProductName(modifiedName)
-                .stream()
-                .map(Product::getProductName)
-                .collect(Collectors.toList());
+        List<String> productNames = new ArrayList<>();
+        for (Product product : productRepository.findByProductName(modifiedName)) {
+            productNames.add(product.getProductName());
+        }
 
         if (productNames.isEmpty()) {
             throw new ProductNotFoundException("상품명을 찾을 수 없습니다.");
         }
 
-        List<String> categoryNames = productRepository.findByCategoryName(modifiedName)
-                .stream()
-                .map(Product::getCategoryName)
-                .collect(Collectors.toList());
+        List<String> categoryNames = new ArrayList<>();
+        for (Product product : productRepository.findByCategoryName(modifiedName)) {
+            categoryNames.add(product.getCategoryName());
+        }
 
         if (categoryNames.isEmpty()) {
             throw new CategoryNotFoundException("카테고리를 찾을 수 없습니다.");
         }
 
-        List<String> combinedNames = Stream.concat(productNames.stream(), categoryNames.stream())
-                .distinct()
-                .collect(Collectors.toList());
-        // 중복항목을 제거하는 이유는 사용자에게 중복된 자동 완성 항목을 보여주지 않게 하기 위함
-        return combinedNames;
-        // 제품 이름뿐이 아닌, 카테고리 이름도 검색 대상이기 때문에, 두 결과를 결합하여 사용자에게 더 다양한 검색결과 제공
+        List<String> combinedNames = new ArrayList<>();
+        combinedNames.addAll(productNames);
+        combinedNames.addAll(categoryNames);
 
+        // 제품이름과 카테고리 이름에 동일항목이 있다면, combinedNames에 두번 포함되므로
+        // 중복 항복을 제거하여 사용자에게 동일한 자동완성항목을 두 번 보여주지 않기 위함
+        return combinedNames.stream().distinct().collect(Collectors.toList());
     }
 
     // 상품 리스트 -> 상품 상세
     public ProductCardListResponseDTO getProductById(Long itemId) {
-        return productRepository.findById(itemId)
-                .map(ProductCardListResponseDTO::toProduct)
+        Product product = productRepository.findById(itemId)
                 .orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다."));
+
+        return ProductCardListResponseDTO.fromEntity(product);
     }
 }
