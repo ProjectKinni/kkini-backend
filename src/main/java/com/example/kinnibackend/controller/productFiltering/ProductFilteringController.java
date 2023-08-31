@@ -1,7 +1,7 @@
-package com.example.kinnibackend.controller.category;
+package com.example.kinnibackend.controller.productFiltering;
 
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
-import com.example.kinnibackend.service.category.CategoryService;
+import com.example.kinnibackend.service.productFiltering.ProductFilteringService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,16 +12,16 @@ import java.util.List;
 @RequestMapping("/category")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
-public class CategoryController {
+public class ProductFilteringController {
 
     @Autowired
-    private final CategoryService categoryService;
+    private final ProductFilteringService productFilteringService;
 
     @GetMapping("/kkini")
     public List<ProductCardListResponseDTO> isGreenChecked
             (@RequestParam Boolean isGreen,
              @RequestParam(required = false) String searchTerm){
-        return categoryService.getIsGreenProductsAndCategory(isGreen, searchTerm);
+        return productFilteringService.getIsGreenProductsAndCategory(isGreen, searchTerm);
     }
 
     @GetMapping("/categories")
@@ -32,11 +32,11 @@ public class CategoryController {
 
         // 끼니 그린 체크리스트가 활성화되어 있으면 해당 메서드를 호출
         if (isGreen) {
-            return categoryService.getIsGreenProductsAndCategory(isGreen, searchTerm, categoryName);
+            return productFilteringService.getIsGreenProductsAndCategory(isGreen, searchTerm, categoryName);
         }
 
         // 끼니 그린 체크리스트가 활성화되어 있지 않으면 기존 메서드를 호출
-        return categoryService.checkProductsByCategoryAndSearchTerm(categoryName, searchTerm);
+        return productFilteringService.checkProductsByCategoryAndSearchTerm(categoryName, searchTerm);
     }
 
 }
