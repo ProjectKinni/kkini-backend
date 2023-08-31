@@ -11,7 +11,7 @@ import lombok.*;
 @RequiredArgsConstructor
 public class ProductCardListResponseDTO {
     private Long productId;
-    private Boolean isKkini;
+    private Boolean isGreen;
     private String categoryName;
     private Integer vendorId;
     private String vendorName;
@@ -26,13 +26,14 @@ public class ProductCardListResponseDTO {
     private Double carb; // 탄수화물
     private Double protein; // 단백질
     private Double sodium; // 나트륨
+    private Integer cholesterol; // 콜레스테롤
     private Double saturatedFat; // 포화지방
     private Double fat; // 지방
 
     public static ProductCardListResponseDTO fromEntity(Product product) {
         return ProductCardListResponseDTO.builder()
                 .productId(product.getProductId())
-                .isKkini(product.getIsKkini())
+                .isGreen(product.getIsGreen())
                 .categoryName(product.getCategoryName())
                 .vendorId(product.getVendorId())
                 .vendorName(product.getVendorName())
@@ -46,6 +47,7 @@ public class ProductCardListResponseDTO {
                 .carb(product.getCarb())
                 .protein(product.getProtein())
                 .sodium(product.getSodium())
+                .cholesterol(product.getCholesterol())
                 .saturatedFat(product.getSaturatedFat())
                 .fat(product.getFat())
                 .build();

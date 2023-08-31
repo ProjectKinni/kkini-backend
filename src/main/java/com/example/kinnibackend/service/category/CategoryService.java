@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -20,12 +18,12 @@ public class CategoryService {
     private final ProductRepository productRepository;
 
     // 끼니 그린 체크
-    public List<ProductCardListResponseDTO> getKkiniGreenProducts(boolean showKkiniGreenOnly, String searchTerm) {
+    public List<ProductCardListResponseDTO> getIsGreenProductsAndCategory(boolean isGreen, String searchTerm) {
         List<Product> products = new ArrayList<>();
 
-        if (showKkiniGreenOnly) {
-            products.addAll(productRepository.findKkiniGreenByProductName(searchTerm));
-            products.addAll(productRepository.findKkiniGreenByCategoryName(searchTerm));
+        if (isGreen) {
+            products.addAll(productRepository.findGreenByProductName(searchTerm));
+            products.addAll(productRepository.findGreenByCategoryName(searchTerm));
         } else {
             products.addAll(productRepository.findByProductName(searchTerm));
             products.addAll(productRepository.findByCategoryName(searchTerm));
@@ -60,14 +58,14 @@ public class CategoryService {
     }
 
     // 끼니 그린 체크와 카테고리 체크 동시 사용
-    public List<ProductCardListResponseDTO> getKkiniGreenProducts
-            (boolean showKkiniGreenOnly, String searchTerm, String categoryName) {
+    public List<ProductCardListResponseDTO> getIsGreenProductsAndCategory
+            (boolean isGreen, String searchTerm, String categoryName) {
         List<Product> products;
-        if (showKkiniGreenOnly) {
+        if (isGreen) {
             if (categoryName == null) {
-                products = productRepository.findKkiniGreenByProductName(searchTerm);
+                products = productRepository.findGreenByProductName(searchTerm);
             } else {
-                products = productRepository.findKkiniGreenByProductNameAndCategory(searchTerm, categoryName);
+                products = productRepository.findGreenByProductNameAndCategory(searchTerm, categoryName);
             }
         } else {
             products = productRepository.findByProductName(searchTerm);

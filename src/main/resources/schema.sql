@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS Product;
 CREATE TABLE Product (
      `product_id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
      `category_name` VARCHAR(255),
-     `is_kkini` BOOLEAN NOT NULL,
+     `is_green` BOOLEAN NOT NULL,
      `hashtag_id` BIGINT,
      `vendor_id` INT NOT NULL,
      `vendor_name` VARCHAR(255) NOT NULL,
@@ -17,6 +17,7 @@ CREATE TABLE Product (
      `carb` DOUBLE,
      `protein` DOUBLE,
      `sodium` DOUBLE,
+     `cholesterol` INT,
      `saturated_fat` DOUBLE,
      `fat` DOUBLE,
      `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

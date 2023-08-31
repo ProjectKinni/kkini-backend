@@ -27,8 +27,8 @@ public class SearchController {
 
     // 자동완성
     @GetMapping("/autocomplete")
-    public ResponseEntity<List<String>> autoCompleteNames(@RequestParam String name) {
-        return ResponseEntity.ok(searchService.autoCompleteNames(name));
+    public ResponseEntity<List<String>> autoCompleteNames(@RequestParam String searchTerm) {
+        return ResponseEntity.ok(searchService.autoCompleteNames(searchTerm));
     }
 
     // 상품리스트 -> 상품 상세 정보

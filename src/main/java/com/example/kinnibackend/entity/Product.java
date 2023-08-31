@@ -21,8 +21,8 @@ public class Product {
     @Column(name = "category_name")
     private String categoryName;
 
-    @Column(name = "is_kkini", nullable = false)
-    private Boolean isKkini;
+    @Column(name = "is_green", nullable = false)
+    private Boolean isGreen;
 
     @Column(name = "hashtag_id")
     private Long hashtagId;
@@ -62,6 +62,9 @@ public class Product {
 
     @Column(name = "sodium")
     private Double sodium; // 나트륨
+
+    @Column(name = "cholesterol")
+    private Integer cholesterol; // 콜레스테롤
 
     @Column(name = "saturated_fat")
     private Double saturatedFat; // 포화지방

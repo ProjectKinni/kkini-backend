@@ -52,6 +52,9 @@ public class FilteringService {
             case "저나트륨":
                 products = filterByLowSodium(products);
                 break;
+            case "콜레스테롤":
+                products = filterByCholesterol(products);
+                break;
             case "포화지방":
                 products = filterBySaturatedFat(products);
                 break;
@@ -113,6 +116,12 @@ public class FilteringService {
     private List<ProductCardListResponseDTO> filterByLowSodium(List<ProductCardListResponseDTO> products) {
         return products.stream()
                 .filter(product -> product.getSodium() <= product.getTotalAmount() * 2)
+                .collect(Collectors.toList());
+    }
+
+    private List<ProductCardListResponseDTO> filterByCholesterol(List<ProductCardListResponseDTO> products){
+        return products.stream()
+                .filter(product -> product.getCholesterol() < 300)
                 .collect(Collectors.toList());
     }
 

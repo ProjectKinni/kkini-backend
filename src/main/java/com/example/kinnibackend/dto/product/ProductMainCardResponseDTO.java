@@ -11,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 public class ProductMainCardResponseDTO {
     private Long productId;
-    private Boolean isKkini;
+    private Boolean isGreen;
     private String categoryName;
     private Long hashtagId;
     private Integer vendorId;
@@ -23,7 +23,7 @@ public class ProductMainCardResponseDTO {
     public static ProductMainCardResponseDTO toEntity(Product product) {
         return ProductMainCardResponseDTO.builder()
                 .productId(product.getProductId())
-                .isKkini(product.getIsKkini())
+                .isGreen(product.getIsGreen())
                 .categoryName(product.getCategoryName())
                 .hashtagId(product.getHashtagId())
                 .vendorId(product.getVendorId())
