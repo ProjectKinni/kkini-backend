@@ -1,6 +1,7 @@
 package com.example.kinnibackend.controller.search;
 
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
+import com.example.kinnibackend.service.productFiltering.ProductFilteringService;
 import com.example.kinnibackend.service.search.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +19,17 @@ public class SearchController {
     @Autowired
     private final SearchService searchService;
 
+    @Autowired
+    private final ProductFilteringService productFilteringService;
+
     // 검색
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<ProductCardListResponseDTO>> searchProducts(@RequestParam String searchTerm) {
-        List<ProductCardListResponseDTO> products = searchService.searchProducts(searchTerm);
-        return ResponseEntity.ok(products);
+        List<ProductCardListResponseDTO> searchResults = searchService.searchProducts(searchTerm);
+        return ResponseEntity.ok(searchResults);
     }
 
-    // 자동완성
+    // 자동완성 기능
     @GetMapping("/autocomplete")
     public ResponseEntity<List<String>> autoCompleteNames(@RequestParam String searchTerm) {
         return ResponseEntity.ok(searchService.autoCompleteNames(searchTerm));
