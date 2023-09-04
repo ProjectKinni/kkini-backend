@@ -37,4 +37,6 @@ out/
 .vscode/
 
 ### profiles ###
-application-db.properties
+application-db.yml
+application-oauth2.yml
+application-jwt.yml
