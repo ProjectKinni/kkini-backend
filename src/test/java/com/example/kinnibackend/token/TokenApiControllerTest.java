@@ -8,6 +8,7 @@ import com.example.kinnibackend.repository.user.UserRepository;
 import com.example.kinnibackend.service.token.RefreshTokenService;
 import com.example.kinnibackend.token.jwt.JwtFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,6 +58,7 @@ class TokenApiControllerTest {
     }
 
     @DisplayName("createNewAccessToken: 새로운 액세스 토큰을 발급한다.")
+    @Transactional
     @Test
     public void createNewAccessToken() throws Exception {
         // given

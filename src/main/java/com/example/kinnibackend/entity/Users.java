@@ -48,6 +48,10 @@ public class Users {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public void updateNickname(String nickname){
+        this.nickname = nickname;
+    }
+
 //    @Column(name = "is_new_user", columnDefinition = "boolean default true")
 //    private boolean isNewUser;
 

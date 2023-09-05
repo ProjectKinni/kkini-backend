@@ -9,10 +9,6 @@ spring:
     hibernate:
       ddl-auto: update
     defer-datasource-initialization: true
-  mvc:
-    view:
-      prefix: /WEB-INF/views/
-      suffix: .jsp
   datasource:
     username: ${username_}
     password: ${password}
