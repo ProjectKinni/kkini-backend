@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,38 +17,84 @@ public class ProductFilteringService {
     @Autowired
     private final ProductRepository productRepository;
 
-    public List<ProductCardListResponseDTO> searchProducts(Boolean isGreen, String searchTerm, String categoryName) {
-        List<Product> products = productRepository.searchByCriteriaWithFilters(isGreen, searchTerm, categoryName,
-                null, null, null, null, null,
-                null, null, null, null, null, null);
+    public List<ProductCardListResponseDTO> filterProducts(
+            Boolean isGreen,
+            String searchTerm,
+            String categoryName,
+            Boolean isLowCalorie,
+            Boolean isSugarFree,
+            Boolean isLowSugar,
+            Boolean isLowCarb,
+            Boolean isKeto,
+            Boolean isTransFat,
+            Boolean isHighProtein,
+            Boolean isLowSodium,
+            Boolean isCholesterol,
+            Boolean isSaturatedFat,
+            Boolean isLowFat
+    ) {
+        List<Product> rawProducts = productRepository.findAll();
 
-        return products.stream()
+        return rawProducts.stream()
+                .filter(product -> isMatchingGreenFilter(product, isGreen))
+                .filter(product -> isMatchingCategoryFilter(product, categoryName))
+                .filter(product -> isMatchingSearchTermFilter(product, searchTerm))
+                .filter(product -> isMatchingLowCalorieFilter(product, isLowCalorie))
+                .filter(product -> isMatchingSugarFilter(product, isSugarFree, isLowSugar))
+                .filter(product -> isMatchingCarbFilter(product, isLowCarb, isKeto))
+                .filter(product -> isMatchingFatFilter(product, isTransFat, isSaturatedFat, isLowFat))
+                .filter(product -> isMatchingProteinFilter(product, isHighProtein))
+                .filter(product -> isMatchingSodiumFilter(product, isLowSodium))
+                .filter(product -> isMatchingCholesterolFilter(product, isCholesterol))
                 .map(ProductCardListResponseDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
-    public List<ProductCardListResponseDTO> filterProductsByCriteria(String criteria) {
-        Boolean isLowCalorie = "저칼로리".equals(criteria);
-        Boolean isSugarFree = "슈가프리".equals(criteria);
-        Boolean isLowSugar = "로우슈가".equals(criteria);
-        Boolean isLowCarb = "저탄수화물".equals(criteria);
-        Boolean isKeto = "키토".equals(criteria);
-        Boolean isTransFat = "트랜스 지방".equals(criteria);
-        Boolean isHighProtein = "고단백".equals(criteria);
-        Boolean isLowSodium = "저나트륨".equals(criteria);
-        Boolean isCholesterol = "콜레스테롤".equals(criteria);
-        Boolean isSaturatedFat = "포화지방".equals(criteria);
-        Boolean isLowFat = "저지방".equals(criteria);
+    private boolean isMatchingGreenFilter(Product product, Boolean isGreen) {
+        return isGreen == null || product.getIsGreen().equals(isGreen);
+    }
 
-        List<Product> rawProducts = productRepository.searchByCriteriaWithFilters(
-                null, null, null,
-                isLowCalorie, isSugarFree, isLowSugar, isLowCarb, isKeto,
-                isTransFat, isHighProtein, isLowSodium, isCholesterol,
-                isSaturatedFat, isLowFat
-        );
+    private boolean isMatchingCategoryFilter(Product product, String categoryName) {
+        return categoryName == null || product.getCategoryName().equals(categoryName);
+    }
 
-        return rawProducts.stream()
-                .map(ProductCardListResponseDTO::fromEntity)
-                .collect(Collectors.toList());
+    private boolean isMatchingSearchTermFilter(Product product, String searchTerm) {
+        return searchTerm == null || product.getProductName().contains(searchTerm) ||
+                product.getCategoryName().contains(searchTerm);
+    }
+
+    private boolean isMatchingLowCalorieFilter(Product product, Boolean isLowCalorie) {
+        return isLowCalorie == null ||
+                (isLowCalorie && ((product.getCategoryName().equals("음료") && product.getKcal() < 20) ||
+                        (!product.getCategoryName().equals("음료") && product.getKcal() < 40)));
+    }
+
+    private boolean isMatchingSugarFilter(Product product, Boolean isSugarFree, Boolean isLowSugar) {
+        return (isSugarFree == null || (isSugarFree && product.getSugar() <= 1)) &&
+                (isLowSugar == null || (isLowSugar && product.getSugar() <= product.getServingSize() * 0.05));
+    }
+
+    private boolean isMatchingCarbFilter(Product product, Boolean isLowCarb, Boolean isKeto) {
+        return (isLowCarb == null || (isLowCarb && product.getCarbohydrate() >= product.getServingSize() * 0.11 &&
+                product.getCarbohydrate() <= product.getServingSize() * 0.20)) &&
+                (isKeto == null || (isKeto && product.getCarbohydrate() <= product.getServingSize() * 0.10));
+    }
+
+    private boolean isMatchingFatFilter(Product product, Boolean isTransFat, Boolean isSaturatedFat, Boolean isLowFat) {
+        return (isTransFat == null || (isTransFat && product.getTransFat() <= 1)) &&
+                (isSaturatedFat == null || (isSaturatedFat && product.getSaturatedFat() <= product.getServingSize() * 0.02)) &&
+                (isLowFat == null || (isLowFat && product.getFat() <= product.getServingSize() * 0.04));
+    }
+
+    private boolean isMatchingProteinFilter(Product product, Boolean isHighProtein) {
+        return isHighProtein == null || (isHighProtein && product.getProtein() >= product.getServingSize() * 0.20);
+    }
+
+    private boolean isMatchingSodiumFilter(Product product, Boolean isLowSodium) {
+        return isLowSodium == null || (isLowSodium && product.getSodium() <= product.getServingSize() * 2);
+    }
+
+    private boolean isMatchingCholesterolFilter(Product product, Boolean isCholesterol) {
+        return isCholesterol == null || (isCholesterol && product.getCholesterol() < 300);
     }
 }

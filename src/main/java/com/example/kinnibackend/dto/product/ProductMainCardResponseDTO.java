@@ -13,11 +13,9 @@ public class ProductMainCardResponseDTO {
     private Long productId;
     private Boolean isGreen;
     private String categoryName;
-    private Long hashtagId;
-    private Integer vendorId;
-    private String vendorName;
+    private String makerName;
     private String productName;
-    private String productImage;
+    private String image;
     private Float averageRating;
 
     public static ProductMainCardResponseDTO toEntity(Product product) {
@@ -25,11 +23,9 @@ public class ProductMainCardResponseDTO {
                 .productId(product.getProductId())
                 .isGreen(product.getIsGreen())
                 .categoryName(product.getCategoryName())
-                .hashtagId(product.getHashtagId())
-                .vendorId(product.getVendorId())
-                .vendorName(product.getVendorName())
+                .makerName(product.getMakerName())
                 .productName(product.getProductName())
-                .productImage(product.getProductImage())
+                .image(product.getImage())
                 .averageRating(product.getAverageRating())
                 .build();
     }
