@@ -21,7 +21,7 @@ public class GetUserInfoDTO {
 
     public static GetUserInfoDTO fromEntity(Users user) {
         if (user == null) {
-            return null; // 또는 다른 적절한 처리
+            return null;
         }
 
         GetUserInfoDTO userInfoDTO = new GetUserInfoDTO();
