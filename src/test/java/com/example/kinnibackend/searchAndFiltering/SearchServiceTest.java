@@ -1,4 +1,4 @@
-package com.example.kinnibackend.search;
+package com.example.kinnibackend.searchAndFiltering;
 
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
 import com.example.kinnibackend.entity.Product;
@@ -6,8 +6,10 @@ import com.example.kinnibackend.exception.search.InvalidSearchTermException;
 import com.example.kinnibackend.exception.search.ProductNotFoundException;
 import com.example.kinnibackend.repository.product.ProductRepository;
 import com.example.kinnibackend.service.search.SearchService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -17,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class SearchServiceTest {
 
     @Autowired
@@ -34,22 +37,22 @@ public class SearchServiceTest {
                 .categoryName("Test Category")
                 .isGreen(true)
                 .detail("ddd")
-                .averageRating(4.52)
+                .averageRating(4.52f)
                 .makerName("슥")
-                .servingSize(100)
-                .kcal(200)
-                .carbohydrate(10)
-                .protein(20)
-                .fat(40)
-                .sodium(5)
-                .cholesterol(20)
-                .saturatedFat(10)
-                .transFat(5)
-                .sugar(2)
-                .score(54)
+                .servingSize(100d)
+                .kcal(200d)
+                .carbohydrate(10d)
+                .protein(20d)
+                .fat(40d)
+                .sodium(5d)
+                .cholesterol(20d)
+                .saturatedFat(10d)
+                .transFat(5d)
+                .sugar(2d)
+                .score(54d)
                 .image("~~~~")
                 .nutImage("~~~~~~~~")
-                .nutScore(20)
+                .nutScore(20d)
                 .build();
 
         Product savedProduct = productRepository.save(product);
@@ -59,7 +62,8 @@ public class SearchServiceTest {
 
 
     @Test
-    public void searchProducts_ValidSearchTerm_ShouldReturnProductList() {
+    @Transactional
+    public void searchProducts_ValidSearchTerm() {
         // Given
         String searchTerm = "Test";
 
@@ -72,7 +76,8 @@ public class SearchServiceTest {
     }
 
     @Test
-    public void searchProducts_InvalidSearchTerm_ShouldThrowException() {
+    @Transactional
+    public void searchProducts_InvalidSearchTerm() {
         // Given
         String searchTerm = "";
 
@@ -83,7 +88,8 @@ public class SearchServiceTest {
     }
 
     @Test
-    public void searchProducts_ProductNotFound_ShouldThrowException() {
+    @Transactional
+    public void searchProducts_ProductNotFound() {
         // Given
         String searchTerm = "NonExisting";
 
@@ -94,7 +100,8 @@ public class SearchServiceTest {
     }
 
     @Test
-    public void autoCompleteNames_ValidSearchTerm_ShouldReturnNameList() {
+    @Transactional
+    public void autoCompleteNames_ValidSearchTerm() {
         // Given
         String searchTerm = "Test";
 
@@ -107,7 +114,8 @@ public class SearchServiceTest {
     }
 
     @Test
-    public void autoCompleteNames_InvalidSearchTerm_ShouldThrowException() {
+    @Transactional
+    public void autoCompleteNames_InvalidSearchTerm() {
         // Given
         String searchTerm = "";
 
@@ -118,7 +126,8 @@ public class SearchServiceTest {
     }
 
     @Test
-    public void getProductById_ValidId_ShouldReturnProduct() {
+    @Transactional
+    public void getProductById_ValidId() {
         // Given
         Long productId = testProduct.getProductId();
 
@@ -131,7 +140,8 @@ public class SearchServiceTest {
     }
 
     @Test
-    public void getProductById_InvalidId_ShouldThrowException() {
+    @Transactional
+    public void getProductById_InvalidId() {
         // Given
         Long productId = -1L;
 
