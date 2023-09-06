@@ -18,7 +18,7 @@ public class ProductCardListResponseDTO {
     private Float averageRating;
     private String makerName;
 
-    private Integer servingSize;
+    private Double servingSize;
     private Double kcal;
     private Double carbohydrate;
     private Double protein; // 단백질
