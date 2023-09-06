@@ -3,6 +3,7 @@ package com.example.kinnibackend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -15,37 +16,37 @@ import java.time.LocalDateTime;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id", nullable = false)
+    @Column(name = "product_id")
     private Long productId;
 
     @Column(name = "category_name")
     private String categoryName;
 
-    @Column(name = "is_green", nullable = false)
+    @Column(name = "is_green", columnDefinition = "boolean default false")
     private Boolean isGreen;
 
-    @Column(name = "product_name", nullable = false)
+    @Column(name = "product_name")
     private String productName;
 
-    @Column(name = "detail", nullable = false)
+    @Column(name = "detail")
     private String detail;
 
-    @Column(name = "average_rating", nullable = false)
+    @Column(name = "average_rating")
     private Float averageRating;
 
     @CreationTimestamp
-    @Column(name = "created_at",nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
-    @CreationTimestamp
+    @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column(name = "maker_name", nullable = false)
+    @Column(name = "maker_name")
     private String makerName;
 
     @Column(name = "serving_size")
-    private Integer servingSize;
+    private Double servingSize;
 
     @Column(name = "kcal")
     private Double kcal;
@@ -85,15 +86,4 @@ public class Product {
 
     @Column(name = "nut_score")
     private Double nutScore;
-
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    public void preUpdate(){
-        this.updatedAt = LocalDateTime.now();
-    }
 }

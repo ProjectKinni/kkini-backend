@@ -81,9 +81,23 @@ public class ProductFilteringService {
     }
 
     private boolean isMatchingFatFilter(Product product, Boolean isTransFat, Boolean isSaturatedFat, Boolean isLowFat) {
-        return (isTransFat == null || (isTransFat && product.getTransFat() <= 1)) &&
-                (isSaturatedFat == null || (isSaturatedFat && product.getSaturatedFat() <= product.getServingSize() * 0.02)) &&
-                (isLowFat == null || (isLowFat && product.getFat() <= product.getServingSize() * 0.04));
+        if (isLowFat != null) {
+            if (product.getCategoryName().equals("음료")) {
+                return (isLowFat && product.getFat() <= 1.5) &&
+                        (isTransFat == null || (isTransFat && product.getTransFat() <= 1)) &&
+                        (isSaturatedFat == null || (isSaturatedFat && product.getSaturatedFat()
+                                <= product.getServingSize() * 0.02));
+            } else {
+                return (isLowFat && product.getFat() <= 3.0) &&
+                        (isTransFat == null || (isTransFat && product.getTransFat() <= 1)) &&
+                        (isSaturatedFat == null || (isSaturatedFat && product.getSaturatedFat()
+                                <= product.getServingSize() * 0.02));
+            }
+        } else {
+            return (isTransFat == null || (isTransFat && product.getTransFat() <= 1)) &&
+                    (isSaturatedFat == null || (isSaturatedFat && product.getSaturatedFat()
+                            <= product.getServingSize() * 0.02));
+        }
     }
 
     private boolean isMatchingProteinFilter(Product product, Boolean isHighProtein) {
