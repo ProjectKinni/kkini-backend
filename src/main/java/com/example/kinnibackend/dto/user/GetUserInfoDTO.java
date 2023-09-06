@@ -20,13 +20,16 @@ public class GetUserInfoDTO {
     private LocalDateTime updatedAt;
 
     public static GetUserInfoDTO fromEntity(Users user) {
-        return  GetUserInfoDTO.builder()
-                .userId(user.getUserId())
-                .email(user.getEmail())
-                .nickname(user.getNickname())
-                .role(user.getRole())
-                .createdAt(user.getCreatedAt())
-                .updatedAt(user.getUpdatedAt())
-                .build();
+        if (user == null) {
+            return null;
+        }
+
+        GetUserInfoDTO userInfoDTO = new GetUserInfoDTO();
+        userInfoDTO.setUserId(user.getUserId());
+        userInfoDTO.setEmail(user.getEmail());
+        userInfoDTO.setRole(user.getRole());
+        userInfoDTO.setNickname(user.getNickname());
+
+        return userInfoDTO;
     }
 }
