@@ -1,19 +1,13 @@
 package com.example.kinnibackend.category;
 
-import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
 import com.example.kinnibackend.repository.product.ProductRepository;
-import com.example.kinnibackend.service.category.CategoryService;
-import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.Test;
+import com.example.kinnibackend.service.productFiltering.ProductFilteringService;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
@@ -24,7 +18,7 @@ public class CategoryServiceTest {
     private ProductRepository productRepository;
 
     @Autowired
-    private CategoryService categoryService;
+    private ProductFilteringService productFilteringService;
 
 //    @Test
 //    @Transactional
