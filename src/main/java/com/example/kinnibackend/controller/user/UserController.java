@@ -39,8 +39,7 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
-
+    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
         String token = request.getHeader("Authorization");
 
         Cookie cookie = new Cookie("access_token", null);
@@ -48,7 +47,21 @@ public class UserController {
         cookie.setPath("/");
         response.addCookie(cookie);
 
-        return "로그아웃 성공";
+        // 로그아웃 성공을 나타내는 HTTP 상태 코드 200과 메시지를 반환
+        return ResponseEntity.ok("로그아웃 성공");
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteUser(@CookieValue(name = "access_token", required = false) String token) {
+        if (token == null || !tokenProvider.validToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Long userId = tokenProvider.getUserIdFromToken(token);
+
+        userService.deleteUserByUserId(userId);
+
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/update")
@@ -65,42 +78,16 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteUser(@CookieValue(name = "access_token", required = false) String token) {
-        if (token == null || !tokenProvider.validToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        Long userId = tokenProvider.getUserIdFromToken(token);
-
-        userService.deleteUserByUserId(userId);
-
-        return ResponseEntity.ok().build();
-    }
-//    @PostMapping("/checkNickname")
-//    public boolean isNicknameAvailable(@RequestBody String nickname) {
-//        return userService.isNicknameAvailable(nickname);
-//    }
-
-//    @PostMapping("/checkNickname")
-//    public ResponseEntity<Boolean> isNicknameAvailable(@CookieValue(name = "access_token", required = false) String token, @RequestBody String nickname) {
-//    if (token == null || !tokenProvider.validToken(token)) {
-//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-//    }
-//
-//    boolean isAvailable = userService.isNicknameAvailable(nickname);
-//    return ResponseEntity.ok(isAvailable);
-//    }
     @PostMapping("/checkNickname")
     public ResponseEntity<Boolean> isNicknameAvailable(
             @CookieValue(name = "access_token", required = false) String token,
-            @RequestBody Map<String, String> requestMap // 요청에서 닉네임을 맵 형태로 받음
-    ) {
+            @RequestBody Map<String, String> requestMap) {
+
         if (token == null || !tokenProvider.validToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        String nickname = requestMap.get("nickname"); // 닉네임을 맵에서 추출
+        String nickname = requestMap.get("nickname");
 
         boolean isAvailable = userService.isNicknameAvailable(nickname);
         return ResponseEntity.ok(isAvailable);
