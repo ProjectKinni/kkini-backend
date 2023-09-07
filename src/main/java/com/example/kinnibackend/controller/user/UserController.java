@@ -78,7 +78,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/checkNickname")
+    @PostMapping("/isNicknameAvailable")
     public ResponseEntity<Boolean> isNicknameAvailable(
             @CookieValue(name = "access_token", required = false) String token,
             @RequestBody Map<String, String> requestMap) {
