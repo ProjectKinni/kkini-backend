@@ -11,7 +11,7 @@ spring:
     defer-datasource-initialization: true
 
   datasource:
-    username: ${username}
+    username: ${username_}
     password: ${password}
     driver-class-name: ${driver-class-name}
     url: ${url}

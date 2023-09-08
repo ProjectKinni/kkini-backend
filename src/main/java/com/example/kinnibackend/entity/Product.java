@@ -25,7 +25,7 @@ public class Product {
     @Column(name = "is_green", columnDefinition = "boolean default false")
     private Boolean isGreen;
 
-    @Column(name = "product_name")
+    @Column(name = "product_name", nullable = false)
     private String productName;
 
     @Column(name = "detail")

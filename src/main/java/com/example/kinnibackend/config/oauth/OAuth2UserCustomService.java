@@ -28,13 +28,13 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
 
     // 소셜 로그인한 회원의 정보를 바탕으로 서비스에 새로운 유저 DB에 저장
 
-    private Users saveOrUpdate(OAuth2User oAuth2User, String registrationId) {
+    private void saveOrUpdate(OAuth2User oAuth2User, String registrationId) {
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
         String email;
         String nickname;
 
-         String role = "USER"; // 해당 부분 수정 시 권한 하드코딩
+        String role = "USER"; // 해당 부분 수정 시 권한 하드코딩
 
         if(registrationId.equals("google")) {
             email = (String) attributes.get("email");
@@ -60,6 +60,6 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
                     .role(role)
                     .build();
         }
-        return userService.save(user);
+        userService.save(user);
     }
 }
