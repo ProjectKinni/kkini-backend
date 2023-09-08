@@ -5,6 +5,7 @@ import com.example.kinnibackend.config.jwt.TokenProvider;
 import com.example.kinnibackend.entity.Users;
 import com.example.kinnibackend.service.user.UserService;
 import io.jsonwebtoken.Jwts;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +32,15 @@ class TokenProviderTest {
     private JwtProperties jwtProperties;
 
     @DisplayName("generateTokenTest: 유저 정보와 만료 기간을 전달해 토큰을 만들 수 있다.")
+    @Transactional
     @Test
     void generateTokenTest() {
         // given
-        Users testUser = userService.save(Users.builder()
+        userService.save(Users.builder()
                 .email("user@gmail.com")
-//                .password("test")
                 .build());
+
+        Users testUser = userService.findByEmail("user@gmail.com");
 
         // when
         String token = tokenProvider.generateToken(testUser, Duration.ofDays(14));
@@ -53,6 +56,7 @@ class TokenProviderTest {
     }
 
     @DisplayName("validToken_invalidTokenTest: 만료된 토큰인 경우에 유효성 검증에 실패한다.")
+    @Transactional
     @Test
     void validToken_invalidTokenTest() {
         // given
@@ -70,6 +74,7 @@ class TokenProviderTest {
 
 
     @DisplayName("validToken_validTokenTest(): 유효한 토큰인 경우에 유효성 검증에 성공한다.")
+    @Transactional
     @Test
     void validToken_validTokenTest() {
         // given
@@ -85,6 +90,7 @@ class TokenProviderTest {
 
 
     @DisplayName("getAuthenticationTest : 토큰 기반으로 인증정보를 가져올 수 있다.")
+    @Transactional
     @Test
     void getAuthenticationTest() {
         // given
@@ -102,6 +108,7 @@ class TokenProviderTest {
     }
 
     @DisplayName("getUserIdTest: 토큰으로 유저 ID를 가져올 수 있다.")
+    @Transactional
     @Test
     void getUserIdTest() {
         // given

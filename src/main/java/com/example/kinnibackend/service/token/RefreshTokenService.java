@@ -23,4 +23,8 @@ public class RefreshTokenService {
         refreshTokenRepository.save(refreshToken);
     }
 
+    public void deleteRefreshTokenByUserId(Long userId){
+        refreshTokenRepository.deleteByUserId(userId);
+    }
+
 }
