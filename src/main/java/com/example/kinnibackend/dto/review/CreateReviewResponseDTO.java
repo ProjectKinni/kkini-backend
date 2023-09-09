@@ -12,7 +12,7 @@ public class CreateReviewResponseDTO {
 
     public static CreateReviewResponseDTO fromEntity(Review review) {
         return CreateReviewResponseDTO.builder()
-                .message(review == null ? "리뷰가 등록되었습니다." : "리뷰 등록 실패")
+                .message(review == null ? "리뷰 등록 실패" : "리뷰가 등록되었습니다.")
                 .build();
     }
 }
