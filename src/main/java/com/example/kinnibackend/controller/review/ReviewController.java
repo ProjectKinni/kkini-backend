@@ -1,12 +1,12 @@
 package com.example.kinnibackend.controller.review;
 
-import com.example.kinnibackend.dto.review.CreateReviewRequestDTO;
-import com.example.kinnibackend.dto.review.CreateReviewResponseDTO;
-import com.example.kinnibackend.entity.Users;
+import com.example.kinnibackend.dto.review.*;
 import com.example.kinnibackend.service.review.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,17 +15,35 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    // PathVariable로 userId 받아오도록 수정해야함
-    @PostMapping
-    ResponseEntity<CreateReviewResponseDTO> createReview(@RequestBody CreateReviewRequestDTO createReviewRequestDTO) {
-        return ResponseEntity.ok(reviewService.createReview(createReviewRequestDTO));
+    @PostMapping("/{userId}")
+    ResponseEntity<CreateReviewResponseDTO> createReview(@RequestBody CreateReviewRequestDTO createReviewRequestDTO, @PathVariable Long userId) {
+        return ResponseEntity.ok(reviewService.createReview(createReviewRequestDTO, userId));
     }
 
     @GetMapping
-    ResponseEntity<List<GetReviewResponseDTO>> getReviewsByUserId(@PathVariable Long userId) {
-
+    ResponseEntity<List<GetReviewResponseDTO>> getReviews() {
+        return ResponseEntity.ok(reviewService.getReviews());
     }
 
-    @GetMapping()
+    @GetMapping("/{productId}")
+    ResponseEntity<List<GetReviewResponseDTO>> getReviewsByProductId(@PathVariable Long productId) {
+        return ResponseEntity.ok(reviewService.getReviewsByProductId(productId));
+    }
+
+    @GetMapping("/{userId}")
+    ResponseEntity<List<GetReviewResponseDTO>> getReviewsByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(reviewService.getReviewsByUserId(userId));
+    }
+
+    @DeleteMapping("/{reviewId}")
+    ResponseEntity<DeleteReviewResponseDTO> deleteReviewByReviewId(@PathVariable Long reviewId) {
+        return ResponseEntity.ok(reviewService.deleteReviewByReviewId(reviewId));
+    }
+
+    @PutMapping("/{reviewId}")
+    ResponseEntity<UpdateReviewResponseDTO> updateReviewByReviewId(@RequestBody CreateReviewRequestDTO updateReviewRequestDTO, @PathVariable Long reviewId) {
+        return ResponseEntity.ok(reviewService.updateReviewByReviewId(reviewId, updateReviewRequestDTO));
+    }
+
 
 }

@@ -51,4 +51,14 @@ public class Review {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public void updateReview(Double rating, String content, String image1, String image2, String image3, String image4) {
+        this.rating = rating;
+        this.content = content;
+        this.image1 = image1;
+        this.image2 = image2;
+        this.image3 = image3;
+        this.image4 = image4;
+    }
+
 }

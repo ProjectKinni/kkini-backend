@@ -11,7 +11,6 @@ import lombok.*;
 @Builder
 public class CreateReviewRequestDTO {
     private Long productId;
-    private Long userId;
     private Double rating;
     private String content;
     private String image1;
