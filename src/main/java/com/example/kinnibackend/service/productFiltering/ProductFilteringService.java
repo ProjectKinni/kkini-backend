@@ -59,8 +59,13 @@ public class ProductFilteringService {
     }
 
     private boolean isMatchingSearchTermFilter(Product product, String searchTerm) {
-        return searchTerm == null || product.getProductName().contains(searchTerm) ||
-                product.getCategoryName().contains(searchTerm);
+        if (searchTerm == null) {
+            return true;
+        }
+        String productName = product.getProductName();
+        String categoryName = product.getCategoryName();
+        return (productName != null && productName.contains(searchTerm)) ||
+                (categoryName != null && categoryName.contains(searchTerm));
     }
 
     private boolean isMatchingLowCalorieFilter(Product product, Boolean isLowCalorie) {
