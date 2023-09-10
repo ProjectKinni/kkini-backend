@@ -9,6 +9,7 @@ spring:
     hibernate:
       ddl-auto: update
     defer-datasource-initialization: true
+
   datasource:
     username: ${username_}
     password: ${password}
