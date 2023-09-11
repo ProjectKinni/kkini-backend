@@ -59,56 +59,97 @@ public class ProductFilteringService {
     }
 
     private boolean isMatchingSearchTermFilter(Product product, String searchTerm) {
-        return searchTerm == null || product.getProductName().contains(searchTerm) ||
-                product.getCategoryName().contains(searchTerm);
+        if (searchTerm == null) {
+            return true;
+        }
+        String productName = product.getProductName();
+        String categoryName = product.getCategoryName();
+        return (productName != null && productName.contains(searchTerm)) ||
+                (categoryName != null && categoryName.contains(searchTerm));
     }
 
     private boolean isMatchingLowCalorieFilter(Product product, Boolean isLowCalorie) {
-        return isLowCalorie == null ||
-                (isLowCalorie && ((product.getCategoryName().equals("음료") && product.getKcal() < 20) ||
-                        (!product.getCategoryName().equals("음료") && product.getKcal() < 40)));
+        if (isLowCalorie == null) {
+            return true;
+        }
+
+        Double kcal = product.getKcal();
+        if (kcal == null) {
+            return false;
+        }
+
+        return (isLowCalorie && ((product.getCategoryName().equals("음료") && kcal < 20) ||
+                (!product.getCategoryName().equals("음료") && kcal < 40)));
     }
 
     private boolean isMatchingSugarFilter(Product product, Boolean isSugarFree, Boolean isLowSugar) {
-        return (isSugarFree == null || (isSugarFree && product.getSugar() <= 1)) &&
-                (isLowSugar == null || (isLowSugar && product.getSugar() <= product.getServingSize() * 0.05));
+        Double sugar = product.getSugar();
+        Double servingSize = product.getServingSize();
+        if (sugar == null || servingSize == null) {
+            return false;
+        }
+        return (isSugarFree == null || (isSugarFree && sugar <= 1)) &&
+                (isLowSugar == null || (isLowSugar && sugar <= servingSize * 0.05));
     }
 
     private boolean isMatchingCarbFilter(Product product, Boolean isLowCarb, Boolean isKeto) {
-        return (isLowCarb == null || (isLowCarb && product.getCarbohydrate() >= product.getServingSize() * 0.11 &&
-                product.getCarbohydrate() <= product.getServingSize() * 0.20)) &&
-                (isKeto == null || (isKeto && product.getCarbohydrate() <= product.getServingSize() * 0.10));
+        Double carbohydrate = product.getCarbohydrate();
+        Double servingSize = product.getServingSize();
+        if (carbohydrate == null || servingSize == null) {
+            return false;
+        }
+        return (isLowCarb == null || (isLowCarb && carbohydrate >= servingSize * 0.11 &&
+                carbohydrate <= servingSize * 0.20)) &&
+                (isKeto == null || (isKeto && carbohydrate <= servingSize * 0.10));
     }
 
     private boolean isMatchingFatFilter(Product product, Boolean isTransFat, Boolean isSaturatedFat, Boolean isLowFat) {
+        Double fat = product.getFat();
+        Double transFat = product.getTransFat();
+        Double saturatedFat = product.getSaturatedFat();
+        Double servingSize = product.getServingSize();
+        if (fat == null || transFat == null || saturatedFat == null || servingSize == null) {
+            return false;
+        }
         if (isLowFat != null) {
             if (product.getCategoryName().equals("음료")) {
-                return (isLowFat && product.getFat() <= 1.5) &&
-                        (isTransFat == null || (isTransFat && product.getTransFat() <= 1)) &&
-                        (isSaturatedFat == null || (isSaturatedFat && product.getSaturatedFat()
-                                <= product.getServingSize() * 0.02));
+                return (isLowFat && fat <= 1.5) &&
+                        (isTransFat == null || (isTransFat && transFat <= 1)) &&
+                        (isSaturatedFat == null || (isSaturatedFat && saturatedFat <= servingSize * 0.02));
             } else {
-                return (isLowFat && product.getFat() <= 3.0) &&
-                        (isTransFat == null || (isTransFat && product.getTransFat() <= 1)) &&
-                        (isSaturatedFat == null || (isSaturatedFat && product.getSaturatedFat()
-                                <= product.getServingSize() * 0.02));
+                return (isLowFat && fat <= 3.0) &&
+                        (isTransFat == null || (isTransFat && transFat <= 1)) &&
+                        (isSaturatedFat == null || (isSaturatedFat && saturatedFat <= servingSize * 0.02));
             }
         } else {
-            return (isTransFat == null || (isTransFat && product.getTransFat() <= 1)) &&
-                    (isSaturatedFat == null || (isSaturatedFat && product.getSaturatedFat()
-                            <= product.getServingSize() * 0.02));
+            return (isTransFat == null || (isTransFat && transFat <= 1)) &&
+                    (isSaturatedFat == null || (isSaturatedFat && saturatedFat <= servingSize * 0.02));
         }
     }
 
     private boolean isMatchingProteinFilter(Product product, Boolean isHighProtein) {
-        return isHighProtein == null || (isHighProtein && product.getProtein() >= product.getServingSize() * 0.20);
+        Double protein = product.getProtein();
+        Double servingSize = product.getServingSize();
+        if (protein == null || servingSize == null) {
+            return false;
+        }
+        return isHighProtein == null || (isHighProtein && protein >= servingSize * 0.20);
     }
 
     private boolean isMatchingSodiumFilter(Product product, Boolean isLowSodium) {
-        return isLowSodium == null || (isLowSodium && product.getSodium() <= product.getServingSize() * 2);
+        Double sodium = product.getSodium();
+        Double servingSize = product.getServingSize();
+        if (sodium == null || servingSize == null) {
+            return false;
+        }
+        return isLowSodium == null || (isLowSodium && sodium <= servingSize * 2);
     }
 
     private boolean isMatchingCholesterolFilter(Product product, Boolean isCholesterol) {
-        return isCholesterol == null || (isCholesterol && product.getCholesterol() < 300);
+        Double cholesterol = product.getCholesterol();
+        if (cholesterol == null) {
+            return false;
+        }
+        return isCholesterol == null || (isCholesterol && cholesterol < 300);
     }
 }
