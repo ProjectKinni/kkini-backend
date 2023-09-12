@@ -102,7 +102,7 @@ public class ProductFilteringServiceTest {
         String categoryName = "Test Category";
 
         // When
-        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(
+        List<?> result = productFilteringService.filterProducts(
                 null, null, categoryName, null, null, null,
                 null, null, null, null, null, null,
                 null, null);

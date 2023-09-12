@@ -35,22 +35,15 @@ public class ProductFilteringService {
             Boolean isSaturatedFat,
             Boolean isLowFat
     ) {
-        List<Product> products;
-        try {
-            products = productRepository.filterProducts(
-                    isGreen, searchTerm, categoryName, isLowCalorie, isSugarFree, isLowSugar,
-                    isLowCarb, isKeto, isTransFat, isHighProtein, isLowSodium,
-                    isCholesterol, isSaturatedFat, isLowFat
-            );
-        } catch (NullPointerException e) {
-            throw new ProductNotFoundException("상품리스트가 비었습니다");
-        }
+        List<Product> products = productRepository.filterProducts(
+                isGreen, searchTerm, categoryName, isLowCalorie, isSugarFree, isLowSugar,
+                isLowCarb, isKeto, isTransFat, isHighProtein, isLowSodium,
+                isCholesterol, isSaturatedFat, isLowFat
+        );
 
-        if (products == null || products.isEmpty()) {
-            throw new ProductNotFoundException("상품리스트가 비었습니다");
-        }
-
-        return products.stream()
+        return (products == null || products.isEmpty())
+                ? List.of(new ProductCardListResponseDTO("상품리스트가 비었습니다"))
+                : products.stream()
                 .filter(Objects::nonNull)
                 .map(ProductCardListResponseDTO::fromEntity)
                 .collect(Collectors.toList());
