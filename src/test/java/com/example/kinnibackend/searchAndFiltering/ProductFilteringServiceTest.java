@@ -23,50 +23,83 @@ public class ProductFilteringServiceTest {
 
     @Autowired
     private ProductRepository productRepository;
+    private ProductCardListResponseDTO testProduct;
 
     @BeforeEach
     public void setUp() {
-        Product product1 = Product.builder()
-                .productName("Test Product1")
-                .categoryName("Test Category1")
+        // Given: 더미 데이터 생성
+        testProduct = ProductCardListResponseDTO.builder()
+                .productName("Test Product")
+                .categoryName("Test Category")
                 .isGreen(true)
-                .kcal(30.0)
-                .sugar(1.0)
-                .carbohydrate(15.0)
-                .fat(2.0)
-                .transFat(0.5)
-                .saturatedFat(0.5)
-                .protein(10.0)
-                .sodium(1.5)
-                .cholesterol(200.0)
-                .servingSize(100.0)
+                .detail("ddd")
+                .averageRating(4.52f)
+                .makerName("슥")
+                .servingSize(100d)
+                .kcal(200d)
+                .carbohydrate(10d)
+                .protein(20d)
+                .fat(40d)
+                .sodium(5d)
+                .cholesterol(20d)
+                .saturatedFat(10d)
+                .transFat(5d)
+                .sugar(2d)
+                .score(54d)
+                .image("~~~~")
+                .nutImage("~~~~~~~~")
+                .nutScore(20d)
                 .build();
 
-        Product product2 = Product.builder()
-                .productName("Test Product2")
-                .categoryName("Test Category2")
-                .isGreen(false)
-                .kcal(50.0)
-                .sugar(5.0)
-                .carbohydrate(20.0)
-                .fat(5.0)
-                .transFat(1.0)
-                .saturatedFat(1.0)
-                .protein(21.0)
-                .sodium(2.0)
-                .cholesterol(300.0)
-                .servingSize(100.0)
+        Product product = Product.builder()
+                .productName(testProduct.getProductName())
+                .categoryName(testProduct.getCategoryName())
+                .isGreen(testProduct.getIsGreen())
+                .detail(testProduct.getDetail())
+                .averageRating(testProduct.getAverageRating())
+                .makerName(testProduct.getMakerName())
+                .servingSize(testProduct.getServingSize())
+                .kcal(testProduct.getKcal())
+                .carbohydrate(testProduct.getCarbohydrate())
+                .protein(testProduct.getProtein())
+                .fat(testProduct.getFat())
+                .sodium(testProduct.getSodium())
+                .cholesterol(testProduct.getCholesterol())
+                .saturatedFat(testProduct.getSaturatedFat())
+                .transFat(testProduct.getTransFat())
+                .sugar(testProduct.getSugar())
+                .score(testProduct.getScore())
+                .image(testProduct.getImage())
+                .nutImage(testProduct.getNutImage())
+                .nutScore(testProduct.getNutScore())
                 .build();
 
-        productRepository.save(product1);
-        productRepository.save(product2);
+        Product savedProduct = productRepository.save(product);
+        testProduct.setProductId(savedProduct.getProductId());
     }
+    @Test
+    @Transactional
+    public void filterProducts_isGreenFilter(){
 
+        // Given
+        Boolean isGreen = true;
+
+        // When
+        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(
+                isGreen, null, null, null, null, null,
+                null, null, null, null, null, null,
+                null, null);
+
+        // Then
+        assertThat(result).isNotEmpty();
+        assertThat(result).hasSize(1);
+        assertThat(result).allMatch(product -> product.getIsGreen() == true);
+    }
     @Test
     @Transactional
     public void filterProducts_CategoryFilter() {
         // Given
-        String categoryName = "Test Category1";
+        String categoryName = "Test Category";
 
         // When
         List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(
@@ -123,14 +156,17 @@ public class ProductFilteringServiceTest {
 
         // When
         List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(
-                null, null, null, null, null, isLowCarb,
-                null, null, null, null, null, null,
-                null, null);
+                null, null, null, null, null,
+                null, isLowCarb, null, null, null,
+                null, null, null, null);
 
         // Then
         assertThat(result).isNotEmpty();
-        assertThat(result).allMatch(product -> product.getCarbohydrate() >= product.getServingSize() * 0.11 &&
-                product.getCarbohydrate() <= product.getServingSize() * 0.20);
+        assertThat(result).allMatch(product ->
+                product.getCarbohydrate() != null && product.getServingSize() != null &&
+                        product.getCarbohydrate() >= product.getServingSize() * 0.11 &&
+                        product.getCarbohydrate() <= product.getServingSize() * 0.20
+        );
     }
 
     @Test
@@ -182,5 +218,26 @@ public class ProductFilteringServiceTest {
         // Then
         assertThat(result).isNotEmpty();
         assertThat(result).allMatch(product -> product.getCholesterol() < 300);
+    }
+
+    @Test
+    @Transactional
+    public void filterProducts_filters(){
+        // Given
+        Boolean isLowCalorie = true;
+        Boolean isSugarFree = true;
+        Boolean isLowSugar = true;
+
+        // When
+        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(
+                null, null, null, isLowCalorie, isSugarFree, isLowSugar,
+                null, null, null, null, null, null,
+                null, null);
+
+        // Then
+        assertThat(result).isNotEmpty();
+        assertThat(result).allMatch(product -> product.getKcal() < 40);
+        assertThat(result).allMatch(product -> product.getSugar() <= 1);
+        assertThat(result).allMatch(product -> product.getSugar() >= 0 && product.getSugar() < 5);
     }
 }
