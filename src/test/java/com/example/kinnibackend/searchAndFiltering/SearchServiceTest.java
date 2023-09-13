@@ -32,7 +32,8 @@ public class SearchServiceTest {
 
     @BeforeEach
     public void setUp() {
-        Product product = Product.builder()
+        // Given: 더미 데이터 생성
+        testProduct = ProductCardListResponseDTO.builder()
                 .productName("Test Product")
                 .categoryName("Test Category")
                 .isGreen(true)
@@ -51,15 +52,36 @@ public class SearchServiceTest {
                 .sugar(2d)
                 .score(54d)
                 .image("~~~~")
-                .nutImage("~~~~~~~~")
-                .nutScore(20d)
+                .nutImage("~~~~")
+                .nutScore(30d)
+                .build();
+
+        Product product = Product.builder()
+                .productName(testProduct.getProductName())
+                .categoryName(testProduct.getCategoryName())
+                .isGreen(testProduct.getIsGreen())
+                .detail(testProduct.getDetail())
+                .averageRating(testProduct.getAverageRating())
+                .makerName(testProduct.getMakerName())
+                .servingSize(testProduct.getServingSize())
+                .kcal(testProduct.getKcal())
+                .carbohydrate(testProduct.getCarbohydrate())
+                .protein(testProduct.getProtein())
+                .fat(testProduct.getFat())
+                .sodium(testProduct.getSodium())
+                .cholesterol(testProduct.getCholesterol())
+                .saturatedFat(testProduct.getSaturatedFat())
+                .transFat(testProduct.getTransFat())
+                .sugar(testProduct.getSugar())
+                .score(testProduct.getScore())
+                .image(testProduct.getImage())
+                .nutImage(testProduct.getNutImage())
+                .nutScore(testProduct.getNutScore())
                 .build();
 
         Product savedProduct = productRepository.save(product);
-
-        testProduct = ProductCardListResponseDTO.fromEntity(savedProduct);
+        testProduct.setProductId(savedProduct.getProductId());
     }
-
 
     @Test
     @Transactional
