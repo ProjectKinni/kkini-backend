@@ -22,38 +22,44 @@ public class ProductRepositoryTest {
     @Test
     @Transactional
     public void findByProductName() {
-        // Given
+        // Given: 더미 데이터 생성 및 저장
         Product product1 = Product.builder()
                 .productName("Test Product1")
-                .categoryName("Test Category")
+                .categoryName("Test Category1")
                 .build();
+
         Product product2 = Product.builder()
                 .productName("Test Product2")
-                .categoryName("Test Category")
+                .categoryName("Test Category2")
                 .build();
+
         productRepository.save(product1);
         productRepository.save(product2);
 
-        // When
+        // When: 더미 데이터를 사용하여 메서드 테스트
         List<Product> foundProducts = productRepository.findByProductName("Test");
 
-        // Then
+        // Then: 결과 검증
         assertThat(foundProducts).isNotEmpty();
         assertThat(foundProducts).hasSize(2);
+        assertThat(foundProducts).contains(product1, product2);
     }
 
     @Test
     @Transactional
     public void findByCategoryName() {
-        // Given
+
+        // Given: 더미 데이터 생성 및 저장
         Product product1 = Product.builder()
-                .productName("Product1")
+                .productName("Test Product1")
                 .categoryName("Test Category1")
                 .build();
+
         Product product2 = Product.builder()
-                .productName("Product2")
+                .productName("Test Product2")
                 .categoryName("Test Category2")
                 .build();
+
         productRepository.save(product1);
         productRepository.save(product2);
 
@@ -81,5 +87,58 @@ public class ProductRepositoryTest {
         // Then
         assertThat(foundProduct).isNotNull();
         assertThat(foundProduct.getProductName()).isEqualTo(product.getProductName());
+    }
+
+    @Test
+    @Transactional
+    public void filterProductsTest() {
+        // Given: 더미 데이터 생성
+        Product product1 = Product.builder()
+                .productName("Test Product1")
+                .categoryName("Test Category1")
+                .isGreen(true)
+                .kcal(30.0)
+                .sugar(1.0)
+                .carbohydrate(15.0)
+                .fat(2.0)
+                .transFat(0.5)
+                .saturatedFat(0.5)
+                .protein(10.0)
+                .sodium(1.5)
+                .cholesterol(200.0)
+                .servingSize(100.0)
+                .build();
+
+        Product product2 = Product.builder()
+                .productName("Test Product2")
+                .categoryName("Test Category2")
+                .isGreen(false)
+                .kcal(50.0)
+                .sugar(5.0)
+                .carbohydrate(20.0)
+                .fat(5.0)
+                .transFat(1.0)
+                .saturatedFat(1.0)
+                .protein(21.0)
+                .sodium(2.0)
+                .cholesterol(300.0)
+                .servingSize(100.0)
+                .build();
+
+        productRepository.save(product1);
+        productRepository.save(product2);
+
+        // When: 필터 적용하여 제품 검색
+        List<Product> result = productRepository.filterProducts(
+                true, null, "Test Category1", null,
+                null, null, null, null, null, null,
+                null, null, null, null
+        );
+
+        // Then: 결과 검증
+        assertThat(result).isNotEmpty();
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getCategoryName()).isEqualTo("Test Category1");
+        assertThat(result.get(0).getIsGreen()).isEqualTo(true);
     }
 }
