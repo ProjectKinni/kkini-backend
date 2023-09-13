@@ -30,9 +30,8 @@ public class ProductCardListResponseDTO {
     private Double sugar;
     private Double score;
     private String image;
-
-    private String message;
-
+    private String nutImage;
+    private Double nutScore;
 
     public static ProductCardListResponseDTO fromEntity(Product product) {
         return ProductCardListResponseDTO.builder()
@@ -55,11 +54,8 @@ public class ProductCardListResponseDTO {
                 .sugar(product.getSugar())
                 .score(product.getScore())
                 .image(product.getImage())
+                .nutImage(product.getNutImage())
+                .nutScore(product.getNutScore())
                 .build();
     }
-
-    public ProductCardListResponseDTO(String message) {
-        this.message = message;
-    }
-
 }

@@ -42,7 +42,7 @@ public class ProductFilteringService {
         );
 
         return (products == null || products.isEmpty())
-                ? List.of(new ProductCardListResponseDTO("상품리스트가 비었습니다"))
+                ? null
                 : products.stream()
                 .filter(Objects::nonNull)
                 .map(ProductCardListResponseDTO::fromEntity)

@@ -52,8 +52,8 @@ public class SearchServiceTest {
                 .sugar(2d)
                 .score(54d)
                 .image("~~~~")
-                .nutImage("~~~~~~~~")
-                .nutScore(20d)
+                .nutImage("~~~~")
+                .nutScore(30d)
                 .build();
 
         Product product = Product.builder()

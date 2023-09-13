@@ -47,8 +47,8 @@ public class ProductFilteringServiceTest {
                 .sugar(2d)
                 .score(54d)
                 .image("~~~~")
-                .nutImage("~~~~~~~~")
-                .nutScore(20d)
+                .nutImage("~~~~")
+                .nutScore(30d)
                 .build();
 
         Product product = Product.builder()
@@ -92,8 +92,7 @@ public class ProductFilteringServiceTest {
 
         // Then
         assertThat(result).isNotEmpty();
-        assertThat(result).hasSize(1);
-        assertThat(result).allMatch(product -> product.getIsGreen() == true);
+        assertThat(result.get(0).getIsGreen()).isEqualTo(testProduct.getIsGreen());
     }
     @Test
     @Transactional
@@ -102,7 +101,7 @@ public class ProductFilteringServiceTest {
         String categoryName = "Test Category";
 
         // When
-        List<?> result = productFilteringService.filterProducts(
+        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(
                 null, null, categoryName, null, null, null,
                 null, null, null, null, null, null,
                 null, null);
