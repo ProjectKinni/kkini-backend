@@ -30,7 +30,7 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getReviewsByProductId(productId));
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/users/{userId}")
     ResponseEntity<List<GetReviewResponseDTO>> getReviewsByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(reviewService.getReviewsByUserId(userId));
     }
