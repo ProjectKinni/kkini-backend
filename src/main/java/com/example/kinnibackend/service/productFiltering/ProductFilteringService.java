@@ -1,6 +1,7 @@
 package com.example.kinnibackend.service.productFiltering;
 
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
+import com.example.kinnibackend.dto.product.ProductFilteringResponseDTO;
 import com.example.kinnibackend.entity.Product;
 import com.example.kinnibackend.exception.search.ProductNotFoundException;
 import com.example.kinnibackend.repository.product.ProductRepository;
@@ -19,26 +20,22 @@ public class ProductFilteringService {
     @Autowired
     private final ProductRepository productRepository;
 
-    public List<ProductCardListResponseDTO> filterProducts(
-            Boolean isGreen,
-            String searchTerm,
-            String categoryName,
-            Boolean isLowCalorie,
-            Boolean isSugarFree,
-            Boolean isLowSugar,
-            Boolean isLowCarb,
-            Boolean isKeto,
-            Boolean isTransFat,
-            Boolean isHighProtein,
-            Boolean isLowSodium,
-            Boolean isCholesterol,
-            Boolean isSaturatedFat,
-            Boolean isLowFat
-    ) {
+    public List<ProductCardListResponseDTO> filterProducts(ProductFilteringResponseDTO productFilteringResponseDTO) {
         List<Product> products = productRepository.filterProducts(
-                isGreen, searchTerm, categoryName, isLowCalorie, isSugarFree, isLowSugar,
-                isLowCarb, isKeto, isTransFat, isHighProtein, isLowSodium,
-                isCholesterol, isSaturatedFat, isLowFat
+                productFilteringResponseDTO.getIsGreen(),
+                productFilteringResponseDTO.getSearchTerm(),
+                productFilteringResponseDTO.getCategoryName(),
+                productFilteringResponseDTO.getIsLowCalorie(),
+                productFilteringResponseDTO.getIsSugarFree(),
+                productFilteringResponseDTO.getIsLowSugar(),
+                productFilteringResponseDTO.getIsLowCarb(),
+                productFilteringResponseDTO.getIsKeto(),
+                productFilteringResponseDTO.getIsTransFat(),
+                productFilteringResponseDTO.getIsHighProtein(),
+                productFilteringResponseDTO.getIsLowSodium(),
+                productFilteringResponseDTO.getIsCholesterol(),
+                productFilteringResponseDTO.getIsSaturatedFat(),
+                productFilteringResponseDTO.getIsLowFat()
         );
 
         return (products == null || products.isEmpty())

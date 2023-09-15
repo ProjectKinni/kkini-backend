@@ -19,37 +19,6 @@ public class SearchService {
     @Autowired
     private final ProductRepository productRepository;
 
-    // 검색 기능
-    public List<ProductCardListResponseDTO> searchProducts(String searchTerm) {
-        if (searchTerm == null || searchTerm.trim().isEmpty()) {
-            throw new InvalidSearchTermException("검색어가 유효하지 않습니다.");
-        }
-
-        searchTerm = searchTerm.replaceAll("\\s+", "");
-
-        List<Product> productsByName = productRepository.findByProductName(searchTerm);
-        List<Product> productsByCategory = productRepository.findByCategoryName(searchTerm);
-
-        List<ProductCardListResponseDTO> productList = new ArrayList<>();
-
-        for (Product product : productsByName) {
-            productList.add(ProductCardListResponseDTO.fromEntity(product));
-        }
-
-        if (!productList.isEmpty()) {
-            return productList;
-        }
-
-        for (Product product : productsByCategory) {
-            productList.add(ProductCardListResponseDTO.fromEntity(product));
-        }
-
-        if (!productList.isEmpty()) {
-            return productList;
-        }
-        throw new ProductNotFoundException("상품을 찾을 수 없습니다.");
-    }
-
     // 자동 완성 기능
     public List<String> autoCompleteNames(String searchTerm) {
         if (searchTerm == null || searchTerm.isEmpty()) {
