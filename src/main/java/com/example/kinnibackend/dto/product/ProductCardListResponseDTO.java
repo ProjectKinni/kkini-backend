@@ -11,43 +11,51 @@ import lombok.*;
 @RequiredArgsConstructor
 public class ProductCardListResponseDTO {
     private Long productId;
-    private Boolean isKkini;
+    private Boolean isGreen;
     private String categoryName;
-    private Integer vendorId;
-    private String vendorName;
     private String productName;
-    private String productImage;
+    private String detail;
     private Float averageRating;
+    private String makerName;
 
-    private Double totalAmount;
-    private Double calorie;
-    private Double sugar;
-    private Double transFat;
-    private Double carb; // 탄수화물
+    private Double servingSize;
+    private Double kcal;
+    private Double carbohydrate;
     private Double protein; // 단백질
-    private Double sodium; // 나트륨
-    private Double saturatedFat; // 포화지방
     private Double fat; // 지방
+    private Double sodium; // 나트륨
+    private Double cholesterol; // 콜레스테롤
+    private Double saturatedFat; // 포화지방
+    private Double transFat;
+    private Double sugar;
+    private Double score;
+    private String image;
+    private String nutImage;
+    private Double nutScore;
 
     public static ProductCardListResponseDTO fromEntity(Product product) {
         return ProductCardListResponseDTO.builder()
                 .productId(product.getProductId())
-                .isKkini(product.getIsKkini())
+                .isGreen(product.getIsGreen())
                 .categoryName(product.getCategoryName())
-                .vendorId(product.getVendorId())
-                .vendorName(product.getVendorName())
                 .productName(product.getProductName())
-                .productImage(product.getProductImage())
+                .detail(product.getDetail())
                 .averageRating(product.getAverageRating())
-                .totalAmount(product.getTotalAmount())
-                .calorie(product.getCalorie())
-                .sugar(product.getSugar())
-                .transFat(product.getTransFat())
-                .carb(product.getCarb())
+                .makerName(product.getMakerName())
+                .servingSize(product.getServingSize())
+                .kcal(product.getKcal())
+                .carbohydrate(product.getCarbohydrate())
                 .protein(product.getProtein())
-                .sodium(product.getSodium())
-                .saturatedFat(product.getSaturatedFat())
                 .fat(product.getFat())
+                .sodium(product.getSodium())
+                .cholesterol(product.getCholesterol())
+                .saturatedFat(product.getSaturatedFat())
+                .transFat(product.getTransFat())
+                .sugar(product.getSugar())
+                .score(product.getScore())
+                .image(product.getImage())
+                .nutImage(product.getNutImage())
+                .nutScore(product.getNutScore())
                 .build();
     }
 }

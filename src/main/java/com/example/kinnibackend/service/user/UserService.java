@@ -1,7 +1,10 @@
 package com.example.kinnibackend.service.user;
 
+import com.example.kinnibackend.dto.user.UserUpdateDTO;
 import com.example.kinnibackend.entity.Users;
+import com.example.kinnibackend.repository.token.RefreshTokenRepository;
 import com.example.kinnibackend.repository.user.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import com.example.kinnibackend.dto.user.GetUserInfoDTO;
 import org.springframework.stereotype.Service;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     public GetUserInfoDTO getUserInfoByUserId(Long userId) {
 
@@ -21,15 +25,34 @@ public class UserService {
         return userInfoDTO;
     }
 
+    public void userUpdate (Long userId, UserUpdateDTO userUpdateDTO){
+        Users user = userRepository.findByUserId(userId);
+
+        user.updateNickname(userUpdateDTO.getNickname());
+
+        userRepository.save(user);
+    }
+
     public Users findByUserId(Long userId){
         return userRepository.findByUserId(userId);
     }
+
     public Users findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    public Users save(Users user) {
-        return userRepository.save(user);
+
+    public void save(Users user) {
+        userRepository.save(user);
     }
 
+    @Transactional
+    public void deleteUserByUserId(Long userId){
+        refreshTokenRepository.deleteByUserId(userId);
+        userRepository.deleteByUserId(userId);
+    }
+
+    public boolean isNicknameAvailable(String nickname) {
+        return !userRepository.existsByNickname(nickname);
+    }
 }

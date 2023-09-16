@@ -2,7 +2,6 @@ package com.example.kinnibackend.service.search;
 
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
 import com.example.kinnibackend.entity.Product;
-import com.example.kinnibackend.exception.search.CategoryNotFoundException;
 import com.example.kinnibackend.exception.search.InvalidSearchTermException;
 import com.example.kinnibackend.exception.search.ProductNotFoundException;
 import com.example.kinnibackend.repository.product.ProductRepository;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,38 +51,38 @@ public class SearchService {
     }
 
     // 자동 완성 기능
-    public List<String> autoCompleteNames(String name) {
-        if (name == null || name.length() < 2) {
-            throw new InvalidSearchTermException("검색어가 너무 짧습니다.");
+    public List<String> autoCompleteNames(String searchTerm) {
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            throw new InvalidSearchTermException("검색어를 입력해주세요.");
         }
 
-        String modifiedName = name.replace(" ", "%"); // 공백을 %로 대체
+        String modifiedName = searchTerm.replace(" ", "%"); // 공백을 %로 대체
 
+        // Product names
         List<String> productNames = new ArrayList<>();
         for (Product product : productRepository.findByProductName(modifiedName)) {
             productNames.add(product.getProductName());
         }
 
-        if (productNames.isEmpty()) {
-            throw new ProductNotFoundException("상품명을 찾을 수 없습니다.");
-        }
-
+        // Category names
         List<String> categoryNames = new ArrayList<>();
         for (Product product : productRepository.findByCategoryName(modifiedName)) {
             categoryNames.add(product.getCategoryName());
         }
 
-        if (categoryNames.isEmpty()) {
-            throw new CategoryNotFoundException("카테고리를 찾을 수 없습니다.");
-        }
-
+        // Combine product and category names
         List<String> combinedNames = new ArrayList<>();
         combinedNames.addAll(productNames);
         combinedNames.addAll(categoryNames);
 
-        // 제품이름과 카테고리 이름에 동일항목이 있다면, combinedNames에 두번 포함되므로
-        // 중복 항복을 제거하여 사용자에게 동일한 자동완성항목을 두 번 보여주지 않기 위함
-        return combinedNames.stream().distinct().collect(Collectors.toList());
+        // Remove duplicates
+        List<String> distinctNames = new ArrayList<>();
+        for (String name : combinedNames) {
+            if (!distinctNames.contains(name)) {
+                distinctNames.add(name);
+            }
+        }
+        return distinctNames;
     }
 
     // 상품 리스트 -> 상품 상세
