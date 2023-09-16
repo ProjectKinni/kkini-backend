@@ -35,6 +35,7 @@ dependencies {
     implementation 'javax.xml.bind:jaxb-api:2.3.1' // xml to json
     testAnnotationProcessor 'org.projectlombok:lombok' // 테스트코드에서 lombok사용
     testImplementation 'org.springframework.security:spring-security-test' // 시큐리티 테스트
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5' // Jasypt 설정파일 암호화
 }
 
 tasks.named('test') {
