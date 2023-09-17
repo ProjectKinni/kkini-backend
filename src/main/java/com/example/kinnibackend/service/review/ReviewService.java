@@ -9,8 +9,10 @@ import com.example.kinnibackend.repository.review.ReviewRepository;
 import com.example.kinnibackend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,8 +42,10 @@ public class ReviewService {
                 .collect(Collectors.toList());
     }
 
-    public List<GetReviewResponseDTO> getReviewsByProductId(Long productId) {
-        List<Review> reviews = reviewRepository.findByProduct_ProductId(productId);
+    public List<GetReviewResponseDTO> getReviewsByProductId(Long productId, int page) {
+        int pageSize = 10;
+        Pageable pageable = (Pageable) PageRequest.of(page, pageSize);
+        List<Review> reviews = reviewRepository.findByProduct_ProductId(productId, pageable);
 
         return reviews.stream()
                 .map(review -> GetReviewResponseDTO.fromEntity(review))
