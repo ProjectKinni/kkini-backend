@@ -3,7 +3,6 @@ package com.example.kinnibackend.service.productFiltering;
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
 import com.example.kinnibackend.dto.product.ProductFilteringResponseDTO;
 import com.example.kinnibackend.entity.Product;
-import com.example.kinnibackend.exception.search.ProductNotFoundException;
 import com.example.kinnibackend.repository.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,23 +19,11 @@ public class ProductFilteringService {
     @Autowired
     private final ProductRepository productRepository;
 
+    // 검색과 검색 결과 필터링 기능
     public List<ProductCardListResponseDTO> filterProducts(ProductFilteringResponseDTO productFilteringResponseDTO) {
-        List<Product> products = productRepository.filterProducts(
-                productFilteringResponseDTO.getIsGreen(),
-                productFilteringResponseDTO.getSearchTerm(),
-                productFilteringResponseDTO.getCategoryName(),
-                productFilteringResponseDTO.getIsLowCalorie(),
-                productFilteringResponseDTO.getIsSugarFree(),
-                productFilteringResponseDTO.getIsLowSugar(),
-                productFilteringResponseDTO.getIsLowCarb(),
-                productFilteringResponseDTO.getIsKeto(),
-                productFilteringResponseDTO.getIsTransFat(),
-                productFilteringResponseDTO.getIsHighProtein(),
-                productFilteringResponseDTO.getIsLowSodium(),
-                productFilteringResponseDTO.getIsCholesterol(),
-                productFilteringResponseDTO.getIsSaturatedFat(),
-                productFilteringResponseDTO.getIsLowFat()
-        );
+        Object[] filterConditions = productFilteringResponseDTO.toFilterConditionsArray();
+
+        List<Product> products = productRepository.filterProducts(filterConditions);
 
         return (products == null || products.isEmpty())
                 ? null
@@ -45,4 +32,5 @@ public class ProductFilteringService {
                 .map(ProductCardListResponseDTO::fromEntity)
                 .collect(Collectors.toList());
     }
+
 }

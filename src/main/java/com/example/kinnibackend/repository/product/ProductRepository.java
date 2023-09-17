@@ -56,4 +56,23 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("isSaturatedFat") Boolean isSaturatedFat,
             @Param("isLowFat") Boolean isLowFat
     );
+
+    default List<Product> filterProducts(Object[] filterConditions){
+        return filterProducts(
+                (Boolean) filterConditions[0],
+                (String) filterConditions[1],
+                (String) filterConditions[2],
+                (Boolean) filterConditions[3],
+                (Boolean) filterConditions[4],
+                (Boolean) filterConditions[5],
+                (Boolean) filterConditions[6],
+                (Boolean) filterConditions[7],
+                (Boolean) filterConditions[8],
+                (Boolean) filterConditions[9],
+                (Boolean) filterConditions[10],
+                (Boolean) filterConditions[11],
+                (Boolean) filterConditions[12],
+                (Boolean) filterConditions[13]
+        );
+    }
 }

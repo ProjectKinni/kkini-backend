@@ -27,24 +27,24 @@ public class SearchService {
 
         String modifiedName = searchTerm.replace(" ", "%"); // 공백을 %로 대체
 
-        // Product names
+        // 상품명
         List<String> productNames = new ArrayList<>();
         for (Product product : productRepository.findByProductName(modifiedName)) {
             productNames.add(product.getProductName());
         }
 
-        // Category names
+        // 카테고리명
         List<String> categoryNames = new ArrayList<>();
         for (Product product : productRepository.findByCategoryName(modifiedName)) {
             categoryNames.add(product.getCategoryName());
         }
 
-        // Combine product and category names
+        // 상품명과 카테고리명을 결합
         List<String> combinedNames = new ArrayList<>();
         combinedNames.addAll(productNames);
         combinedNames.addAll(categoryNames);
 
-        // Remove duplicates
+        // 중복 제거
         List<String> distinctNames = new ArrayList<>();
         for (String name : combinedNames) {
             if (!distinctNames.contains(name)) {

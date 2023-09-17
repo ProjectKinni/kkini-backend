@@ -23,4 +23,23 @@ public class ProductFilteringResponseDTO {
     private Boolean isCholesterol;
     private Boolean isSaturatedFat;
     private Boolean isLowFat;
+
+    public Object[] toFilterConditionsArray(){
+        return new Object[]{
+                this.getIsGreen(),
+                this.getSearchTerm(),
+                this.getCategoryName(),
+                this.getIsLowCalorie(),
+                this.getIsSugarFree(),
+                this.getIsLowSugar(),
+                this.getIsLowCarb(),
+                this.getIsKeto(),
+                this.getIsTransFat(),
+                this.getIsHighProtein(),
+                this.getIsLowSodium(),
+                this.getIsCholesterol(),
+                this.getIsSaturatedFat(),
+                this.getIsLowFat()
+        };
+    }
 }
