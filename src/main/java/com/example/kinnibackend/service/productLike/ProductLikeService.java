@@ -44,5 +44,13 @@ public class ProductLikeService {
         LikeId likeId = new LikeId(productId, userId);
         return productLikeRepository.existsById(likeId);
     }
-}
 
+    public void removeProductLike(Long userId, Long productId) {
+        List<ProductLike> productLikes = productLikeRepository.findByUsersUserIdAndProductProductId(userId, productId);
+        if (!productLikes.isEmpty()) {
+            productLikes.forEach(product -> {
+                productLikeRepository.delete(product);
+            });
+        }
+    }
+}
