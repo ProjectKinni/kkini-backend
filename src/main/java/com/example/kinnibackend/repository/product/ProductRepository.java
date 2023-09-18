@@ -1,6 +1,7 @@
 package com.example.kinnibackend.repository.product;
 
 import com.example.kinnibackend.entity.Product;
+import com.example.kinnibackend.entity.ProductViewCount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -58,6 +59,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("isLowFat") Boolean isLowFat
     );
 
+    // 평균 평점 계산
     @Query("SELECT AVG(r.rating) FROM Review r WHERE r.product.productId = :productId")
     Optional<Double> findAverageRatingByProductId(@Param("productId") Long productId);
 

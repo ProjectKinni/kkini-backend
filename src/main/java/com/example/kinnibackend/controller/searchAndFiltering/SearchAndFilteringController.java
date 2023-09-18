@@ -2,7 +2,7 @@ package com.example.kinnibackend.controller.searchAndFiltering;
 
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
 import com.example.kinnibackend.dto.product.ProductFilteringResponseDTO;
-import com.example.kinnibackend.service.productFiltering.ProductFilteringService;
+import com.example.kinnibackend.service.product.ProductFilteringService;
 import com.example.kinnibackend.service.search.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +39,10 @@ public class SearchAndFilteringController {
 
     // 상품리스트 -> 상품 상세 정보
     @GetMapping("/{productId}")
-    public ResponseEntity<ProductCardListResponseDTO> getProductById(@PathVariable Long productId) {
-        ProductCardListResponseDTO product = searchService.getProductById(productId);
+    public ResponseEntity<ProductCardListResponseDTO>
+    getProductById(@PathVariable Long productId, @RequestParam(required = false) Long userId) {
+        ProductCardListResponseDTO product = searchService.getProductById(productId, userId);
+
         return (product != null) ? ResponseEntity.ok(product) : ResponseEntity.notFound().build();
     }
 }
