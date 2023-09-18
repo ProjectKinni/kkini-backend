@@ -45,7 +45,7 @@ public class ReviewService {
     public List<GetReviewResponseDTO> getReviewsByProductId(Long productId, int page) {
         int pageSize = 10;
         Pageable pageable = (Pageable) PageRequest.of(page, pageSize);
-        List<Review> reviews = reviewRepository.findByProduct_ProductId(productId, pageable);
+        List<Review> reviews = reviewRepository.findByProduct_ProductIdOrderByCreatedAtDesc(productId, pageable);
 
         return reviews.stream()
                 .map(review -> GetReviewResponseDTO.fromEntity(review))
@@ -53,7 +53,7 @@ public class ReviewService {
     }
 
     public List<GetReviewResponseDTO> getReviewsByUserId(Long userId) {
-        List<Review> reviews = reviewRepository.findByUsers_UserId(userId);
+        List<Review> reviews = reviewRepository.findByUsers_UserIdOrderByCreatedAtDesc(userId);
 
         return reviews.stream()
                 .map(review -> GetReviewResponseDTO.fromEntity(review))

@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -56,6 +57,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("isSaturatedFat") Boolean isSaturatedFat,
             @Param("isLowFat") Boolean isLowFat
     );
+
+    @Query("SELECT AVG(r.rating) FROM Review r WHERE r.product.productId = :productId")
+    Optional<Double> findAverageRatingByProductId(@Param("productId") Long productId);
 
     default List<Product> filterProducts(Object[] filterConditions){
         return filterProducts(
