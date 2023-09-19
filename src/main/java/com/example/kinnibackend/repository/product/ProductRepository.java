@@ -1,5 +1,6 @@
 package com.example.kinnibackend.repository.product;
 
+import com.example.kinnibackend.dto.product.ProductPreviewResponseDTO;
 import com.example.kinnibackend.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -79,4 +80,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 (Boolean) filterConditions[13]
         );
     }
+
+    //임시로 쓸 로직
+    @Query("SELECT p FROM Product p ORDER BY p.productId DESC")
+    List<Product> findAllByDesc();
+
+
+
 }
