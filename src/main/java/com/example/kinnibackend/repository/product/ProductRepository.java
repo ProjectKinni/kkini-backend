@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -27,16 +28,16 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             + "(:categoryName IS NULL OR p.categoryName = :categoryName) AND "
             + "(:searchTerm IS NULL OR p.productName LIKE %:searchTerm% OR p.categoryName LIKE %:searchTerm%) AND "
             + "(:isLowCalorie IS NULL OR (p.categoryName = '음료' AND p.kcal < 20) OR " +
-                "(p.categoryName != '음료' AND p.kcal < 40)) AND "
+            "(p.categoryName != '음료' AND p.kcal < 40)) AND "
             + "(:isSugarFree IS NULL OR p.sugar <= 1) AND "
             + "(:isLowSugar IS NULL OR p.sugar <= p.servingSize * 0.05) AND "
             + "(:isLowCarb IS NULL OR (p.carbohydrate >= p.servingSize * 0.11 AND "
-                +"p.carbohydrate <= p.servingSize * 0.20)) AND "
+            +"p.carbohydrate <= p.servingSize * 0.20)) AND "
             + "(:isKeto IS NULL OR p.carbohydrate <= p.servingSize * 0.10) AND "
             + "(:isTransFat IS NULL OR p.transFat <= 1) AND "
             + "(:isSaturatedFat IS NULL OR p.saturatedFat <= p.servingSize * 0.02) AND "
             + "(:isLowFat IS NULL OR ((p.categoryName = '음료' AND p.fat <= 1.5) OR "
-                + "(p.categoryName != '음료' AND p.fat <= 3.0))) AND "
+            + "(p.categoryName != '음료' AND p.fat <= 3.0))) AND "
             + "(:isHighProtein IS NULL OR p.protein >= p.servingSize * 0.20) AND "
             + "(:isLowSodium IS NULL OR p.sodium <= p.servingSize * 2) AND "
             + "(:isCholesterol IS NULL OR p.cholesterol < 300)")
@@ -56,4 +57,26 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("isSaturatedFat") Boolean isSaturatedFat,
             @Param("isLowFat") Boolean isLowFat
     );
+
+    @Query("SELECT AVG(r.rating) FROM Review r WHERE r.product.productId = :productId")
+    Optional<Double> findAverageRatingByProductId(@Param("productId") Long productId);
+
+    default List<Product> filterProducts(Object[] filterConditions){
+        return filterProducts(
+                (Boolean) filterConditions[0],
+                (String) filterConditions[1],
+                (String) filterConditions[2],
+                (Boolean) filterConditions[3],
+                (Boolean) filterConditions[4],
+                (Boolean) filterConditions[5],
+                (Boolean) filterConditions[6],
+                (Boolean) filterConditions[7],
+                (Boolean) filterConditions[8],
+                (Boolean) filterConditions[9],
+                (Boolean) filterConditions[10],
+                (Boolean) filterConditions[11],
+                (Boolean) filterConditions[12],
+                (Boolean) filterConditions[13]
+        );
+    }
 }

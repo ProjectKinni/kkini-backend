@@ -1,6 +1,7 @@
 package com.example.kinnibackend.searchAndFiltering;
 
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
+import com.example.kinnibackend.dto.product.ProductFilteringResponseDTO;
 import com.example.kinnibackend.entity.Product;
 import com.example.kinnibackend.repository.product.ProductRepository;
 import com.example.kinnibackend.service.productFiltering.ProductFilteringService;
@@ -80,49 +81,42 @@ public class ProductFilteringServiceTest {
     @Test
     @Transactional
     public void filterProducts_isGreenFilter(){
-
         // Given
-        Boolean isGreen = true;
+        ProductFilteringResponseDTO filterDTO = new ProductFilteringResponseDTO();
+        filterDTO.setIsGreen(true);
 
         // When
-        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(
-                isGreen, null, null, null, null, null,
-                null, null, null, null, null, null,
-                null, null);
+        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(filterDTO);
 
         // Then
         assertThat(result).isNotEmpty();
         assertThat(result.get(0).getIsGreen()).isEqualTo(testProduct.getIsGreen());
     }
+
     @Test
     @Transactional
     public void filterProducts_CategoryFilter() {
         // Given
-        String categoryName = "Test Category";
+        ProductFilteringResponseDTO filterDTO = new ProductFilteringResponseDTO();
+        filterDTO.setCategoryName("Test Category");
 
         // When
-        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(
-                null, null, categoryName, null, null, null,
-                null, null, null, null, null, null,
-                null, null);
+        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(filterDTO);
 
         // Then
         assertThat(result).isNotEmpty();
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getCategoryName()).isEqualTo(categoryName);
+        assertThat(result.get(0).getCategoryName()).isEqualTo(filterDTO.getCategoryName());
     }
-
     @Test
     @Transactional
     public void filterProducts_LowCalorieFilter() {
         // Given
-        Boolean isLowCalorie = true;
+        ProductFilteringResponseDTO filterDTO = new ProductFilteringResponseDTO();
+        filterDTO.setIsLowCalorie(true);
 
         // When
-        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(
-                null, null, null, isLowCalorie, null, null,
-                null, null, null, null, null, null,
-                null, null);
+        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(filterDTO);
 
         // Then
         assertThat(result).isNotEmpty();
@@ -134,13 +128,11 @@ public class ProductFilteringServiceTest {
     @Transactional
     public void filterProducts_SugarFreeFilter() {
         // Given
-        Boolean isSugarFree = true;
+        ProductFilteringResponseDTO filterDTO = new ProductFilteringResponseDTO();
+        filterDTO.setIsSugarFree(true);
 
         // When
-        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(
-                null, null, null, null, isSugarFree, null,
-                null, null, null, null, null, null,
-                null, null);
+        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(filterDTO);
 
         // Then
         assertThat(result).isNotEmpty();
@@ -151,13 +143,11 @@ public class ProductFilteringServiceTest {
     @Transactional
     public void filterProducts_LowCarbFilter() {
         // Given
-        Boolean isLowCarb = true;
+        ProductFilteringResponseDTO filterDTO = new ProductFilteringResponseDTO();
+        filterDTO.setIsLowCarb(true);
 
         // When
-        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(
-                null, null, null, null, null,
-                null, isLowCarb, null, null, null,
-                null, null, null, null);
+        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(filterDTO);
 
         // Then
         assertThat(result).isNotEmpty();
@@ -172,13 +162,11 @@ public class ProductFilteringServiceTest {
     @Transactional
     public void filterProducts_HighProteinFilter() {
         // Given
-        Boolean isHighProtein = true;
+        ProductFilteringResponseDTO filterDTO = new ProductFilteringResponseDTO();
+        filterDTO.setIsHighProtein(true);
 
         // When
-        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(
-                null, null, null, null, null,
-                null, null, null, null, isHighProtein, null,
-                null, null, null);
+        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(filterDTO);
 
         // Then
         assertThat(result).isNotEmpty();
@@ -189,13 +177,11 @@ public class ProductFilteringServiceTest {
     @Transactional
     public void filterProducts_LowSodiumFilter() {
         // Given
-        Boolean isLowSodium = true;
+        ProductFilteringResponseDTO filterDTO = new ProductFilteringResponseDTO();
+        filterDTO.setIsLowSodium(true);
 
         // When
-        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(
-                null, null, null, null, null, null,
-                null, null, null, null, isLowSodium, null,
-                null, null);
+        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(filterDTO);
 
         // Then
         assertThat(result).isNotEmpty();
@@ -206,13 +192,11 @@ public class ProductFilteringServiceTest {
     @Transactional
     public void filterProducts_LowCholesterolFilter() {
         // Given
-        Boolean isCholesterol = true;
+        ProductFilteringResponseDTO filterDTO = new ProductFilteringResponseDTO();
+        filterDTO.setIsCholesterol(true);
 
         // When
-        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(
-                null, null, null, null, null, null,
-                null, null, null, null, null, isCholesterol,
-                null, null);
+        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(filterDTO);
 
         // Then
         assertThat(result).isNotEmpty();
@@ -223,15 +207,13 @@ public class ProductFilteringServiceTest {
     @Transactional
     public void filterProducts_filters(){
         // Given
-        Boolean isLowCalorie = true;
-        Boolean isSugarFree = true;
-        Boolean isLowSugar = true;
+        ProductFilteringResponseDTO filterDTO = new ProductFilteringResponseDTO();
+        filterDTO.setIsLowCalorie(true);
+        filterDTO.setIsSugarFree(true);
+        filterDTO.setIsLowSugar(true);
 
         // When
-        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(
-                null, null, null, isLowCalorie, isSugarFree, isLowSugar,
-                null, null, null, null, null, null,
-                null, null);
+        List<ProductCardListResponseDTO> result = productFilteringService.filterProducts(filterDTO);
 
         // Then
         assertThat(result).isNotEmpty();
@@ -239,4 +221,5 @@ public class ProductFilteringServiceTest {
         assertThat(result).allMatch(product -> product.getSugar() <= 1);
         assertThat(result).allMatch(product -> product.getSugar() >= 0 && product.getSugar() < 5);
     }
+
 }

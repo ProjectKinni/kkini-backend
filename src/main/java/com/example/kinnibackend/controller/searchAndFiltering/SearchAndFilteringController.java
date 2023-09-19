@@ -1,6 +1,7 @@
 package com.example.kinnibackend.controller.searchAndFiltering;
 
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
+import com.example.kinnibackend.dto.product.ProductFilteringResponseDTO;
 import com.example.kinnibackend.service.productFiltering.ProductFilteringService;
 import com.example.kinnibackend.service.search.SearchService;
 import lombok.RequiredArgsConstructor;
@@ -21,31 +22,12 @@ public class SearchAndFilteringController {
     @Autowired
     private final ProductFilteringService productFilteringService;
 
-    // 검색결과의 필터링 기능
+    // 검색과 검색 결과의 필터링 기능
     @GetMapping("/search")
-    public ResponseEntity<List<ProductCardListResponseDTO>> searchAndFilterProducts(
-            @RequestParam String searchTerm,
-            @RequestParam(required = false) Boolean isGreen,
-            @RequestParam(required = false) String categoryName,
-            @RequestParam(required = false) Boolean isLowCalorie,
-            @RequestParam(required = false) Boolean isSugarFree,
-            @RequestParam(required = false) Boolean isLowSugar,
-            @RequestParam(required = false) Boolean isLowCarb,
-            @RequestParam(required = false) Boolean isKeto,
-            @RequestParam(required = false) Boolean isTransFat,
-            @RequestParam(required = false) Boolean isHighProtein,
-            @RequestParam(required = false) Boolean isLowSodium,
-            @RequestParam(required = false) Boolean isCholesterol,
-            @RequestParam(required = false) Boolean isSaturatedFat,
-            @RequestParam(required = false) Boolean isLowFat
-    ) {
-
+    public ResponseEntity<List<ProductCardListResponseDTO>>
+        searchAndFilterProducts(@ModelAttribute ProductFilteringResponseDTO productFilteringResponseDTO) {
         List<ProductCardListResponseDTO> searchResults =
-                productFilteringService.filterProducts(isGreen, searchTerm, categoryName,
-                        isLowCalorie, isSugarFree, isLowSugar, isLowCarb, isKeto, isTransFat,
-                        isHighProtein, isLowSodium, isCholesterol, isSaturatedFat, isLowFat
-                );
-
+                productFilteringService.filterProducts(productFilteringResponseDTO);
         return ResponseEntity.ok(searchResults);
     }
 
