@@ -1,6 +1,7 @@
 package com.example.kinnibackend.controller.review;
 
 import com.example.kinnibackend.dto.review.*;
+import com.example.kinnibackend.service.product.ProductService;
 import com.example.kinnibackend.service.review.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +15,14 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final ProductService productService;
 
     @PostMapping("/{userId}")
-    ResponseEntity<CreateReviewResponseDTO> createReview(@RequestBody CreateReviewRequestDTO createReviewRequestDTO, @PathVariable Long userId) {
-        return ResponseEntity.ok(reviewService.createReview(createReviewRequestDTO, userId));
+    ResponseEntity<CreateReviewResponseDTO> createReview
+            (@RequestBody CreateReviewRequestDTO createReviewRequestDTO, @PathVariable Long userId) {
+        CreateReviewResponseDTO responseDTO = reviewService.createReview(createReviewRequestDTO, userId);
+        productService.updateProductAverageRating(createReviewRequestDTO.getProductId()); // 평균평점 업데이트
+        return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping
@@ -26,7 +31,8 @@ public class ReviewController {
     }
 
     @GetMapping("/{productId}")
-    ResponseEntity<List<GetReviewResponseDTO>> getReviewsByProductId(@PathVariable Long productId, @RequestParam int page) {
+    ResponseEntity<List<GetReviewResponseDTO>> getReviewsByProductId
+            (@PathVariable Long productId, @RequestParam int page) {
         return ResponseEntity.ok(reviewService.getReviewsByProductId(productId, page));
     }
 
@@ -41,9 +47,11 @@ public class ReviewController {
     }
 
     @PutMapping("/{reviewId}")
-    ResponseEntity<UpdateReviewResponseDTO> updateReviewByReviewId(@RequestBody CreateReviewRequestDTO updateReviewRequestDTO, @PathVariable Long reviewId) {
-        return ResponseEntity.ok(reviewService.updateReviewByReviewId(reviewId, updateReviewRequestDTO));
+    ResponseEntity<UpdateReviewResponseDTO> updateReviewByReviewId
+            (@RequestBody CreateReviewRequestDTO updateReviewRequestDTO, @PathVariable Long reviewId) {
+        UpdateReviewResponseDTO responseDTO = reviewService.updateReviewByReviewId(reviewId, updateReviewRequestDTO);
+        productService.updateProductAverageRating(updateReviewRequestDTO.getProductId()); // 평균평점 업데이트
+        return ResponseEntity.ok(responseDTO);
     }
-
 
 }

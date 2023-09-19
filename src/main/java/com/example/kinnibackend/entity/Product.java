@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -86,4 +87,8 @@ public class Product {
 
     @Column(name = "nut_score")
     private Double nutScore;
+
+    public void updateAverageRating(Float averageRating){
+        this.averageRating = averageRating;
+    }
 }
