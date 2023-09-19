@@ -1,6 +1,6 @@
 package com.example.kinnibackend.controller.productLike;
 
-import com.example.kinnibackend.entity.Like.ProductLike;
+import com.example.kinnibackend.entity.like.ProductLike;
 import com.example.kinnibackend.service.productLike.ProductLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

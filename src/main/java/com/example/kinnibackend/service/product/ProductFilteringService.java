@@ -1,4 +1,4 @@
-package com.example.kinnibackend.service.productFiltering;
+package com.example.kinnibackend.service.product;
 
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
 import com.example.kinnibackend.dto.product.ProductFilteringResponseDTO;

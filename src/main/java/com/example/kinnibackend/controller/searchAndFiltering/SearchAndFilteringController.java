@@ -2,14 +2,16 @@ package com.example.kinnibackend.controller.searchAndFiltering;
 
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
 import com.example.kinnibackend.dto.product.ProductFilteringResponseDTO;
-import com.example.kinnibackend.service.productFiltering.ProductFilteringService;
+import com.example.kinnibackend.service.product.ProductFilteringService;
 import com.example.kinnibackend.service.search.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/products")
@@ -39,8 +41,20 @@ public class SearchAndFilteringController {
 
     // 상품리스트 -> 상품 상세 정보
     @GetMapping("/{productId}")
-    public ResponseEntity<ProductCardListResponseDTO> getProductById(@PathVariable Long productId) {
+    public ResponseEntity<ProductCardListResponseDTO>
+    getProductById(@PathVariable Long productId) {
         ProductCardListResponseDTO product = searchService.getProductById(productId);
+
         return (product != null) ? ResponseEntity.ok(product) : ResponseEntity.notFound().build();
+    }
+
+    // 조회수 증가
+    @PostMapping("/{productId}/viewCount")
+    public ResponseEntity<Map<String, String>>
+        incrementViewCount(@PathVariable Long productId, @RequestParam Long userId) {
+            searchService.incrementViewCount(productId, userId);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "View count incremented");
+            return ResponseEntity.ok(response);
     }
 }

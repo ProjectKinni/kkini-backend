@@ -59,6 +59,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("isLowFat") Boolean isLowFat
     );
 
+    // 평균 평점 계산
     @Query("SELECT AVG(r.rating) FROM Review r WHERE r.product.productId = :productId")
     Optional<Double> findAverageRatingByProductId(@Param("productId") Long productId);
 

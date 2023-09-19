@@ -1,4 +1,4 @@
-package com.example.kinnibackend.entity.Like;
+package com.example.kinnibackend.entity.like;
 
 
 import lombok.AllArgsConstructor;
