@@ -33,6 +33,8 @@ public class ProductCardListResponseDTO {
     private String nutImage;
     private Double nutScore;
 
+    private Long viewCount;
+
     public static ProductCardListResponseDTO fromEntity(Product product) {
         return ProductCardListResponseDTO.builder()
                 .productId(product.getProductId())

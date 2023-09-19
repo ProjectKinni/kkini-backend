@@ -4,7 +4,7 @@ import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
 import com.example.kinnibackend.dto.product.ProductFilteringResponseDTO;
 import com.example.kinnibackend.entity.Product;
 import com.example.kinnibackend.repository.product.ProductRepository;
-import com.example.kinnibackend.service.productFiltering.ProductFilteringService;
+import com.example.kinnibackend.service.product.ProductFilteringService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

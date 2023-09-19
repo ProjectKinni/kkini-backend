@@ -1,7 +1,7 @@
 package com.example.kinnibackend.service.productLike;
 
-import com.example.kinnibackend.entity.Like.LikeId;
-import com.example.kinnibackend.entity.Like.ProductLike;
+import com.example.kinnibackend.entity.like.LikeId;
+import com.example.kinnibackend.entity.like.ProductLike;
 import com.example.kinnibackend.entity.Product;
 import com.example.kinnibackend.entity.Users;
 import com.example.kinnibackend.repository.product.ProductRepository;
