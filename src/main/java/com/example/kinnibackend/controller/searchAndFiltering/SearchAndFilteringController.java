@@ -40,9 +40,16 @@ public class SearchAndFilteringController {
     // 상품리스트 -> 상품 상세 정보
     @GetMapping("/{productId}")
     public ResponseEntity<ProductCardListResponseDTO>
-    getProductById(@PathVariable Long productId, @RequestParam(required = false) Long userId) {
-        ProductCardListResponseDTO product = searchService.getProductById(productId, userId);
+    getProductById(@PathVariable Long productId) {
+        ProductCardListResponseDTO product = searchService.getProductById(productId);
 
         return (product != null) ? ResponseEntity.ok(product) : ResponseEntity.notFound().build();
+    }
+
+    // 조회수 증가
+    @PostMapping("/{productId}/viewCount")
+    public ResponseEntity<Void> incrementViewCount(@PathVariable Long productId, @RequestParam Long userId) {
+        searchService.incrementViewCount(productId, userId);
+        return ResponseEntity.ok().build();
     }
 }

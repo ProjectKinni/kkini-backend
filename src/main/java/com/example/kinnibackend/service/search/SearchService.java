@@ -61,11 +61,23 @@ public class SearchService {
     }
 
     // 상품 리스트 -> 상품 상세
-    public ProductCardListResponseDTO getProductById(Long productId, Long userId) {
+    public ProductCardListResponseDTO getProductById(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다."));
 
-        // 조회수 증가 로직
+        // 조회수 계산 로직
+        Long totalViewCount = productViewCountRepository.findTotalViewCountByProductId(productId);
+
+        ProductCardListResponseDTO responseDTO = ProductCardListResponseDTO.fromEntity(product);
+        responseDTO.setViewCount(totalViewCount);
+
+        return responseDTO;
+    }
+
+    public void incrementViewCount(Long productId, Long userId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다."));
+
         if (userId != null) {
             Users user = userRepository.findById(userId).orElse(null);
             if (user != null) {
@@ -81,13 +93,6 @@ public class SearchService {
                 productViewCountRepository.save(productViewCount);
             }
         }
-
-        // 조회수 계산 로직
-        Long totalViewCount = productViewCountRepository.findTotalViewCountByProductId(productId);
-
-        ProductCardListResponseDTO responseDTO = ProductCardListResponseDTO.fromEntity(product);
-        responseDTO.setViewCount(totalViewCount);
-
-        return responseDTO;
     }
+
 }
