@@ -2,7 +2,7 @@ package com.example.kinnibackend.service.search;
 
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
 import com.example.kinnibackend.entity.Product;
-import com.example.kinnibackend.entity.ProductViewCount;
+import com.example.kinnibackend.entity.productViewCount.ProductViewCount;
 import com.example.kinnibackend.entity.Users;
 import com.example.kinnibackend.exception.search.InvalidSearchTermException;
 import com.example.kinnibackend.exception.search.ProductNotFoundException;

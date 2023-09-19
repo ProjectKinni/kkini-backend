@@ -1,9 +1,9 @@
-package com.example.kinnibackend.entity;
+package com.example.kinnibackend.entity.productViewCount;
 
+import com.example.kinnibackend.entity.Product;
+import com.example.kinnibackend.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.io.Serializable;
 
 @Entity
 @NoArgsConstructor
@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Builder
 @Getter
 @ToString
-@IdClass(ProductViewCount.ProductViewCountId.class)
+@IdClass(ProductViewCountId.class)
 public class ProductViewCount {
 
     @Id
@@ -26,14 +26,6 @@ public class ProductViewCount {
 
     @Column(name = "view_count", nullable = false, columnDefinition = "Long default 0")
     private Long viewCount;
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ProductViewCountId implements Serializable {
-        private Long product;
-        private Long users;
-    }
     public void incrementViewCount(){
         this.viewCount += 1;
     }
