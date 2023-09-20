@@ -26,8 +26,8 @@ public class ReviewController {
     }
 
     @GetMapping
-    ResponseEntity<List<GetReviewResponseDTO>> getReviews() {
-        return ResponseEntity.ok(reviewService.getReviews());
+    ResponseEntity<List<GetReviewResponseDTO>> getReviews(@RequestParam int page) {
+        return ResponseEntity.ok(reviewService.getReviews(page));
     }
 
     @GetMapping("/{productId}")
