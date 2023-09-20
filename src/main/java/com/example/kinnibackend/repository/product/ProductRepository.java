@@ -2,7 +2,9 @@ package com.example.kinnibackend.repository.product;
 
 import com.example.kinnibackend.dto.product.ProductPreviewResponseDTO;
 import com.example.kinnibackend.entity.Product;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -86,9 +88,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p ORDER BY p.productId DESC")
     List<Product> findAllByDesc();
 
-    //끼니랭킹: score 에 따른
+    //끼니랭킹
     @Query("SELECT p FROM Product p ORDER BY p.score DESC, p.updatedAt DESC, p.productId DESC")
-    List<Product> findAllByScore();
+    List<Product> findAllByScoreAndUpdatedAt();
 
 
 

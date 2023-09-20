@@ -3,7 +3,7 @@ package com.example.kinnibackend.dto.product;
 import com.example.kinnibackend.entity.Product;
 import lombok.*;
 
-@Getter
+@Getter @Setter
 @AllArgsConstructor @Builder
 @NoArgsConstructor
 public class ProductPreviewResponseDTO {
@@ -13,6 +13,7 @@ public class ProductPreviewResponseDTO {
     private Float averageRating;
     private Boolean isGreen;
     private String categoryName;
+    private Double score;
 
     public ProductPreviewResponseDTO(Product entity){
         this.productId = entity.getProductId();
@@ -21,5 +22,18 @@ public class ProductPreviewResponseDTO {
         this.averageRating = entity.getAverageRating();
         this.isGreen = entity.getIsGreen();
         this.categoryName = entity.getCategoryName();
+        this.score = entity.getScore();
+    }
+
+    public Product toEntity(){
+        return Product.builder()
+                .productId(productId)
+                .productName(productName)
+                .image(image)
+                .averageRating(averageRating)
+                .isGreen(isGreen)
+                .categoryName(categoryName)
+                .score(score)
+                .build();
     }
 }

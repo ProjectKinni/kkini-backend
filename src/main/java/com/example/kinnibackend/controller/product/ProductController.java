@@ -19,9 +19,18 @@ public class ProductController {
         this.productService = productService;
     }
 
+    //전체 상품 얻어오기
     @GetMapping
     public ResponseEntity<List<ProductPreviewResponseDTO>> fetchProducts(){
         return ResponseEntity.ok(productService.findAll());
     }
+
+    //Kkini Ranking 로직에 따라 전체 상품 얻어오기.
+    @GetMapping("/ranking")
+    public ResponseEntity<List<ProductPreviewResponseDTO>> fetchKkiniRankingProducts(){
+        return ResponseEntity.ok(productService.findAllKkiniRanking());
+    }
+
+
 
 }
