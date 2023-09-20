@@ -10,9 +10,10 @@ import com.example.kinnibackend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,8 +35,10 @@ public class ReviewService {
         return CreateReviewResponseDTO.fromEntity(reviewRepository.save(review));
     }
 
-    public List<GetReviewResponseDTO> getReviews() {
-        List<Review> reviews = reviewRepository.findAll();
+    public List<GetReviewResponseDTO> getReviews(int page) {
+        int pageSize = 50;
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
+        List<Review> reviews = reviewRepository.findAllByOrderByCreatedAtDesc(pageable);
 
         return reviews.stream()
                 .map(review -> GetReviewResponseDTO.fromEntity(review))

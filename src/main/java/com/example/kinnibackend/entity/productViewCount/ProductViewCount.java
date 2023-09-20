@@ -24,8 +24,9 @@ public class ProductViewCount {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private Users users;
 
-    @Column(name = "view_count", nullable = false, columnDefinition = "Long default 0")
-    private Long viewCount;
+    @Column(name = "view_count", nullable = false)
+    private Long viewCount = 0L; // 기본값을 0으로 초기화
+
     public void incrementViewCount(){
         this.viewCount += 1;
     }
