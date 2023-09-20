@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByProduct_ProductIdOrderByCreatedAtDesc(Long productId, Pageable pageable);
-    List<Review> findByUsers_UserIdOrderByCreatedAtDesc(Long userId);
+    List<Review> findByUsers_UserIdOrderByCreatedAtDesc(Long userId,  Pageable pageable);
 
 }

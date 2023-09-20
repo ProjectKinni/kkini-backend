@@ -52,8 +52,10 @@ public class ReviewService {
                 .collect(Collectors.toList());
     }
 
-    public List<GetReviewResponseDTO> getReviewsByUserId(Long userId) {
-        List<Review> reviews = reviewRepository.findByUsers_UserIdOrderByCreatedAtDesc(userId);
+    public List<GetReviewResponseDTO> getReviewsByUserId(Long userId,  int page) {
+        int pageSize = 10;
+        Pageable pageable = (Pageable) PageRequest.of(page, pageSize);
+        List<Review> reviews = reviewRepository.findByUsers_UserIdOrderByCreatedAtDesc(userId, pageable);
 
         return reviews.stream()
                 .map(review -> GetReviewResponseDTO.fromEntity(review))

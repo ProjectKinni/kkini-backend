@@ -37,8 +37,9 @@ public class ReviewController {
     }
 
     @GetMapping("/users/{userId}")
-    ResponseEntity<List<GetReviewResponseDTO>> getReviewsByUserId(@PathVariable Long userId) {
-        return ResponseEntity.ok(reviewService.getReviewsByUserId(userId));
+    ResponseEntity<List<GetReviewResponseDTO>> getReviewsByUserId
+            (@PathVariable Long userId, @RequestParam int page) {
+        return ResponseEntity.ok(reviewService.getReviewsByUserId(userId, page));
     }
 
     @DeleteMapping("/{reviewId}")
