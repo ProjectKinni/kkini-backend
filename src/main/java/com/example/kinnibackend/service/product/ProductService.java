@@ -45,4 +45,12 @@ public class ProductService {
 
         return responseDtoList;
     }
+
+    //끼니랭킹
+    public List<ProductPreviewResponseDTO> findAllKkiniRanking(){
+         //끼니 랭킹 조회 할 때 score 값 업데이트 하는 것으로 로직을 짜겠음.
+
+        List<ProductPreviewResponseDTO> responseDtoList = new ArrayList<>();
+        return responseDtoList;
+    }
 }
