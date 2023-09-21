@@ -1,6 +1,7 @@
 package com.example.kinnibackend.service.review;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.kinnibackend.dto.review.*;
@@ -52,7 +53,8 @@ public class ReviewService {
                     File tempFile = File.createTempFile("image", ".jpg");
                     image.transferTo(tempFile);
 
-                    naverS3Client.putObject(new PutObjectRequest(BUCKET_NAME, objectName, tempFile));
+                    naverS3Client.putObject(new PutObjectRequest(BUCKET_NAME, objectName, tempFile)
+                            .withCannedAcl(CannedAccessControlList.PublicRead));
                     imageUrls[i] = naverS3Client.getUrl(BUCKET_NAME, objectName).toString();
 
                 } catch (Exception e) {
@@ -137,7 +139,8 @@ public class ReviewService {
                     File tempFile = File.createTempFile("image", ".jpg");
                     image.transferTo(tempFile);
 
-                    naverS3Client.putObject(new PutObjectRequest(BUCKET_NAME, objectName, tempFile));
+                    naverS3Client.putObject(new PutObjectRequest(BUCKET_NAME, objectName, tempFile)
+                            .withCannedAcl(CannedAccessControlList.PublicRead));
                     imageUrls[i] = naverS3Client.getUrl(BUCKET_NAME, objectName).toString();
 
                 } catch (Exception e) {
