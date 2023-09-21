@@ -1,6 +1,5 @@
 package com.example.kinnibackend.repository.product;
 
-import com.example.kinnibackend.dto.product.ProductPreviewResponseDTO;
 import com.example.kinnibackend.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -60,7 +59,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     );
 
     // 평균 평점 계산
-    @Query("SELECT AVG(r.rating) FROM Review r WHERE r.product.productId = :productId")
+    @Query("SELECT COALESCE(AVG(r.rating), 0) FROM Review r WHERE r.product.productId = :productId")
     Optional<Double> findAverageRatingByProductId(@Param("productId") Long productId);
 
     default List<Product> filterProducts(Object[] filterConditions){
@@ -85,7 +84,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     //임시로 쓸 로직
     @Query("SELECT p FROM Product p ORDER BY p.productId DESC")
     List<Product> findAllByDesc();
-
-
 
 }
