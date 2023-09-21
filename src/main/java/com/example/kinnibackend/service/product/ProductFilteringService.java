@@ -4,6 +4,7 @@ import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
 import com.example.kinnibackend.dto.product.ProductFilteringResponseDTO;
 import com.example.kinnibackend.entity.Product;
 import com.example.kinnibackend.repository.product.ProductRepository;
+import com.example.kinnibackend.repository.review.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class ProductFilteringService {
 
     @Autowired
     private final ProductRepository productRepository;
+    private final ReviewRepository reviewRepository;
 
     // 검색과 검색 결과 필터링 기능
     public List<ProductCardListResponseDTO> filterProducts(ProductFilteringResponseDTO productFilteringResponseDTO) {
@@ -29,7 +31,11 @@ public class ProductFilteringService {
                 ? null
                 : products.stream()
                 .filter(Objects::nonNull)
-                .map(ProductCardListResponseDTO::fromEntity)
+                .map(product -> {
+                    ProductCardListResponseDTO dto = ProductCardListResponseDTO.fromEntity(product);
+                    dto.setReviewCount(reviewRepository.findTotalReviewCountByProductId(product.getProductId()));
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 

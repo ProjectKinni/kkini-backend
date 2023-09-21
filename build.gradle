@@ -38,6 +38,8 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test' // 시큐리티 테스트
     testImplementation group: 'com.h2database', name: 'h2', version: '2.2.224' //테스트 위한 H2 DB사용
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5' // Jasypt 설정파일 암호화
+    implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.529') // dependency for s3 sdk
+    implementation 'com.amazonaws:aws-java-sdk-s3' // sdk for s3
 }
 
 tasks.named('test') {

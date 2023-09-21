@@ -3,6 +3,8 @@ package com.example.kinnibackend.repository.review;
 import com.example.kinnibackend.entity.Review;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import org.springframework.data.domain.Pageable;
@@ -14,4 +16,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Page<Review> findByUsers_UserIdOrderByCreatedAtDesc(Long userId, Pageable pageable);
     List<Review> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
+    @Query("SELECT COUNT(r.reviewId) FROM Review r WHERE r.product.productId = :productId")
+    Long findTotalReviewCountByProductId(@Param("productId") Long productId);
 }
