@@ -12,4 +12,7 @@ public interface ProductLikeRepository extends JpaRepository<ProductLike, LikeId
     List<ProductLike> findByUsersUserIdAndProductProductId(Long userId, Long productId);
 
     Page<ProductLike> findByUsersUserId(Long userId, Pageable pageable);
+
+    List<ProductLike> findByUsersUserId(Long userId);
+
 }
