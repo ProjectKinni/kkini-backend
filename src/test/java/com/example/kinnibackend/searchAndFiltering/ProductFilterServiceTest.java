@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-public class ProductFilteringServiceTest {
+public class ProductFilterServiceTest {
     @Autowired
     private ProductFilteringService productFilteringService;
 

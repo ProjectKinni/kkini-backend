@@ -85,6 +85,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p ORDER BY p.productId DESC")
     List<Product> findAllByDesc();
 
-
-
 }

@@ -39,7 +39,7 @@ public class ProductFilteringResponseDTO {
                 this.getIsLowSodium(),
                 this.getIsCholesterol(),
                 this.getIsSaturatedFat(),
-                this.getIsLowFat()
+                this.getIsLowFat(),
         };
     }
 }
