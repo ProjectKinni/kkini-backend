@@ -1,5 +1,6 @@
 package com.example.kinnibackend.service.productLike;
 
+import com.example.kinnibackend.dto.productLike.ProductLikeDTO;
 import com.example.kinnibackend.entity.like.LikeId;
 import com.example.kinnibackend.entity.like.ProductLike;
 import com.example.kinnibackend.entity.Product;
@@ -8,6 +9,8 @@ import com.example.kinnibackend.repository.product.ProductRepository;
 import com.example.kinnibackend.repository.productLike.ProductLikeRepository;
 import com.example.kinnibackend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,9 +39,10 @@ public class ProductLikeService {
         }
     }
 
-    public List<ProductLike> getProductLikesByUserId(Long userId) {
-        return productLikeRepository.findByUsersUserId(userId);
+    public Page<ProductLike> getProductLikesByUserId(Long userId, Pageable pageable) {
+        return productLikeRepository.findByUsersUserId(userId, pageable);
     }
+
 
     public boolean isProductLiked(Long userId, Long productId) {
         LikeId likeId = new LikeId(productId, userId);
