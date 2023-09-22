@@ -21,7 +21,7 @@ public class ReviewController {
 
     @PostMapping("/{userId}")
     ResponseEntity<CreateReviewResponseDTO> createReview
-            (@RequestBody CreateReviewRequestDTO createReviewRequestDTO, @PathVariable Long userId) {
+            (@ModelAttribute CreateReviewRequestDTO createReviewRequestDTO, @PathVariable Long userId) {
         CreateReviewResponseDTO responseDTO = reviewService.createReview(createReviewRequestDTO, userId);
         productService.updateProductAverageRating(createReviewRequestDTO.getProductId()); // 평균평점 업데이트
         return ResponseEntity.ok(responseDTO);

@@ -8,6 +8,7 @@ import com.example.kinnibackend.exception.search.InvalidSearchTermException;
 import com.example.kinnibackend.exception.search.ProductNotFoundException;
 import com.example.kinnibackend.repository.product.ProductRepository;
 import com.example.kinnibackend.repository.product.ProductViewCountRepository;
+import com.example.kinnibackend.repository.review.ReviewRepository;
 import com.example.kinnibackend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class SearchService {
     private final ProductRepository productRepository;
     private final ProductViewCountRepository productViewCountRepository;
     private final UserRepository userRepository;
+    private final ReviewRepository reviewRepository;
 
     // 자동 완성 기능
     public List<String> autoCompleteNames(String searchTerm) {
@@ -67,9 +69,12 @@ public class SearchService {
 
         // 조회수 계산 로직
         Long totalViewCount = productViewCountRepository.findTotalViewCountByProductId(productId);
+        // 리뷰수 계산 로직
+        Long totalReviewCount = reviewRepository.findTotalReviewCountByProductId(productId);
 
         ProductCardListResponseDTO responseDTO = ProductCardListResponseDTO.fromEntity(product);
         responseDTO.setViewCount(totalViewCount);
+        responseDTO.setReviewCount(totalReviewCount);
 
         return responseDTO;
     }

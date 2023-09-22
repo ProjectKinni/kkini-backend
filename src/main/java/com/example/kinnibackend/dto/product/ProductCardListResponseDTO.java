@@ -34,6 +34,7 @@ public class ProductCardListResponseDTO {
     private Double nutScore;
 
     private Long viewCount;
+    private Long reviewCount;
 
     public static ProductCardListResponseDTO fromEntity(Product product) {
         return ProductCardListResponseDTO.builder()
