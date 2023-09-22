@@ -7,6 +7,7 @@ import com.example.kinnibackend.repository.product.ProductViewCountRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -76,13 +77,19 @@ public class ProductService {
         productRepository.save(responseDTO.toEntity());
     }
 
+    @Scheduled(cron = "0 0 0 * * ?") //매일 0시에 실행
+    public void updateAllProductScores(){
+        List<Product> productList = productRepository.findAll();
+        for(Product product : productList){
+            updateProductScore(product.getProductId());
+        }
+    }
+
     public List<ProductPreviewResponseDTO> findAllKkiniRanking(){
-         //끼니 랭킹 조회 할 때 score 값 업데이트 하는 것으로 로직을 짜겠음.
         List<ProductPreviewResponseDTO> responseDtoList = new ArrayList<>();
         //Score 순대로 product 값 얻어오기
         List<Product> productList = productRepository.findAllByScoreAndUpdatedAt();
         for(Product product : productList){
-            updateProductScore(product.getProductId());
             responseDtoList.add(new ProductPreviewResponseDTO(product));
         }
         return responseDtoList;
