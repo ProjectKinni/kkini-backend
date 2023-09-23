@@ -23,7 +23,11 @@ public class ProductFilteringService {
 
     // 검색과 검색 결과 필터링 기능
     public List<ProductCardListResponseDTO> filterProducts(ProductFilteringResponseDTO productFilteringResponseDTO) {
-        Object[] filterConditions = productFilteringResponseDTO.toFilterConditionsArray();
+        // 띄어쓰기 제거
+        String searchTerm = productFilteringResponseDTO.getSearchTerm().replace(" ", "");
+
+        // 띄어쓰기가 제거된 검색어로 필터링 조건 설정
+        Object[] filterConditions = productFilteringResponseDTO.toFilterConditionsArray(searchTerm); // searchTerm을 인자로 전달
 
         List<Product> products = productRepository.filterProducts(filterConditions);
 
@@ -38,5 +42,4 @@ public class ProductFilteringService {
                 })
                 .collect(Collectors.toList());
     }
-
 }

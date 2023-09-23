@@ -24,7 +24,7 @@ public class ProductFilteringResponseDTO {
     private Boolean isSaturatedFat;
     private Boolean isLowFat;
 
-    public Object[] toFilterConditionsArray(){
+    public Object[] toFilterConditionsArray(String searhTerm){
         return new Object[]{
                 this.getIsGreen(),
                 this.getSearchTerm(),

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import org.springframework.data.domain.Pageable;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
@@ -18,4 +19,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     @Query("SELECT COUNT(r.reviewId) FROM Review r WHERE r.product.productId = :productId")
     Long findTotalReviewCountByProductId(@Param("productId") Long productId);
+
+    List<Review> findByUsers_UserIdAndProduct_ProductId(Long userId, Long productId);
+
 }
