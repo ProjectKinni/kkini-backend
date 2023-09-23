@@ -29,9 +29,9 @@ public class SearchAndFilteringController {
     // 검색과 검색 결과의 필터링 기능
     @GetMapping("/search")
     public ResponseEntity<List<ProductCardListResponseDTO>>
-        searchAndFilterProducts(@ModelAttribute ProductFilteringResponseDTO productFilteringResponseDTO) {
+        searchAndFilterProducts(@ModelAttribute ProductFilteringResponseDTO productFilteringResponseDTO, @RequestParam int page) {
         List<ProductCardListResponseDTO> searchResults =
-                productFilteringService.filterProducts(productFilteringResponseDTO);
+                productFilteringService.filterProducts(productFilteringResponseDTO, page);
         return ResponseEntity.ok(searchResults);
     }
 
