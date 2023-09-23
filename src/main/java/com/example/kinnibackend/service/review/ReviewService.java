@@ -164,5 +164,10 @@ public class ReviewService {
                 .build();
     }
 
+    public boolean hasUserReviewedProduct(Long userId, Long productId) {
+        List<Review> reviews = reviewRepository.findByUsers_UserIdAndProduct_ProductId(userId, productId);
+        return !reviews.isEmpty();
+    }
+
 
 }

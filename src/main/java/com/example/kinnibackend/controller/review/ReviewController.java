@@ -1,6 +1,7 @@
 package com.example.kinnibackend.controller.review;
 
 import com.example.kinnibackend.dto.review.*;
+import com.example.kinnibackend.entity.Product;
 import com.example.kinnibackend.service.product.ProductService;
 import com.example.kinnibackend.service.review.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -55,4 +56,9 @@ public class ReviewController {
         return ResponseEntity.ok(responseDTO);
     }
 
+    @GetMapping("/hasReviewed/{productId}/{userId}")
+    public ResponseEntity<Boolean> hasUserReviewedProduct(@PathVariable Long productId, @PathVariable Long userId) {
+        boolean hasReviewed = reviewService.hasUserReviewedProduct(userId, productId);
+        return ResponseEntity.ok(hasReviewed);
+    }
 }
