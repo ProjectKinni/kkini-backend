@@ -7,6 +7,8 @@ import com.example.kinnibackend.repository.product.ProductRepository;
 import com.example.kinnibackend.repository.review.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,14 +24,18 @@ public class ProductFilteringService {
     private final ReviewRepository reviewRepository;
 
     // 검색과 검색 결과 필터링 기능
-    public List<ProductCardListResponseDTO> filterProducts(ProductFilteringResponseDTO productFilteringResponseDTO) {
+    public List<ProductCardListResponseDTO> filterProducts(ProductFilteringResponseDTO productFilteringResponseDTO, int page) {
+        //paging
+        int pageSize = 15;
+        Pageable pageable = PageRequest.of(page, pageSize);
+
         // 띄어쓰기 제거
         String searchTerm = productFilteringResponseDTO.getSearchTerm().replace(" ", "");
 
         // 띄어쓰기가 제거된 검색어로 필터링 조건 설정
         Object[] filterConditions = productFilteringResponseDTO.toFilterConditionsArray(searchTerm); // searchTerm을 인자로 전달
 
-        List<Product> products = productRepository.filterProducts(filterConditions);
+        List<Product> products = productRepository.filterProducts(filterConditions, pageable);
 
         return (products == null || products.isEmpty())
                 ? null

@@ -1,6 +1,7 @@
 package com.example.kinnibackend.repository.product;
 
 import com.example.kinnibackend.entity.Product;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -55,14 +56,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("isLowSodium") Boolean isLowSodium,
             @Param("isCholesterol") Boolean isCholesterol,
             @Param("isSaturatedFat") Boolean isSaturatedFat,
-            @Param("isLowFat") Boolean isLowFat
+            @Param("isLowFat") Boolean isLowFat,
+            Pageable pageable
     );
 
     // 평균 평점 계산
     @Query("SELECT COALESCE(AVG(r.rating), 0) FROM Review r WHERE r.product.productId = :productId")
     Optional<Double> findAverageRatingByProductId(@Param("productId") Long productId);
 
-    default List<Product> filterProducts(Object[] filterConditions){
+    default List<Product> filterProducts(Object[] filterConditions, Pageable pageable){
         return filterProducts(
                 (Boolean) filterConditions[0],
                 (String) filterConditions[1],
@@ -77,7 +79,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 (Boolean) filterConditions[10],
                 (Boolean) filterConditions[11],
                 (Boolean) filterConditions[12],
-                (Boolean) filterConditions[13]
+                (Boolean) filterConditions[13],
+                pageable
         );
     }
 
