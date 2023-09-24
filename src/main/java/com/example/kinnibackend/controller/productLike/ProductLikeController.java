@@ -1,8 +1,11 @@
 package com.example.kinnibackend.controller.productLike;
 
+import com.example.kinnibackend.dto.productLike.ProductLikeDTO;
 import com.example.kinnibackend.entity.like.ProductLike;
 import com.example.kinnibackend.service.productLike.ProductLikeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +15,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/like")
+@CrossOrigin(origins = "http://localhost:3000") // 허용할 원본 출처 설정
 public class ProductLikeController {
 
     private final ProductLikeService productLikeService;
@@ -33,9 +37,10 @@ public class ProductLikeController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(false);
         }
     }
+
     @GetMapping("/liked-products/{userId}")
-    public ResponseEntity<List<ProductLike>> getLikedProducts(@PathVariable Long userId) {
-        List<ProductLike> likedProducts = productLikeService.getProductLikesByUserId(userId);
+    public ResponseEntity<Page<ProductLike>> getLikedProducts(@PathVariable Long userId, Pageable pageable) {
+        Page<ProductLike> likedProducts = productLikeService.getProductLikesByUserId(userId, pageable);
         return ResponseEntity.ok(likedProducts);
     }
 

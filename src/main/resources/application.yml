@@ -1,6 +1,11 @@
 spring:
   profiles:
-    include: oauth2, db, jwt
+    include: oauth2, db, jwt, s3
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
   jpa:
     show-sql: true
     properties:
@@ -58,3 +63,9 @@ spring:
 jwt:
   issuer: ${issuer}
   secret_key: ${secret_key}
+
+s3:
+  endPoint: ${endpoint}
+  region: ${region}
+  accessKey: ${accessKey}
+  secretKey: ${secretKey}

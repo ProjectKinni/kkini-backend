@@ -6,7 +6,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -33,7 +32,7 @@ public class Product {
     private String detail;
 
     @Column(name = "average_rating")
-    private Float averageRating;
+    private Float averageRating = 0.0f;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false, nullable = false)

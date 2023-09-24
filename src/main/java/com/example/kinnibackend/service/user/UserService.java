@@ -2,6 +2,9 @@ package com.example.kinnibackend.service.user;
 
 import com.example.kinnibackend.dto.user.UserUpdateDTO;
 import com.example.kinnibackend.entity.Users;
+import com.example.kinnibackend.repository.product.ProductViewCountRepository;
+import com.example.kinnibackend.repository.productLike.ProductLikeRepository;
+import com.example.kinnibackend.repository.review.ReviewRepository;
 import com.example.kinnibackend.repository.token.RefreshTokenRepository;
 import com.example.kinnibackend.repository.user.UserRepository;
 import jakarta.transaction.Transactional;
@@ -15,6 +18,9 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final ProductViewCountRepository productViewCountRepository;
+    private final ReviewRepository reviewRepository;
+    private final ProductLikeRepository productLikeRepository;
 
     public GetUserInfoDTO getUserInfoByUserId(Long userId) {
 
@@ -48,6 +54,9 @@ public class UserService {
 
     @Transactional
     public void deleteUserByUserId(Long userId){
+        productViewCountRepository.deleteByUsers_UserId(userId);
+        productLikeRepository.deleteByUsers_UserId(userId);
+        reviewRepository.deleteByUsers_UserId(userId);
         refreshTokenRepository.deleteByUserId(userId);
         userRepository.deleteByUserId(userId);
     }

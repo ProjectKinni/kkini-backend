@@ -1,9 +1,12 @@
 package com.example.kinnibackend.controller.review;
 
 import com.example.kinnibackend.dto.review.*;
+import com.example.kinnibackend.entity.Product;
 import com.example.kinnibackend.service.product.ProductService;
 import com.example.kinnibackend.service.review.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +22,7 @@ public class ReviewController {
 
     @PostMapping("/{userId}")
     ResponseEntity<CreateReviewResponseDTO> createReview
-            (@RequestBody CreateReviewRequestDTO createReviewRequestDTO, @PathVariable Long userId) {
+            (@ModelAttribute CreateReviewRequestDTO createReviewRequestDTO, @PathVariable Long userId) {
         CreateReviewResponseDTO responseDTO = reviewService.createReview(createReviewRequestDTO, userId);
         productService.updateProductAverageRating(createReviewRequestDTO.getProductId()); // 평균평점 업데이트
         return ResponseEntity.ok(responseDTO);
@@ -35,10 +38,9 @@ public class ReviewController {
             (@PathVariable Long productId, @RequestParam int page) {
         return ResponseEntity.ok(reviewService.getReviewsByProductId(productId, page));
     }
-
     @GetMapping("/users/{userId}")
-    ResponseEntity<List<GetReviewResponseDTO>> getReviewsByUserId(@PathVariable Long userId) {
-        return ResponseEntity.ok(reviewService.getReviewsByUserId(userId));
+    public ResponseEntity<Page<GetReviewResponseDTO>> getReviewsByUserId(@PathVariable Long userId, Pageable pageable) {
+        return ResponseEntity.ok(reviewService.getReviewsByUserId(userId, pageable));
     }
 
     @DeleteMapping("/{reviewId}")
@@ -54,4 +56,9 @@ public class ReviewController {
         return ResponseEntity.ok(responseDTO);
     }
 
+    @GetMapping("/hasReviewed/{productId}/{userId}")
+    public ResponseEntity<Boolean> hasUserReviewedProduct(@PathVariable Long productId, @PathVariable Long userId) {
+        boolean hasReviewed = reviewService.hasUserReviewedProduct(userId, productId);
+        return ResponseEntity.ok(hasReviewed);
+    }
 }

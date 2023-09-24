@@ -2,6 +2,7 @@ package com.example.kinnibackend.controller.searchAndFiltering;
 
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
 import com.example.kinnibackend.dto.product.ProductFilteringResponseDTO;
+import com.example.kinnibackend.repository.review.ReviewRepository;
 import com.example.kinnibackend.service.product.ProductFilteringService;
 import com.example.kinnibackend.service.search.SearchService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class SearchAndFilteringController {
 
     @Autowired
     private final SearchService searchService;
+    private final ReviewRepository reviewRepository;
 
     @Autowired
     private final ProductFilteringService productFilteringService;
@@ -27,9 +29,9 @@ public class SearchAndFilteringController {
     // 검색과 검색 결과의 필터링 기능
     @GetMapping("/search")
     public ResponseEntity<List<ProductCardListResponseDTO>>
-        searchAndFilterProducts(@ModelAttribute ProductFilteringResponseDTO productFilteringResponseDTO) {
+        searchAndFilterProducts(@ModelAttribute ProductFilteringResponseDTO productFilteringResponseDTO, @RequestParam int page) {
         List<ProductCardListResponseDTO> searchResults =
-                productFilteringService.filterProducts(productFilteringResponseDTO);
+                productFilteringService.filterProducts(productFilteringResponseDTO, page);
         return ResponseEntity.ok(searchResults);
     }
 
@@ -44,6 +46,7 @@ public class SearchAndFilteringController {
     public ResponseEntity<ProductCardListResponseDTO>
     getProductById(@PathVariable Long productId) {
         ProductCardListResponseDTO product = searchService.getProductById(productId);
+        product.setReviewCount(reviewRepository.findTotalReviewCountByProductId(productId));
 
         return (product != null) ? ResponseEntity.ok(product) : ResponseEntity.notFound().build();
     }

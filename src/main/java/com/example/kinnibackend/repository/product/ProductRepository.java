@@ -1,10 +1,8 @@
 package com.example.kinnibackend.repository.product;
 
-import com.example.kinnibackend.dto.product.ProductPreviewResponseDTO;
 import com.example.kinnibackend.entity.Product;
-import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -35,7 +33,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             + "(:isSugarFree IS NULL OR p.sugar <= 1) AND "
             + "(:isLowSugar IS NULL OR p.sugar <= p.servingSize * 0.05) AND "
             + "(:isLowCarb IS NULL OR (p.carbohydrate >= p.servingSize * 0.11 AND "
-            +"p.carbohydrate <= p.servingSize * 0.20)) AND "
+            + "p.carbohydrate <= p.servingSize * 0.20)) AND "
             + "(:isKeto IS NULL OR p.carbohydrate <= p.servingSize * 0.10) AND "
             + "(:isTransFat IS NULL OR p.transFat <= 1) AND "
             + "(:isSaturatedFat IS NULL OR p.saturatedFat <= p.servingSize * 0.02) AND "
@@ -58,14 +56,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("isLowSodium") Boolean isLowSodium,
             @Param("isCholesterol") Boolean isCholesterol,
             @Param("isSaturatedFat") Boolean isSaturatedFat,
-            @Param("isLowFat") Boolean isLowFat
+            @Param("isLowFat") Boolean isLowFat,
+            Pageable pageable
     );
 
     // 평균 평점 계산
-    @Query("SELECT AVG(r.rating) FROM Review r WHERE r.product.productId = :productId")
+    @Query("SELECT COALESCE(AVG(r.rating), 0) FROM Review r WHERE r.product.productId = :productId")
     Optional<Double> findAverageRatingByProductId(@Param("productId") Long productId);
 
-    default List<Product> filterProducts(Object[] filterConditions){
+    default List<Product> filterProducts(Object[] filterConditions, Pageable pageable) {
         return filterProducts(
                 (Boolean) filterConditions[0],
                 (String) filterConditions[1],
@@ -80,7 +79,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 (Boolean) filterConditions[10],
                 (Boolean) filterConditions[11],
                 (Boolean) filterConditions[12],
-                (Boolean) filterConditions[13]
+                (Boolean) filterConditions[13],
+                pageable
         );
     }
 
@@ -92,6 +92,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p ORDER BY p.score DESC, p.updatedAt DESC, p.productId DESC")
     List<Product> findAllByScoreAndUpdatedAt();
 
-
-
+    //끼니그린
+    // is_green true인 제품들 중에서 nut_score 높은 순으로 정렬, 같은 경우, 최근 업데이트 되고, product_id 높은 순으로.
+    @Query("SELECT p FROM Product p WHERE p.isGreen = true ORDER BY p.nutScore DESC, p.updatedAt DESC, p.productId DESC")
+    List<Product> findAllByIsGreenIsTrueOrderByNutScoreDescUpdatedAtDescProductIdDesc();
 }
+
+
