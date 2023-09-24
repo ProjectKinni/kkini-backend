@@ -22,4 +22,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     List<Review> findByUsers_UserIdAndProduct_ProductId(Long userId, Long productId);
 
+    void deleteByUsers_UserId(Long userId);
+
 }

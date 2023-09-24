@@ -15,4 +15,6 @@ public interface ProductLikeRepository extends JpaRepository<ProductLike, LikeId
 
     List<ProductLike> findByUsersUserId(Long userId);
 
+    void deleteByUsers_UserId(Long userId);
+
 }

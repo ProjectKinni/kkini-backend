@@ -15,4 +15,6 @@ public interface ProductViewCountRepository extends JpaRepository<ProductViewCou
 
     @Query("SELECT SUM(p.viewCount) FROM ProductViewCount p WHERE p.product.productId = :productId")
     Long findTotalViewCountByProductId(@Param("productId") Long productId);
+
+    void deleteByUsers_UserId(Long userId);
 }
