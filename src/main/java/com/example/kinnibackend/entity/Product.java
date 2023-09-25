@@ -87,6 +87,9 @@ public class Product {
     @Column(name = "nut_score")
     private Double nutScore;
 
+    @Column(name = "product_link")
+    private String productLink;
+
     public void updateAverageRating(Float averageRating){
         this.averageRating = averageRating;
     }
