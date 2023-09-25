@@ -1,7 +1,6 @@
 package com.example.kinnibackend.service.product;
 
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
-import com.example.kinnibackend.dto.product.ProductFilterResponseDTO;
 import com.example.kinnibackend.dto.product.ProductFilteringResponseDTO;
 import com.example.kinnibackend.entity.Product;
 import com.example.kinnibackend.entity.ProductFilter;
@@ -10,7 +9,12 @@ import com.example.kinnibackend.repository.product.ProductRepository;
 import com.example.kinnibackend.repository.productLike.ProductLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -31,7 +35,10 @@ public class ProductFilterService {
     private final ProductFilterRepository productFilterRepository;
 
     public List<ProductCardListResponseDTO> getFilteredLikedProducts
-            (Long userId, String categoryName, ProductFilteringResponseDTO filterDTO) {
+            (Long userId, String categoryName, ProductFilteringResponseDTO filterDTO, int page, int size) {
+
+        int pageSize = 15;
+        Pageable pageable = PageRequest.of(page, pageSize);
 
         List<Long> likedProductIds = productLikeRepository.findByUsersUserId(userId)
                 .stream()
@@ -44,7 +51,7 @@ public class ProductFilterService {
         Set<Product> filteredProductsSet = new HashSet<>();
 
         for (ProductFilter likedProductFilter : likedProductFilters) {
-            List<ProductFilter> similarProductFilters = productFilterRepository.filterProductResponse(
+            Page<ProductFilter> similarProductFilters = productFilterRepository.filterProductResponse(
                     likedProductFilter.getIsGreen(),
                     likedProductFilter.getCategoryName(),
                     likedProductFilter.getIsLowCalorie(), likedProductFilter.getIsSugarFree(),
@@ -52,12 +59,12 @@ public class ProductFilterService {
                     likedProductFilter.getIsKeto(), likedProductFilter.getIsTransFat(),
                     likedProductFilter.getIsHighProtein(), likedProductFilter.getIsLowSodium(),
                     likedProductFilter.getIsCholesterol(), likedProductFilter.getIsSaturatedFat(),
-                    likedProductFilter.getIsLowFat()
+                    likedProductFilter.getIsLowFat(),
+                    pageable
             );
 
-            // 이후 로직 (filteredProductsSet에 추가 등)
             for (ProductFilter similarProductFilter : similarProductFilters) {
-                Product similarProduct = productRepository.findById(similarProductFilter.getProductId()).orElse(null);
+                Product similarProduct = productRepository.findByProductId(similarProductFilter.getProductId());
                 if (similarProduct != null && !likedProductIds.contains(similarProduct.getProductId())) {
                     filteredProductsSet.add(similarProduct);
                 }

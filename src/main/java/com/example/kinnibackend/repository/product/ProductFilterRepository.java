@@ -1,10 +1,13 @@
 package com.example.kinnibackend.repository.product;
 
 import com.example.kinnibackend.entity.ProductFilter;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -26,7 +29,7 @@ public interface ProductFilterRepository extends JpaRepository<ProductFilter, Lo
             + "(p.isSaturatedFat  = :isSaturatedFat) AND"
             + "(p.isLowFat  = :isLowFat)"
     )
-    List<ProductFilter> filterProductResponse(
+    Page<ProductFilter> filterProductResponse(
             @Param("isGreen") Boolean isGreen,
             @Param("categoryName") String categoryName,
             @Param("isLowCalorie") Boolean isLowCalorie,
@@ -39,6 +42,7 @@ public interface ProductFilterRepository extends JpaRepository<ProductFilter, Lo
             @Param("isLowSodium") Boolean isLowSodium,
             @Param("isCholesterol") Boolean isCholesterol,
             @Param("isSaturatedFat") Boolean isSaturatedFat,
-            @Param("isLowFat") Boolean isLowFat
+            @Param("isLowFat") Boolean isLowFat,
+            Pageable pageable
     );
 }

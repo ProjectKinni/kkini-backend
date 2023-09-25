@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/products")
@@ -37,8 +39,20 @@ public class ProductController {
     public List<ProductCardListResponseDTO> getFilteredLikedProducts(
             @RequestParam Long userId,
             @RequestParam(required = false) String categoryName,
+            ProductFilteringResponseDTO filterDTO,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size) {
+        return productFilterService.getFilteredLikedProducts(userId, categoryName, filterDTO, page, size);
+    }
+
+    @GetMapping("/kkini-pick-products/top")
+    public List<ProductCardListResponseDTO> getTop12FilteredLikedProducts(
+            @RequestParam Long userId,
+            @RequestParam(required = false) String categoryName,
             ProductFilteringResponseDTO filterDTO) {
-        return productFilterService.getFilteredLikedProducts(userId, categoryName, filterDTO);
+        List<ProductCardListResponseDTO> allProducts =
+                productFilterService.getFilteredLikedProducts(userId, categoryName, filterDTO, 0, 12);
+        return allProducts.stream().limit(12).collect(Collectors.toList());  // 상위 12개만 추출
     }
 
     //필터링, 페이징 적용 된 끼니그린랭킹
