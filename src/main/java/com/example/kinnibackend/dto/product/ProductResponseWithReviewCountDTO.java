@@ -3,10 +3,13 @@ package com.example.kinnibackend.dto.product;
 import com.example.kinnibackend.entity.Product;
 import lombok.*;
 
-@Getter @Setter
-@AllArgsConstructor @Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@Builder
 @NoArgsConstructor
-public class ProductPreviewResponseDTO {
+public class ProductResponseWithReviewCountDTO {
+
     private Long productId;
     private String productName;
     private String image;
@@ -14,8 +17,9 @@ public class ProductPreviewResponseDTO {
     private Boolean isGreen;
     private String categoryName;
     private Double score;
+    private long reviewCount;
 
-    public ProductPreviewResponseDTO(Product entity){
+    public ProductResponseWithReviewCountDTO(Product entity, long reviewCount){
         this.productId = entity.getProductId();
         this.productName = entity.getProductName();
         this.image = entity.getImage();
@@ -23,6 +27,7 @@ public class ProductPreviewResponseDTO {
         this.isGreen = entity.getIsGreen();
         this.categoryName = entity.getCategoryName();
         this.score = entity.getScore();
+        this.reviewCount = reviewCount;
     }
 
 
@@ -37,4 +42,5 @@ public class ProductPreviewResponseDTO {
                 .score(score)
                 .build();
     }
+
 }
