@@ -3,6 +3,8 @@ package com.example.kinnibackend.dto.product;
 import com.example.kinnibackend.entity.Product;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -29,8 +31,6 @@ public class ProductResponseWithReviewCountDTO {
         this.score = entity.getScore();
         this.reviewCount = reviewCount;
     }
-
-
     public Product toEntity(){
         return Product.builder()
                 .productId(productId)
