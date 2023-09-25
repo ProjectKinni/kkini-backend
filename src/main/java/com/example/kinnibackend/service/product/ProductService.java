@@ -1,22 +1,22 @@
 package com.example.kinnibackend.service.product;
 
+import com.example.kinnibackend.dto.product.ProductFilterResponseDTO;
 import com.example.kinnibackend.dto.product.ProductPreviewResponseDTO;
 import com.example.kinnibackend.dto.product.ProductResponseWithReviewCountDTO;
 import com.example.kinnibackend.entity.Product;
 import com.example.kinnibackend.repository.product.ProductRepository;
 import com.example.kinnibackend.repository.product.ProductViewCountRepository;
 import com.example.kinnibackend.repository.review.ReviewRepository;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -92,23 +92,52 @@ public class ProductService {
         }
     }
 
-    public List<ProductResponseWithReviewCountDTO> findAllKkiniRanking(){
-        List<ProductResponseWithReviewCountDTO> responseDtoList = new ArrayList<>();
-        //Score 순대로 product 값 얻어오기
-        List<Product> productList = productRepository.findAllByScoreAndUpdatedAt();
+    //Top 12 끼니 랭킹
+    public List<ProductPreviewResponseDTO> findTopKkiniRanking(){
+
+        List<ProductPreviewResponseDTO> responseDtoList = new ArrayList<>();
+        Pageable topProducts = PageRequest.of(0, 12);
+        List<Product> productList = productRepository.findTopProductsByScoreAndUpdatedAt(topProducts);
+
         for(Product product : productList){
-            responseDtoList.add(new ProductResponseWithReviewCountDTO(product, reviewRepository.findTotalReviewCountByProductId(product.getProductId())));
+            responseDtoList.add(new ProductPreviewResponseDTO(product));
         }
         return responseDtoList;
     }
 
-    public List<ProductResponseWithReviewCountDTO> findAllGreenRanking(){
+    //Top12 끼니 그린
+    public List<ProductPreviewResponseDTO> findTopKkiniGreen(){
+        List<ProductPreviewResponseDTO> responseDtoList = new ArrayList<>();
+        Pageable topProducts = PageRequest.of(0, 12);
+        List<Product> productList = productRepository.findTopProductsByIsGreenIsTrueOrderByNutScoreDescUpdatedAtDescProductIdDesc(topProducts);
+
+        for(Product product : productList){
+            responseDtoList.add(new ProductPreviewResponseDTO(product));
+        }
+        return responseDtoList;
+    }
+
+    //필터링 적용된 끼니그린
+    public List<ProductResponseWithReviewCountDTO> findAllGreenRanking(ProductFilterResponseDTO filterDto){
         List<ProductResponseWithReviewCountDTO> responseDTOList = new ArrayList<>();
         //isGreen = true 인 상품 중에 nut_score 높은 순으로 product 얻어오기
-        List<Product> productList = productRepository.findAllByIsGreenIsTrueOrderByNutScoreDescUpdatedAtDescProductIdDesc();
+        List<Product> productList = productRepository.findAllByIsGreenIsTrueOrderByNutScoreDescAndCategoryNameAndFilters(filterDto);
+
         for(Product product : productList){
             responseDTOList.add(new ProductResponseWithReviewCountDTO(product, reviewRepository.findTotalReviewCountByProductId(product.getProductId())));
         }
         return responseDTOList;
+    }
+
+    //필터링 적용 된 끼니랭킹
+    public List<ProductResponseWithReviewCountDTO> findAllKkiniRankingByCategoriesAndFilters(ProductFilterResponseDTO filterDto){
+        // 카테고리 이름 목록을 콤마로 구분된 문자열로 변환
+
+        //선택한 카테고리 및 필터에 해당하는 제품들만 얻어온다.
+        List<Product> productList = productRepository.findAllByScoreAndCategoryNameAndFilters(filterDto);
+
+        return productList.stream()
+                .map(product -> new ProductResponseWithReviewCountDTO(product,reviewRepository.findTotalReviewCountByProductId(product.getProductId())))
+                .collect(Collectors.toList());
     }
 }
