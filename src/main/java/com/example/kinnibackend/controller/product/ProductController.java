@@ -39,7 +39,7 @@ public class ProductController {
     public List<ProductCardListResponseDTO> getFilteredLikedProducts(
             @RequestParam Long userId,
             @RequestParam(required = false) String categoryName,
-            ProductFilteringResponseDTO filterDTO,
+            @RequestParam(required = false) ProductFilteringResponseDTO filterDTO,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "15") int size) {
         return productFilterService.getFilteredLikedProducts(userId, categoryName, filterDTO, page, size);
