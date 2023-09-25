@@ -39,8 +39,10 @@ public class ProductController {
     public List<ProductCardListResponseDTO> getFilteredLikedProducts(
             @RequestParam Long userId,
             @RequestParam(required = false) String categoryName,
-            ProductFilteringResponseDTO filterDTO) {
-        return productFilterService.getFilteredLikedProducts(userId, categoryName, filterDTO);
+            ProductFilteringResponseDTO filterDTO,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size) {
+        return productFilterService.getFilteredLikedProducts(userId, categoryName, filterDTO, page, size);
     }
 
     //kkini-green Ranking

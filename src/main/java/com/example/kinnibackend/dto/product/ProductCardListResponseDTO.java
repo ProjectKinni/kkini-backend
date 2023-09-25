@@ -32,6 +32,7 @@ public class ProductCardListResponseDTO {
     private String image;
     private String nutImage;
     private Double nutScore;
+    private String productLink;
 
     private Long viewCount;
     private Long reviewCount;
@@ -59,6 +60,7 @@ public class ProductCardListResponseDTO {
                 .image(product.getImage())
                 .nutImage(product.getNutImage())
                 .nutScore(product.getNutScore())
+                .productLink(product.getProductLink())
                 .build();
     }
 }
