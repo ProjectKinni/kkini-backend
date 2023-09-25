@@ -1,17 +1,12 @@
 package com.example.kinnibackend.controller.product;
 
-import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
-import com.example.kinnibackend.dto.product.ProductFilteringResponseDTO;
-import com.example.kinnibackend.dto.product.ProductPreviewResponseDTO;
-import com.example.kinnibackend.dto.product.ProductResponseWithReviewCountDTO;
+import com.example.kinnibackend.dto.product.*;
 import com.example.kinnibackend.service.product.ProductFilterService;
 import com.example.kinnibackend.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RestController
@@ -29,10 +24,13 @@ public class ProductController {
         return ResponseEntity.ok(productService.findAll());
     }
 
-    //Kkini Ranking 로직에 따라 전체 상품 얻어오기.
-    @GetMapping("/kkini-ranking")
-    public ResponseEntity<List<ProductResponseWithReviewCountDTO>> fetchKkiniRankingProducts(){
-        return ResponseEntity.ok(productService.findAllKkiniRanking());
+    //필터링, 페이징 적용 된 끼니랭킹
+    @GetMapping("kkini-ranking")
+    public ResponseEntity<Page<ProductResponseWithReviewCountDTO>> fetchKkiniRankingByFilters(
+            ProductFilterResponseDTO filterDto,
+            @RequestParam(name="page", defaultValue = "0") int page,
+            @RequestParam(name="size", defaultValue = "15") int size){
+        return ResponseEntity.ok(productService.findAllKkiniRankingByCategoriesAndFilters(filterDto, page, size));
     }
 
     @GetMapping("/kkini-pick-products")
@@ -43,11 +41,27 @@ public class ProductController {
         return productFilterService.getFilteredLikedProducts(userId, categoryName, filterDTO);
     }
 
-    //kkini-green Ranking
+    //필터링, 페이징 적용 된 끼니그린랭킹
     @GetMapping("kkini-green")
-    public ResponseEntity<List<ProductResponseWithReviewCountDTO>> fetchKkiniGreenRankingProducts(){
-        return ResponseEntity.ok(productService.findAllGreenRanking());
+    public ResponseEntity<Page<ProductResponseWithReviewCountDTO>> fetchKkiniGreenRankingProducts(
+            ProductFilterResponseDTO filterDto,
+            @RequestParam(name="page", defaultValue = "0") int page,
+            @RequestParam(name="size", defaultValue = "15") int size){
+        return ResponseEntity.ok(productService.findAllGreenRanking(filterDto, page, size));
     }
+
+    //상위 12 끼니랭킹
+    @GetMapping("kkini-ranking/top")
+    public ResponseEntity<List<ProductPreviewResponseDTO>> fetchTopKkiniRanking(){
+        return ResponseEntity.ok(productService.findTopKkiniRanking());
+    }
+
+    //상위 12 그린랭킹
+    @GetMapping("kkini-green/top")
+    public ResponseEntity<List<ProductPreviewResponseDTO>> fetchTopGreenRanking(){
+        return ResponseEntity.ok(productService.findTopKkiniGreen());
+    }
+
 
 
 }
