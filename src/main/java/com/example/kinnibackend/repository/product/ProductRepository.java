@@ -25,6 +25,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByCategoryName(String categoryName);
 
     // 상품 ID로 상품 찾기
+    @Query("SELECT p FROM Product p WHERE p.productId = :productId ORDER BY p.productId DESC")
     Product findByProductId(Long productId);
 
     @Query("SELECT p FROM Product p WHERE "

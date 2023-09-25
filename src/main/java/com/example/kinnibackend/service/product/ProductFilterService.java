@@ -63,9 +63,8 @@ public class ProductFilterService {
                     pageable
             );
 
-            // 이후 로직 (filteredProductsSet에 추가 등)
             for (ProductFilter similarProductFilter : similarProductFilters) {
-                Product similarProduct = productRepository.findById(similarProductFilter.getProductId()).orElse(null);
+                Product similarProduct = productRepository.findByProductId(similarProductFilter.getProductId());
                 if (similarProduct != null && !likedProductIds.contains(similarProduct.getProductId())) {
                     filteredProductsSet.add(similarProduct);
                 }
