@@ -8,6 +8,7 @@ import com.example.kinnibackend.repository.product.ProductRepository;
 import com.example.kinnibackend.repository.product.ProductViewCountRepository;
 import com.example.kinnibackend.repository.review.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -118,26 +119,27 @@ public class ProductService {
     }
 
     //필터링 적용된 끼니그린
-    public List<ProductResponseWithReviewCountDTO> findAllGreenRanking(ProductFilterResponseDTO filterDto){
-        List<ProductResponseWithReviewCountDTO> responseDTOList = new ArrayList<>();
+    public Page<ProductResponseWithReviewCountDTO> findAllGreenRanking(
+            ProductFilterResponseDTO filterDto, int page, int size){
         //isGreen = true 인 상품 중에 nut_score 높은 순으로 product 얻어오기
-        List<Product> productList = productRepository.findAllByIsGreenIsTrueOrderByNutScoreDescAndCategoryNameAndFilters(filterDto);
+        Page<Product> productList = productRepository.findAllByIsGreenIsTrueOrderByNutScoreDescAndCategoryNameAndFilters(filterDto, PageRequest.of(0, 15));
 
-        for(Product product : productList){
-            responseDTOList.add(new ProductResponseWithReviewCountDTO(product, reviewRepository.findTotalReviewCountByProductId(product.getProductId())));
-        }
-        return responseDTOList;
+        return productList.map(product -> new ProductResponseWithReviewCountDTO(
+                product,    //상품
+                reviewRepository.findTotalReviewCountByProductId(product.getProductId())    //리뷰수
+        ));
     }
 
     //필터링 적용 된 끼니랭킹
-    public List<ProductResponseWithReviewCountDTO> findAllKkiniRankingByCategoriesAndFilters(ProductFilterResponseDTO filterDto){
-        // 카테고리 이름 목록을 콤마로 구분된 문자열로 변환
+    public Page<ProductResponseWithReviewCountDTO> findAllKkiniRankingByCategoriesAndFilters(
+            ProductFilterResponseDTO filterDto, int page, int size){
 
-        //선택한 카테고리 및 필터에 해당하는 제품들만 얻어온다.
-        List<Product> productList = productRepository.findAllByScoreAndCategoryNameAndFilters(filterDto);
+        //선택한 카테고리 및 필터에 해당하는 제품들만 얻어온다. 페이징 처리 적용.
+        Page<Product> productList = productRepository.findAllByScoreAndCategoryNameAndFilters(filterDto, PageRequest.of(0, 15));
 
-        return productList.stream()
-                .map(product -> new ProductResponseWithReviewCountDTO(product,reviewRepository.findTotalReviewCountByProductId(product.getProductId())))
-                .collect(Collectors.toList());
+        return productList.map(product -> new ProductResponseWithReviewCountDTO(
+                product,    //상품
+                reviewRepository.findTotalReviewCountByProductId(product.getProductId())    //리뷰수
+        ));
     }
 }

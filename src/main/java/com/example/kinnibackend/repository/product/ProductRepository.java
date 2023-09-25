@@ -3,6 +3,7 @@ package com.example.kinnibackend.repository.product;
 import com.example.kinnibackend.dto.product.ProductFilterResponseDTO;
 import com.example.kinnibackend.entity.Product;
 import org.hibernate.procedure.ProcedureOutputs;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -111,7 +112,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "AND (:#{#filterDto.isSaturatedFat} IS NULL OR pf.isSaturatedFat = :#{#filterDto.isSaturatedFat})" +
             "AND (:#{#filterDto.isLowFat} IS NULL OR pf.isLowFat = :#{#filterDto.isLowFat})" +
             "ORDER BY p.score DESC, p.updatedAt DESC, p.productId DESC")
-    List<Product> findAllByScoreAndCategoryNameAndFilters(@Param("filterDto")ProductFilterResponseDTO filterDto);
+    Page<Product> findAllByScoreAndCategoryNameAndFilters(@Param("filterDto")ProductFilterResponseDTO filterDto, Pageable pageable);
 
     // is_green true인 제품들 중에서 nut_score 높은 순으로 정렬, 같은 경우, 최근 업데이트 되고, product_id 높은 순으로.
     @Query("SELECT p FROM Product p WHERE p.isGreen = true ORDER BY p.nutScore DESC, p.updatedAt DESC, p.productId DESC")
@@ -135,7 +136,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "AND (:#{#filterDto.isSaturatedFat} IS NULL OR pf.isSaturatedFat = :#{#filterDto.isSaturatedFat})" +
             "AND (:#{#filterDto.isLowFat} IS NULL OR pf.isLowFat = :#{#filterDto.isLowFat})" +
             "ORDER BY p.nutScore DESC, p.updatedAt DESC, p.productId DESC")
-    List<Product> findAllByIsGreenIsTrueOrderByNutScoreDescAndCategoryNameAndFilters(@Param("filterDto")ProductFilterResponseDTO filterDto);
+    Page<Product> findAllByIsGreenIsTrueOrderByNutScoreDescAndCategoryNameAndFilters(@Param("filterDto")ProductFilterResponseDTO filterDto, Pageable pageable);
 
 }
 
