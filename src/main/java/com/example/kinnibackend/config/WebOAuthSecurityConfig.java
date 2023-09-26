@@ -62,7 +62,7 @@ public class WebOAuthSecurityConfig {
 
         http.logout(logoutConfig -> {
             logoutConfig
-                    .logoutSuccessUrl("http://localhost:3000/");
+                    .logoutSuccessUrl("http://223.130.138.156:3000/");
         });
 
         http.exceptionHandling(httpSecurityExceptionHandlingConfigurer-> {

@@ -1,6 +1,5 @@
 package com.example.kinnibackend.controller.productLike;
 
-import com.example.kinnibackend.dto.productLike.ProductLikeDTO;
 import com.example.kinnibackend.entity.like.ProductLike;
 import com.example.kinnibackend.service.productLike.ProductLikeService;
 import lombok.RequiredArgsConstructor;
@@ -10,12 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/like")
-@CrossOrigin(origins = "http://localhost:3000") // 허용할 원본 출처 설정
+@CrossOrigin(origins = "http://223.130.138.156:3000") // 허용할 원본 출처 설정
 public class ProductLikeController {
 
     private final ProductLikeService productLikeService;
