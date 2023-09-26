@@ -8,7 +8,6 @@ import com.example.kinnibackend.repository.product.ProductRepository;
 import com.example.kinnibackend.repository.product.ProductViewCountRepository;
 import com.example.kinnibackend.repository.review.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -119,10 +117,13 @@ public class ProductService {
     }
 
     //필터링 적용된 끼니그린
-    public List<ProductResponseWithReviewCountDTO> findAllGreenRanking(
-            ProductFilterResponseDTO filterDto) {
+    public List<ProductResponseWithReviewCountDTO> findAllGreenRanking(int page) {
+        // Pageable
+        int pageSize = 15;
+        Pageable pageable = PageRequest.of(page, pageSize);
+
         // isGreen이 true이고 nut_score가 높은 순서로 상품을 가져옵니다.
-        List<Product> productList = productRepository.findAllByIsGreenIsTrueOrderByNutScoreDescAndCategoryNameAndFilters(filterDto);
+        List<Product> productList = productRepository.findAllByIsGreenIsTrueOrderByNutScoreDescAndCategoryNameAndFilters(pageable);
 
         // 각 상품에 대한 리뷰 수를 찾아서 DTO로 변환합니다.
         List<ProductResponseWithReviewCountDTO> result = new ArrayList<>();
@@ -137,10 +138,12 @@ public class ProductService {
 
     //필터링 적용 된 끼니랭킹
     public List<ProductResponseWithReviewCountDTO> findAllKkiniRankingByCategoriesAndFilters(
-            ProductFilterResponseDTO filterDto) {
+            int page) {
+        int pageSize = 15;
+        Pageable pageable = PageRequest.of(page, pageSize);
 
         // 선택한 카테고리 및 필터에 해당하는 제품들을 모두 가져옵니다.
-        List<Product> productList = productRepository.findAllByScoreAndCategoryNameAndFilters(filterDto);
+        List<Product> productList = productRepository.findAllByScoreAndCategoryNameAndFilters(pageable);
 
         // 각 상품에 대한 리뷰 수를 찾아서 DTO로 변환합니다.
         List<ProductResponseWithReviewCountDTO> result = new ArrayList<>();
