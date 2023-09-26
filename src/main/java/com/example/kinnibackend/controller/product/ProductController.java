@@ -28,21 +28,17 @@ public class ProductController {
 
     //필터링, 페이징 적용 된 끼니랭킹
     @GetMapping("kkini-ranking")
-    public ResponseEntity<Page<ProductResponseWithReviewCountDTO>> fetchKkiniRankingByFilters(
-            ProductFilterResponseDTO filterDto,
-            @RequestParam(name="page", defaultValue = "0") int page,
-            @RequestParam(name="size", defaultValue = "15") int size){
-        return ResponseEntity.ok(productService.findAllKkiniRankingByCategoriesAndFilters(filterDto, page, size));
+    public ResponseEntity<List<ProductResponseWithReviewCountDTO>> fetchKkiniRankingByFilters(
+            ProductFilterResponseDTO filterDto){
+        return ResponseEntity.ok(productService.findAllKkiniRankingByCategoriesAndFilters(filterDto));
     }
 
     @GetMapping("/kkini-pick-products")
     public List<ProductCardListResponseDTO> getFilteredLikedProducts(
             @RequestParam Long userId,
             @RequestParam(required = false) String categoryName,
-            @RequestParam(required = false) ProductFilteringResponseDTO filterDTO,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "15") int size) {
-        return productFilterService.getFilteredLikedProducts(userId, categoryName, filterDTO, page, size);
+            @RequestParam(required = false) ProductFilteringResponseDTO filterDTO) {
+        return productFilterService.getFilteredLikedProducts(userId, categoryName, filterDTO);
     }
 
     @GetMapping("/kkini-pick-products/top")
@@ -55,13 +51,10 @@ public class ProductController {
         return allProducts.stream().limit(12).collect(Collectors.toList());  // 상위 12개만 추출
     }
 
-    //필터링, 페이징 적용 된 끼니그린랭킹
     @GetMapping("kkini-green")
-    public ResponseEntity<Page<ProductResponseWithReviewCountDTO>> fetchKkiniGreenRankingProducts(
-            ProductFilterResponseDTO filterDto,
-            @RequestParam(name="page", defaultValue = "0") int page,
-            @RequestParam(name="size", defaultValue = "15") int size){
-        return ResponseEntity.ok(productService.findAllGreenRanking(filterDto, page, size));
+    public ResponseEntity<List<ProductResponseWithReviewCountDTO>> fetchKkiniGreenRankingProducts(
+            ProductFilterResponseDTO filterDto){
+        return ResponseEntity.ok(productService.findAllGreenRanking(filterDto));
     }
 
     //상위 12 끼니랭킹

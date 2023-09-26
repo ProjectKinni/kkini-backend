@@ -45,4 +45,36 @@ public interface ProductFilterRepository extends JpaRepository<ProductFilter, Lo
             @Param("isLowFat") Boolean isLowFat,
             Pageable pageable
     );
+
+    @Query("SELECT p FROM ProductFilter p WHERE "
+            + "(p.isGreen = :isGreen) AND "
+            + "(p.categoryName  = :categoryName) AND "
+            + "(p.isLowCalorie  = :isLowCalorie) AND "
+            + "(p.isSugarFree  = :isSugarFree) AND "
+            + "(p.isLowSugar  = :isLowSugar) AND "
+            + "(p.isLowCarb  = :isLowCarb) AND "
+            + "(p.isKeto  = :isKeto) AND "
+            + "(p.isTransFat  = :isTransFat) AND "
+            + "(p.isHighProtein  = :isHighProtein) AND "
+            + "(p.isLowSodium  = :isLowSodium) AND "
+            + "(p.isCholesterol  = :isCholesterol) AND "
+            + "(p.isSaturatedFat  = :isSaturatedFat) AND "
+            + "(p.isSaturatedFat  = :isSaturatedFat) AND"
+            + "(p.isLowFat  = :isLowFat)"
+    )
+    List<ProductFilter> filterProductResponse(
+            @Param("isGreen") Boolean isGreen,
+            @Param("categoryName") String categoryName,
+            @Param("isLowCalorie") Boolean isLowCalorie,
+            @Param("isSugarFree") Boolean isSugarFree,
+            @Param("isLowSugar") Boolean isLowSugar,
+            @Param("isLowCarb") Boolean isLowCarb,
+            @Param("isKeto") Boolean isKeto,
+            @Param("isTransFat") Boolean isTransFat,
+            @Param("isHighProtein") Boolean isHighProtein,
+            @Param("isLowSodium") Boolean isLowSodium,
+            @Param("isCholesterol") Boolean isCholesterol,
+            @Param("isSaturatedFat") Boolean isSaturatedFat,
+            @Param("isLowFat") Boolean isLowFat
+    );
 }

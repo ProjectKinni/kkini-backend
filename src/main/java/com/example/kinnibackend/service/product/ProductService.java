@@ -119,27 +119,37 @@ public class ProductService {
     }
 
     //필터링 적용된 끼니그린
-    public Page<ProductResponseWithReviewCountDTO> findAllGreenRanking(
-            ProductFilterResponseDTO filterDto, int page, int size){
-        //isGreen = true 인 상품 중에 nut_score 높은 순으로 product 얻어오기
-        Page<Product> productList = productRepository.findAllByIsGreenIsTrueOrderByNutScoreDescAndCategoryNameAndFilters(filterDto, PageRequest.of(0, 15));
+    public List<ProductResponseWithReviewCountDTO> findAllGreenRanking(
+            ProductFilterResponseDTO filterDto) {
+        // isGreen이 true이고 nut_score가 높은 순서로 상품을 가져옵니다.
+        List<Product> productList = productRepository.findAllByIsGreenIsTrueOrderByNutScoreDescAndCategoryNameAndFilters(filterDto);
 
-        return productList.map(product -> new ProductResponseWithReviewCountDTO(
-                product,    //상품
-                reviewRepository.findTotalReviewCountByProductId(product.getProductId())    //리뷰수
-        ));
+        // 각 상품에 대한 리뷰 수를 찾아서 DTO로 변환합니다.
+        List<ProductResponseWithReviewCountDTO> result = new ArrayList<>();
+        for (Product product : productList) {
+            Long reviewCount = reviewRepository.findTotalReviewCountByProductId(product.getProductId());
+            ProductResponseWithReviewCountDTO dto = new ProductResponseWithReviewCountDTO(product, reviewCount);
+            result.add(dto);
+        }
+
+        return result;
     }
 
     //필터링 적용 된 끼니랭킹
-    public Page<ProductResponseWithReviewCountDTO> findAllKkiniRankingByCategoriesAndFilters(
-            ProductFilterResponseDTO filterDto, int page, int size){
+    public List<ProductResponseWithReviewCountDTO> findAllKkiniRankingByCategoriesAndFilters(
+            ProductFilterResponseDTO filterDto) {
 
-        //선택한 카테고리 및 필터에 해당하는 제품들만 얻어온다. 페이징 처리 적용.
-        Page<Product> productList = productRepository.findAllByScoreAndCategoryNameAndFilters(filterDto, PageRequest.of(0, 15));
+        // 선택한 카테고리 및 필터에 해당하는 제품들을 모두 가져옵니다.
+        List<Product> productList = productRepository.findAllByScoreAndCategoryNameAndFilters(filterDto);
 
-        return productList.map(product -> new ProductResponseWithReviewCountDTO(
-                product,    //상품
-                reviewRepository.findTotalReviewCountByProductId(product.getProductId())    //리뷰수
-        ));
+        // 각 상품에 대한 리뷰 수를 찾아서 DTO로 변환합니다.
+        List<ProductResponseWithReviewCountDTO> result = new ArrayList<>();
+        for (Product product : productList) {
+            Long reviewCount = reviewRepository.findTotalReviewCountByProductId(product.getProductId());
+            ProductResponseWithReviewCountDTO dto = new ProductResponseWithReviewCountDTO(product, reviewCount);
+            result.add(dto);
+        }
+
+        return result;
     }
 }

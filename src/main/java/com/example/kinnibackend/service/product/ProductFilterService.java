@@ -78,4 +78,45 @@ public class ProductFilterService {
 
         return filteredProductDTOs;
     }
+
+    public List<ProductCardListResponseDTO> getFilteredLikedProducts
+            (Long userId, String categoryName, ProductFilteringResponseDTO filterDTO) {
+
+        List<Long> likedProductIds = productLikeRepository.findByUsersUserId(userId)
+                .stream()
+                .map(productLike -> productLike.getProduct().getProductId())
+                .collect(Collectors.toList());
+
+        List<ProductFilter> likedProductFilters = productFilterRepository.findAllById(likedProductIds);
+        System.out.println(likedProductFilters);  // For debugging
+
+        Set<Product> filteredProductsSet = new HashSet<>();
+
+        for (ProductFilter likedProductFilter : likedProductFilters) {
+            List<ProductFilter> similarProductFilters = productFilterRepository.filterProductResponse(
+                    likedProductFilter.getIsGreen(),
+                    likedProductFilter.getCategoryName(),
+                    likedProductFilter.getIsLowCalorie(), likedProductFilter.getIsSugarFree(),
+                    likedProductFilter.getIsLowSugar(), likedProductFilter.getIsLowCarb(),
+                    likedProductFilter.getIsKeto(), likedProductFilter.getIsTransFat(),
+                    likedProductFilter.getIsHighProtein(), likedProductFilter.getIsLowSodium(),
+                    likedProductFilter.getIsCholesterol(), likedProductFilter.getIsSaturatedFat(),
+                    likedProductFilter.getIsLowFat()
+            );
+
+            for (ProductFilter similarProductFilter : similarProductFilters) {
+                Product similarProduct = productRepository.findByProductId(similarProductFilter.getProductId());
+                if (similarProduct != null && !likedProductIds.contains(similarProduct.getProductId())) {
+                    filteredProductsSet.add(similarProduct);
+                }
+            }
+        }
+
+        // ProductCardListResponseDTO로 변환
+        List<ProductCardListResponseDTO> filteredProductDTOs = filteredProductsSet.stream()
+                .map(ProductCardListResponseDTO::fromEntity)
+                .collect(Collectors.toList());
+
+        return filteredProductDTOs;
+    }
 }

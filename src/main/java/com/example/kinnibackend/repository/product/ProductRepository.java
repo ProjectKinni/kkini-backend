@@ -115,8 +115,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "AND (:#{#filterDto.isCholesterol} IS NULL OR pf.isCholesterol = :#{#filterDto.isCholesterol})" +
             "AND (:#{#filterDto.isSaturatedFat} IS NULL OR pf.isSaturatedFat = :#{#filterDto.isSaturatedFat})" +
             "AND (:#{#filterDto.isLowFat} IS NULL OR pf.isLowFat = :#{#filterDto.isLowFat})" +
+
             "ORDER BY p.score DESC, p.updatedAt DESC, p.productId DESC")
-    Page<Product> findAllByScoreAndCategoryNameAndFilters(@Param("filterDto")ProductFilterResponseDTO filterDto, Pageable pageable);
+    List<Product> findAllByScoreAndCategoryNameAndFilters(@Param("filterDto")ProductFilterResponseDTO filterDto);
+//    Page<Product> findAllByScoreAndCategoryNameAndFilters(@Param("filterDto")ProductFilterResponseDTO filterDto, Pageable pageable);
 
     // is_green true인 제품들 중에서 nut_score 높은 순으로 정렬, 같은 경우, 최근 업데이트 되고, product_id 높은 순으로.
     @Query("SELECT p FROM Product p WHERE p.isGreen = true ORDER BY p.nutScore DESC, p.updatedAt DESC, p.productId DESC")
@@ -140,7 +142,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "AND (:#{#filterDto.isSaturatedFat} IS NULL OR pf.isSaturatedFat = :#{#filterDto.isSaturatedFat})" +
             "AND (:#{#filterDto.isLowFat} IS NULL OR pf.isLowFat = :#{#filterDto.isLowFat})" +
             "ORDER BY p.nutScore DESC, p.updatedAt DESC, p.productId DESC")
-    Page<Product> findAllByIsGreenIsTrueOrderByNutScoreDescAndCategoryNameAndFilters(@Param("filterDto")ProductFilterResponseDTO filterDto, Pageable pageable);
+    List<Product> findAllByIsGreenIsTrueOrderByNutScoreDescAndCategoryNameAndFilters(@Param("filterDto")ProductFilterResponseDTO filterDto);
+//    Page<Product> findAllByIsGreenIsTrueOrderByNutScoreDescAndCategoryNameAndFilters(@Param("filterDto")ProductFilterResponseDTO filterDto, Pageable pageable);
 
 }
 
