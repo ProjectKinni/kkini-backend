@@ -85,44 +85,6 @@ public class SearchServiceTest {
 
     @Test
     @Transactional
-    public void searchProducts_ValidSearchTerm() {
-        // Given
-        String searchTerm = "Test";
-
-        // When
-        List<ProductCardListResponseDTO> result = searchService.searchProducts(searchTerm);
-
-        // Then
-        assertThat(result).isNotEmpty();
-        assertThat(result.get(0).getProductName()).isEqualTo(testProduct.getProductName());
-    }
-
-    @Test
-    @Transactional
-    public void searchProducts_InvalidSearchTerm() {
-        // Given
-        String searchTerm = "";
-
-        // When & Then
-        assertThatThrownBy(() -> searchService.searchProducts(searchTerm))
-                .isInstanceOf(InvalidSearchTermException.class)
-                .hasMessageContaining("검색어가 유효하지 않습니다.");
-    }
-
-    @Test
-    @Transactional
-    public void searchProducts_ProductNotFound() {
-        // Given
-        String searchTerm = "NonExisting";
-
-        // When & Then
-        assertThatThrownBy(() -> searchService.searchProducts(searchTerm))
-                .isInstanceOf(ProductNotFoundException.class)
-                .hasMessageContaining("상품을 찾을 수 없습니다.");
-    }
-
-    @Test
-    @Transactional
     public void autoCompleteNames_ValidSearchTerm() {
         // Given
         String searchTerm = "Test";

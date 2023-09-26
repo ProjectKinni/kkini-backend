@@ -30,8 +30,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
         if (tokenProvider.validToken(token)) {
             Authentication authentication = tokenProvider.getAuthentication(token);
-            System.out.println("doFilterInternal인데 if문 통과?");
-            System.out.println(authentication);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);

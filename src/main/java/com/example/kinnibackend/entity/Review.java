@@ -29,19 +29,19 @@ public class Review {
     @Column(name = "rating", columnDefinition = "DECIMAL(2, 1)")
     private Double rating;
 
-    @Column(name = "content", columnDefinition = "TEXT")
+    @Column(name = "content")
     private String content;
 
-    @Column(name = "image1", columnDefinition = "TEXT")
+    @Column(name = "image1")
     private String image1;
 
-    @Column(name = "image2", columnDefinition = "TEXT")
+    @Column(name = "image2")
     private String image2;
 
-    @Column(name = "image3", columnDefinition = "TEXT")
+    @Column(name = "image3")
     private String image3;
 
-    @Column(name = "image4", columnDefinition = "TEXT")
+    @Column(name = "image4")
     private String image4;
 
     @CreationTimestamp

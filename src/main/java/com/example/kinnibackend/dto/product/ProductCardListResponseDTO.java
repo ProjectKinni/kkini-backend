@@ -15,7 +15,7 @@ public class ProductCardListResponseDTO {
     private String categoryName;
     private String productName;
     private String detail;
-    private Float averageRating;
+    private String averageRating;
     private String makerName;
 
     private Double servingSize;
@@ -32,6 +32,10 @@ public class ProductCardListResponseDTO {
     private String image;
     private String nutImage;
     private Double nutScore;
+    private String productLink;
+
+    private Long viewCount;
+    private Long reviewCount;
 
     public static ProductCardListResponseDTO fromEntity(Product product) {
         return ProductCardListResponseDTO.builder()
@@ -40,7 +44,7 @@ public class ProductCardListResponseDTO {
                 .categoryName(product.getCategoryName())
                 .productName(product.getProductName())
                 .detail(product.getDetail())
-                .averageRating(product.getAverageRating())
+                .averageRating(String.format("%.1f", product.getAverageRating()))
                 .makerName(product.getMakerName())
                 .servingSize(product.getServingSize())
                 .kcal(product.getKcal())
@@ -56,6 +60,7 @@ public class ProductCardListResponseDTO {
                 .image(product.getImage())
                 .nutImage(product.getNutImage())
                 .nutScore(product.getNutScore())
+                .productLink(product.getProductLink())
                 .build();
     }
 }
