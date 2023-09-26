@@ -7,4 +7,3 @@ Backend repository of Project KKINI.
 src/main/resources 아래 application-db.properties 생성
 </br>
 application.properties 안의 주석 참고하여 진행
-
