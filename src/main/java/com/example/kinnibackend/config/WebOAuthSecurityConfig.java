@@ -52,7 +52,7 @@ public class WebOAuthSecurityConfig {
         });
 
         http.oauth2Login(oauth2  -> {
-            oauth2.loginPage("/getUserINfo")
+            oauth2.loginPage("/getUserInfo")
                     .authorizationEndpoint(endpointConfig -> endpointConfig
                             .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository()))
                     .successHandler(oAuth2SuccessHandler())
