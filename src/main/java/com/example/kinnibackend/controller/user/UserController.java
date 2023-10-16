@@ -18,7 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://223.130.138.156:3000") // 허용할 도메인을 설정
+@CrossOrigin(origins = "http://localhost:3000") // 허용할 도메인을 설정
 public class UserController {
 
     private final TokenProvider tokenProvider;

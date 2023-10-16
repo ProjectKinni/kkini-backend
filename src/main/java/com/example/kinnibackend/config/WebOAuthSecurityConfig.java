@@ -62,7 +62,7 @@ public class WebOAuthSecurityConfig {
 
         http.logout(logoutConfig -> {
             logoutConfig
-                    .logoutSuccessUrl("http://kkini.net:3000/");
+                    .logoutSuccessUrl("http://localhost:3000/");
         });
 
         http.exceptionHandling(httpSecurityExceptionHandlingConfigurer-> {

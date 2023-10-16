@@ -31,7 +31,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     public static final Duration ACCESS_TOKEN_DURATION = Duration.ofDays(1);
 
-    public static final String REDIRECT_PATH = "http://kkini.net:3000/";
+    public static final String REDIRECT_PATH = "http://localhost:3000/";
 
     private final TokenProvider tokenProvider;
     private final RefreshTokenService refreshTokenService;
