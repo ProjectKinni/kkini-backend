@@ -69,3 +69,7 @@ s3:
   region: ${region}
   accessKey: ${accessKey}
   secretKey: ${secretKey}
+
+server:
+  servlet:
+    context-path: /wasApi
