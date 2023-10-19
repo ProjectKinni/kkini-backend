@@ -73,3 +73,8 @@ s3:
 server:
   servlet:
     context-path: /wasApi
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-type: PKCS12
+    key-store-password: password
+
