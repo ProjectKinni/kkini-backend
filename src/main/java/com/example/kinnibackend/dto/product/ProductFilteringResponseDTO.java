@@ -1,5 +1,7 @@
 package com.example.kinnibackend.dto.product;
 
+import com.example.kinnibackend.entity.Product;
+import com.example.kinnibackend.entity.ProductFilter;
 import lombok.*;
 
 @Getter
@@ -9,6 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class ProductFilteringResponseDTO {
+    private Long productId;
     private Boolean isGreen;
     private String searchTerm;
     private String categoryName;
@@ -24,10 +27,10 @@ public class ProductFilteringResponseDTO {
     private Boolean isSaturatedFat;
     private Boolean isLowFat;
 
-    public Object[] toFilterConditionsArray(String searhTerm){
+    public Object[] toFilterConditionsArray(String searchTerm) {
         return new Object[]{
                 this.getIsGreen(),
-                this.getSearchTerm(),
+                searchTerm,
                 this.getCategoryName(),
                 this.getIsLowCalorie(),
                 this.getIsSugarFree(),
@@ -41,5 +44,24 @@ public class ProductFilteringResponseDTO {
                 this.getIsSaturatedFat(),
                 this.getIsLowFat(),
         };
+    }
+
+    public static ProductFilteringResponseDTO fromEntity(ProductFilter productFilter){
+        return ProductFilteringResponseDTO.builder()
+                .productId(productFilter.getProductId())
+                .categoryName(productFilter.getCategoryName())
+                .isGreen(productFilter.getIsGreen())
+                .isLowCalorie(productFilter.getIsLowCalorie())
+                .isSugarFree(productFilter.getIsSugarFree())
+                .isLowSugar(productFilter.getIsLowSugar())
+                .isLowCarb(productFilter.getIsLowCarb())
+                .isKeto(productFilter.getIsKeto())
+                .isTransFat(productFilter.getIsTransFat())
+                .isHighProtein(productFilter.getIsHighProtein())
+                .isLowSodium(productFilter.getIsLowSodium())
+                .isCholesterol(productFilter.getIsCholesterol())
+                .isSaturatedFat(productFilter.getIsSaturatedFat())
+                .isLowFat(productFilter.getIsLowFat())
+                .build();
     }
 }

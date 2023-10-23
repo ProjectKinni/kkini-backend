@@ -60,12 +60,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("isLowFat") Boolean isLowFat,
             Pageable pageable
     );
-
-    // 평균 평점 계산
-    @Query("SELECT COALESCE(AVG(r.rating), 0) FROM Review r WHERE r.product.productId = :productId")
-    Optional<Double> findAverageRatingByProductId(@Param("productId") Long productId);
-
-    default List<Product> filterProducts(Object[] filterConditions, Pageable pageable){
+    default List<Product> filterProducts(Object[] filterConditions, Pageable pageable) {
         return filterProducts(
                 (Boolean) filterConditions[0],
                 (String) filterConditions[1],
@@ -80,18 +75,41 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 (Boolean) filterConditions[10],
                 (Boolean) filterConditions[11],
                 (Boolean) filterConditions[12],
-                (Boolean) filterConditions[13]
-                ,pageable
+                (Boolean) filterConditions[13],
+                pageable
         );
     }
+//    default List<Product> filterProducts(Object[] filterConditions, List<Long> likedProductIds, Pageable pageable){
+//        return filterProducts(
+//                (Boolean) filterConditions[0],
+//                (String) filterConditions[1],
+//                (String) filterConditions[2],
+//                (Boolean) filterConditions[3],
+//                (Boolean) filterConditions[4],
+//                (Boolean) filterConditions[5],
+//                (Boolean) filterConditions[6],
+//                (Boolean) filterConditions[7],
+//                (Boolean) filterConditions[8],
+//                (Boolean) filterConditions[9],
+//                (Boolean) filterConditions[10],
+//                (Boolean) filterConditions[11],
+//                (Boolean) filterConditions[12],
+//                (Boolean) filterConditions[13],
+//                likedProductIds,
+//                pageable
+//        );
+//    }
+
+
+    // 평균 평점 계산
+    @Query("SELECT COALESCE(AVG(r.rating), 0) FROM Review r WHERE r.product.productId = :productId")
+    Optional<Double> findAverageRatingByProductId(@Param("productId") Long productId);
 
     //임시로 쓸 로직
     @Query("SELECT p FROM Product p ORDER BY p.productId DESC")
     List<Product> findAllByDesc();
 
     // 끼니 PICK 정렬
-    @Query("SELECT p FROM Product p ORDER BY p.score DESC, p.updatedAt DESC, p.productId DESC")
-    List<Product> findKkiniPickByScoreAndUpdatedAt(Pageable pageable);
 
     //Top 12 끼니랭킹
     @Query("SELECT p FROM Product p ORDER BY p.score DESC, p.updatedAt DESC, p.productId DESC")

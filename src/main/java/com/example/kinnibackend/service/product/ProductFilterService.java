@@ -2,21 +2,22 @@ package com.example.kinnibackend.service.product;
 
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
 import com.example.kinnibackend.dto.product.ProductFilteringResponseDTO;
+import com.example.kinnibackend.dto.productLike.ProductLikeDTO;
 import com.example.kinnibackend.entity.Product;
 import com.example.kinnibackend.entity.ProductFilter;
 import com.example.kinnibackend.repository.product.ProductFilterRepository;
 import com.example.kinnibackend.repository.product.ProductRepository;
 import com.example.kinnibackend.repository.productLike.ProductLikeRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,8 +32,9 @@ public class ProductFilterService {
 
     @Autowired
     private final ProductFilterRepository productFilterRepository;
+    private static final Logger logger = LoggerFactory.getLogger(ProductFilterService.class);
 
-    public List<ProductCardListResponseDTO> getFilteredLikedProducts
+    public List<ProductCardListResponseDTO> findTopKkiniPickRanking
             (Long userId, String categoryName, ProductFilteringResponseDTO filterDTO, int page, int size) {
 
         int pageSize = 15;
@@ -44,12 +46,11 @@ public class ProductFilterService {
                 .collect(Collectors.toList());
 
         List<ProductFilter> likedProductFilters = productFilterRepository.findAllById(likedProductIds);
-        System.out.println(likedProductFilters);  // For debugging
 
         Set<Product> filteredProductsSet = new HashSet<>();
 
         for (ProductFilter likedProductFilter : likedProductFilters) {
-            Page<ProductFilter> similarProductFilters = productFilterRepository.filterProductResponse(
+            Page<ProductFilter> similarProductFilters = productFilterRepository.filterKkiniPickProducts(
                     likedProductFilter.getIsGreen(),
                     likedProductFilter.getCategoryName(),
                     likedProductFilter.getIsLowCalorie(), likedProductFilter.getIsSugarFree(),
@@ -77,44 +78,90 @@ public class ProductFilterService {
         return filteredProductDTOs;
     }
 
-    public List<ProductCardListResponseDTO> getFilteredLikedProducts
-            (Long userId, String categoryName, ProductFilteringResponseDTO filterDTO) {
-
-        List<Long> likedProductIds = productLikeRepository.findByUsersUserId(userId)
+    //    public List<ProductCardListResponseDTO> findAllKkiniPickByCategoriesAndFilters
+//            (Long userId, String categoryName, ProductFilteringResponseDTO filterDTO, int page) {
+//        int pageSize = 15;
+//        Pageable pageable = PageRequest.of(page, pageSize);
+//
+//        List<Long> likedProductIds = productLikeRepository.findByUsersUserId(userId)
+//                .stream()
+//                .map(productLike -> productLike.getProduct().getProductId())
+//                .collect(Collectors.toList());
+//
+//        List<ProductFilter> likedProductFilters = productFilterRepository.findAllById(likedProductIds);
+//
+//        Set<Product> filteredProductsSet = new HashSet<>();
+//
+//        for (ProductFilter likedProductFilter : likedProductFilters) {
+//            Page<ProductFilter> similarProductFilters = productFilterRepository.filterKkiniPickProducts(
+//                    likedProductFilter.getIsGreen(),
+//                    likedProductFilter.getCategoryName(),
+//                    likedProductFilter.getIsLowCalorie(), likedProductFilter.getIsSugarFree(),
+//                    likedProductFilter.getIsLowSugar(), likedProductFilter.getIsLowCarb(),
+//                    likedProductFilter.getIsKeto(), likedProductFilter.getIsTransFat(),
+//                    likedProductFilter.getIsHighProtein(), likedProductFilter.getIsLowSodium(),
+//                    likedProductFilter.getIsCholesterol(), likedProductFilter.getIsSaturatedFat(),
+//                    likedProductFilter.getIsLowFat(),
+//                    pageable
+//            );
+//
+//            for (ProductFilter similarProductFilter : similarProductFilters) {
+//                Product similarProduct = productRepository.findByProductId(similarProductFilter.getProductId());
+//                if (similarProduct != null && !likedProductIds.contains(similarProduct.getProductId())) {
+//                    filteredProductsSet.add(similarProduct);
+//                }
+//            }
+//        }
+//
+//        // ProductCardListResponseDTO로 변환
+//        List<ProductCardListResponseDTO> filteredProductDTOs = filteredProductsSet.stream()
+//                .map(ProductCardListResponseDTO::fromEntity)
+//                .collect(Collectors.toList());
+//
+//        return filteredProductDTOs;
+//    }
+    public List<ProductFilteringResponseDTO> getKkiniPick(Long userId, Pageable pageable) {
+        List<ProductLikeDTO> likedProductDTOs = productLikeRepository.findByUsersUserId(userId)
                 .stream()
-                .map(productLike -> productLike.getProduct().getProductId())
+                .map(pl -> ProductLikeDTO.fromEntity(pl.getProduct(), pl.getUsers()))
                 .collect(Collectors.toList());
 
-        List<ProductFilter> likedProductFilters = productFilterRepository.findAllById(likedProductIds);
-        System.out.println(likedProductFilters);  // For debugging
+        List<ProductFilteringResponseDTO> resultDTOs = new ArrayList<>();
 
-        Set<Product> filteredProductsSet = new HashSet<>();
+        for (ProductLikeDTO likedProductDTO : likedProductDTOs) {
+            Optional<ProductFilter> optionalProductFilter = productFilterRepository.findById(likedProductDTO.getProductId());
 
-        for (ProductFilter likedProductFilter : likedProductFilters) {
-            List<ProductFilter> similarProductFilters = productFilterRepository.filterProductResponse(
-                    likedProductFilter.getIsGreen(),
-                    likedProductFilter.getCategoryName(),
-                    likedProductFilter.getIsLowCalorie(), likedProductFilter.getIsSugarFree(),
-                    likedProductFilter.getIsLowSugar(), likedProductFilter.getIsLowCarb(),
-                    likedProductFilter.getIsKeto(), likedProductFilter.getIsTransFat(),
-                    likedProductFilter.getIsHighProtein(), likedProductFilter.getIsLowSodium(),
-                    likedProductFilter.getIsCholesterol(), likedProductFilter.getIsSaturatedFat(),
-                    likedProductFilter.getIsLowFat()
+            if(!optionalProductFilter.isPresent()){
+                continue;
+            }
+
+            ProductFilter productFilter = optionalProductFilter.get();
+            ProductFilteringResponseDTO filteringDTO = ProductFilteringResponseDTO.fromEntity(productFilter);
+
+            Page<ProductFilter> filteredProductFilters = productFilterRepository.filterKkiniPickProducts(
+                    filteringDTO.getIsGreen(),
+                    filteringDTO.getCategoryName(),
+                    filteringDTO.getIsLowCalorie(),
+                    filteringDTO.getIsSugarFree(),
+                    filteringDTO.getIsLowSugar(),
+                    filteringDTO.getIsLowCarb(),
+                    filteringDTO.getIsKeto(),
+                    filteringDTO.getIsTransFat(),
+                    filteringDTO.getIsHighProtein(),
+                    filteringDTO.getIsLowSodium(),
+                    filteringDTO.getIsCholesterol(),
+                    filteringDTO.getIsSaturatedFat(),
+                    filteringDTO.getIsLowFat(),
+                    pageable
             );
 
-            for (ProductFilter similarProductFilter : similarProductFilters) {
-                Product similarProduct = productRepository.findByProductId(similarProductFilter.getProductId());
-                if (similarProduct != null && !likedProductIds.contains(similarProduct.getProductId())) {
-                    filteredProductsSet.add(similarProduct);
-                }
-            }
+            resultDTOs.addAll(
+                    filteredProductFilters.stream()
+                            .map(ProductFilteringResponseDTO::fromEntity)
+                            .collect(Collectors.toList())
+            );
         }
 
-        // ProductCardListResponseDTO로 변환
-        List<ProductCardListResponseDTO> filteredProductDTOs = filteredProductsSet.stream()
-                .map(ProductCardListResponseDTO::fromEntity)
-                .collect(Collectors.toList());
-
-        return filteredProductDTOs;
+        return resultDTOs.stream().distinct().collect(Collectors.toList());
     }
 }

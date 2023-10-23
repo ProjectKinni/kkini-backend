@@ -8,27 +8,25 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 
 @Repository
 public interface ProductFilterRepository extends JpaRepository<ProductFilter, Long> {
     @Query("SELECT p FROM ProductFilter p WHERE "
-            + "(p.isGreen = :isGreen) AND "
-            + "(p.categoryName  = :categoryName) AND "
-            + "(p.isLowCalorie  = :isLowCalorie) AND "
-            + "(p.isSugarFree  = :isSugarFree) AND "
-            + "(p.isLowSugar  = :isLowSugar) AND "
-            + "(p.isLowCarb  = :isLowCarb) AND "
-            + "(p.isKeto  = :isKeto) AND "
-            + "(p.isTransFat  = :isTransFat) AND "
-            + "(p.isHighProtein  = :isHighProtein) AND "
-            + "(p.isLowSodium  = :isLowSodium) AND "
-            + "(p.isCholesterol  = :isCholesterol) AND "
-            + "(p.isSaturatedFat  = :isSaturatedFat) AND "
-            + "(p.isSaturatedFat  = :isSaturatedFat) AND"
-            + "(p.isLowFat  = :isLowFat)"
+            + "(:isGreen IS NULL OR p.isGreen = :isGreen) AND "
+            + "(:categoryName IS NULL OR p.categoryName = :categoryName) AND "
+            + "(:isLowCalorie IS NULL OR p.isLowCalorie = :isLowCalorie) AND "
+            + "(:isSugarFree IS NULL OR p.isSugarFree = :isSugarFree) AND "
+            + "(:isLowSugar IS NULL OR p.isLowSugar = :isLowSugar) AND "
+            + "(:isLowCarb IS NULL OR p.isLowCarb = :isLowCarb) AND "
+            + "(:isKeto IS NULL OR p.isKeto = :isKeto) AND "
+            + "(:isTransFat IS NULL OR p.isTransFat = :isTransFat) AND "
+            + "(:isHighProtein IS NULL OR p.isHighProtein = :isHighProtein) AND "
+            + "(:isLowSodium IS NULL OR p.isLowSodium = :isLowSodium) AND "
+            + "(:isCholesterol IS NULL OR p.isCholesterol = :isCholesterol) AND "
+            + "(:isSaturatedFat IS NULL OR p.isSaturatedFat = :isSaturatedFat) AND "
+            + "(:isLowFat IS NULL OR p.isLowFat = :isLowFat)"
     )
-    Page<ProductFilter> filterProductResponse(
+    Page<ProductFilter> filterKkiniPickProducts(
             @Param("isGreen") Boolean isGreen,
             @Param("categoryName") String categoryName,
             @Param("isLowCalorie") Boolean isLowCalorie,
@@ -43,37 +41,5 @@ public interface ProductFilterRepository extends JpaRepository<ProductFilter, Lo
             @Param("isSaturatedFat") Boolean isSaturatedFat,
             @Param("isLowFat") Boolean isLowFat,
             Pageable pageable
-    );
-
-    @Query("SELECT p FROM ProductFilter p WHERE "
-            + "(p.isGreen = :isGreen) AND "
-            + "(p.categoryName  = :categoryName) AND "
-            + "(p.isLowCalorie  = :isLowCalorie) AND "
-            + "(p.isSugarFree  = :isSugarFree) AND "
-            + "(p.isLowSugar  = :isLowSugar) AND "
-            + "(p.isLowCarb  = :isLowCarb) AND "
-            + "(p.isKeto  = :isKeto) AND "
-            + "(p.isTransFat  = :isTransFat) AND "
-            + "(p.isHighProtein  = :isHighProtein) AND "
-            + "(p.isLowSodium  = :isLowSodium) AND "
-            + "(p.isCholesterol  = :isCholesterol) AND "
-            + "(p.isSaturatedFat  = :isSaturatedFat) AND "
-            + "(p.isSaturatedFat  = :isSaturatedFat) AND"
-            + "(p.isLowFat  = :isLowFat)"
-    )
-    List<ProductFilter> filterProductResponse(
-            @Param("isGreen") Boolean isGreen,
-            @Param("categoryName") String categoryName,
-            @Param("isLowCalorie") Boolean isLowCalorie,
-            @Param("isSugarFree") Boolean isSugarFree,
-            @Param("isLowSugar") Boolean isLowSugar,
-            @Param("isLowCarb") Boolean isLowCarb,
-            @Param("isKeto") Boolean isKeto,
-            @Param("isTransFat") Boolean isTransFat,
-            @Param("isHighProtein") Boolean isHighProtein,
-            @Param("isLowSodium") Boolean isLowSodium,
-            @Param("isCholesterol") Boolean isCholesterol,
-            @Param("isSaturatedFat") Boolean isSaturatedFat,
-            @Param("isLowFat") Boolean isLowFat
     );
 }

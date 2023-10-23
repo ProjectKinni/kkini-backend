@@ -1,6 +1,7 @@
 package com.example.kinnibackend.dto.product;
 
 import com.example.kinnibackend.entity.Product;
+import com.example.kinnibackend.entity.ProductFilter;
 import lombok.*;
 
 @Getter
@@ -63,4 +64,5 @@ public class ProductCardListResponseDTO {
                 .productLink(product.getProductLink())
                 .build();
     }
+
 }
