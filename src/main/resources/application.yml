@@ -70,5 +70,3 @@ s3:
   accessKey: ${accessKey}
   secretKey: ${secretKey}
 
-
-
