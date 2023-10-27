@@ -36,16 +36,15 @@ public class ProductController {
         return allProducts.stream().limit(12).collect(Collectors.toList());  // 상위 12개만 추출
     }
     @GetMapping("/kkini-pick")
-    public ResponseEntity<List<ProductFilteringResponseDTO>> getKkiniPickForUser(
+    public ResponseEntity<List<ProductCardListResponseDTO>> getFilteredKkiniPick(
             @RequestParam Long userId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @ModelAttribute ProductFilteringResponseDTO userFilteringCondition,
+            @RequestParam(defaultValue = "0") int page) {
 
-        Pageable pageable = PageRequest.of(page, size);
+        List<ProductCardListResponseDTO> products =
+                productFilterService.getFilteredProductsByUserLikes(userId, userFilteringCondition, page);
 
-        List<ProductFilteringResponseDTO> kkiniPicks = productFilterService.getKkiniPick(userId, pageable);
-
-        return ResponseEntity.ok(kkiniPicks);
+        return ResponseEntity.ok(products);
     }
 
     //상위 12 끼니랭킹

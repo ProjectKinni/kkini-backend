@@ -64,5 +64,34 @@ public class ProductCardListResponseDTO {
                 .productLink(product.getProductLink())
                 .build();
     }
-
+    public static ProductCardListResponseDTO fromEntity(ProductFilter productFilter){
+        if (productFilter.getProduct() == null) {
+            throw new IllegalArgumentException("Product cannot be null when creating ProductCardListResponseDTO");
+        }
+        Product product = productFilter.getProduct();
+        return ProductCardListResponseDTO.builder()
+                .productId(product.getProductId())
+                .isGreen(product.getIsGreen())
+                .categoryName(product.getCategoryName())
+                .productName(product.getProductName())
+                .detail(product.getDetail())
+                .averageRating(String.format("%.1f", product.getAverageRating()))
+                .makerName(product.getMakerName())
+                .servingSize(product.getServingSize())
+                .kcal(product.getKcal())
+                .carbohydrate(product.getCarbohydrate())
+                .protein(product.getProtein())
+                .fat(product.getFat())
+                .sodium(product.getSodium())
+                .cholesterol(product.getCholesterol())
+                .saturatedFat(product.getSaturatedFat())
+                .transFat(product.getTransFat())
+                .sugar(product.getSugar())
+                .score(product.getScore())
+                .image(product.getImage())
+                .nutImage(product.getNutImage())
+                .nutScore(product.getNutScore())
+                .productLink(product.getProductLink())
+                .build();
+    }
 }
