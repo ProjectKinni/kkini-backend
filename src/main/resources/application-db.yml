@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://db-j8cm1-kr.vpc-pub-cdb.ntruss.com:3306/test?useSSL=false
+    url: jdbc:mysql://db-j8cm1-kr.vpc-pub-cdb.ntruss.com:3306/kkini?useSSL=false
     username_: kkini
     password: bronx7500!
     driver-class-name: com.mysql.cj.jdbc.Driver
