@@ -29,43 +29,44 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             + "(:isGreen IS NULL OR p.isGreen = :isGreen) AND "
             + "(:categoryName IS NULL OR p.categoryName = :categoryName) AND "
             + "(:searchTerm IS NULL OR p.productName LIKE %:searchTerm% OR p.categoryName LIKE %:searchTerm%) AND "
-            + "(:isLowCalorie IS NULL OR (p.categoryName = '음료' AND p.kcal < 20) OR " +
-            "(p.categoryName != '음료' AND p.kcal < 40)) AND "
+            + "(:isLowCalorie IS NULL OR (p.categoryName = '음료' AND p.kcal < 20) OR "
+            + "(p.categoryName != '음료' AND p.kcal < 40)) AND "
+            + "(:isHighCalorie IS NULL OR (p.kcal > 500 AND p.sodium > 600)) AND "
             + "(:isSugarFree IS NULL OR p.sugar <= 1) AND "
             + "(:isLowSugar IS NULL OR p.sugar <= p.servingSize * 0.05) AND "
             + "(:isLowCarb IS NULL OR (p.carbohydrate >= p.servingSize * 0.11 AND "
             + "p.carbohydrate <= p.servingSize * 0.20)) AND "
+            + "(:isHighCarb IS NULL OR p.carbohydrate > p.servingSize * 0.6) AND "
             + "(:isKeto IS NULL OR p.carbohydrate <= p.servingSize * 0.10) AND "
-            + "(:isTransFat IS NULL OR p.transFat <= 1) AND "
-            + "(:isSaturatedFat IS NULL OR p.saturatedFat <= p.servingSize * 0.02) AND "
+            + "(:isLowTransFat IS NULL OR p.transFat <= 1) AND "
+            + "(:isLowSaturatedFat IS NULL OR p.saturatedFat <= p.servingSize * 0.02) AND "
             + "(:isLowFat IS NULL OR ((p.categoryName = '음료' AND p.fat <= 1.5) OR "
             + "(p.categoryName != '음료' AND p.fat <= 3.0))) AND "
+            + "(:isHighFat IS NULL OR p.fat > p.servingSize * 0.2) AND"
             + "(:isHighProtein IS NULL OR p.protein >= p.servingSize * 0.20) AND "
             + "(:isLowSodium IS NULL OR p.sodium <= p.servingSize * 2) AND "
-            + "(:isCholesterol IS NULL OR p.cholesterol < 300)")
+            + "(:isLowCholesterol IS NULL OR p.cholesterol < 300)")
     List<Product> filterProducts(
             @Param("isGreen") Boolean isGreen,
-            @Param("searchTerm") String searchTerm,
             @Param("categoryName") String categoryName,
+            @Param("searchTerm") String searchTerm,
             @Param("isLowCalorie") Boolean isLowCalorie,
+            @Param("isHighCalorie") Boolean isHighCalorie,
             @Param("isSugarFree") Boolean isSugarFree,
             @Param("isLowSugar") Boolean isLowSugar,
             @Param("isLowCarb") Boolean isLowCarb,
+            @Param("isHighCarb") Boolean isHighCarb,
             @Param("isKeto") Boolean isKeto,
-            @Param("isTransFat") Boolean isTransFat,
+            @Param("isLowTransFat") Boolean isLowTransFat,
             @Param("isHighProtein") Boolean isHighProtein,
             @Param("isLowSodium") Boolean isLowSodium,
-            @Param("isCholesterol") Boolean isCholesterol,
-            @Param("isSaturatedFat") Boolean isSaturatedFat,
+            @Param("isLowCholesterol") Boolean isLowCholesterol,
+            @Param("isLowSaturatedFat") Boolean isLowSaturatedFat,
             @Param("isLowFat") Boolean isLowFat,
+            @Param("isHighFat") Boolean isHighFat,
             Pageable pageable
     );
-
-    // 평균 평점 계산
-    @Query("SELECT COALESCE(AVG(r.rating), 0) FROM Review r WHERE r.product.productId = :productId")
-    Optional<Double> findAverageRatingByProductId(@Param("productId") Long productId);
-
-    default List<Product> filterProducts(Object[] filterConditions, Pageable pageable){
+    default List<Product> filterProducts(Object[] filterConditions, Pageable pageable) {
         return filterProducts(
                 (Boolean) filterConditions[0],
                 (String) filterConditions[1],
@@ -80,18 +81,23 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 (Boolean) filterConditions[10],
                 (Boolean) filterConditions[11],
                 (Boolean) filterConditions[12],
-                (Boolean) filterConditions[13]
-                ,pageable
+                (Boolean) filterConditions[13],
+                (Boolean) filterConditions[14],
+                (Boolean) filterConditions[15],
+                (Boolean) filterConditions[16],
+                pageable
         );
     }
+
+    // 평균 평점 계산
+    @Query("SELECT COALESCE(AVG(r.rating), 0) FROM Review r WHERE r.product.productId = :productId")
+    Optional<Double> findAverageRatingByProductId(@Param("productId") Long productId);
 
     //임시로 쓸 로직
     @Query("SELECT p FROM Product p ORDER BY p.productId DESC")
     List<Product> findAllByDesc();
 
     // 끼니 PICK 정렬
-    @Query("SELECT p FROM Product p ORDER BY p.score DESC, p.updatedAt DESC, p.productId DESC")
-    List<Product> findKkiniPickByScoreAndUpdatedAt(Pageable pageable);
 
     //Top 12 끼니랭킹
     @Query("SELECT p FROM Product p ORDER BY p.score DESC, p.updatedAt DESC, p.productId DESC")

@@ -1,6 +1,5 @@
 package com.example.kinnibackend.service.product;
 
-import com.example.kinnibackend.dto.product.ProductFilterResponseDTO;
 import com.example.kinnibackend.dto.product.ProductPreviewResponseDTO;
 import com.example.kinnibackend.dto.product.ProductResponseWithReviewCountDTO;
 import com.example.kinnibackend.entity.Product;
