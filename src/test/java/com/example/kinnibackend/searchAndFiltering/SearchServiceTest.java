@@ -35,7 +35,7 @@ public class SearchServiceTest {
         // Given: 더미 데이터 생성
         testProduct = ProductCardListResponseDTO.builder()
                 .productName("Test Product")
-                .categoryName("Test Category")
+                .category("Test Category")
                 .isGreen(true)
                 .detail("ddd")
                 .averageRating(4.52f)
@@ -58,7 +58,7 @@ public class SearchServiceTest {
 
         Product product = Product.builder()
                 .productName(testProduct.getProductName())
-                .categoryName(testProduct.getCategoryName())
+                .categoryName(testProduct.getCategory())
                 .isGreen(testProduct.getIsGreen())
                 .detail(testProduct.getDetail())
                 .averageRating(testProduct.getAverageRating())
@@ -94,7 +94,7 @@ public class SearchServiceTest {
 
         // Then
         assertThat(result).isNotEmpty();
-        assertThat(result).contains(testProduct.getProductName(), testProduct.getCategoryName());
+        assertThat(result).contains(testProduct.getProductName(), testProduct.getCategory());
     }
 
     @Test

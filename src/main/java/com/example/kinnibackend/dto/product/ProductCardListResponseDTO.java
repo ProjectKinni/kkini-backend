@@ -13,7 +13,7 @@ import lombok.*;
 public class ProductCardListResponseDTO {
     private Long productId;
     private Boolean isGreen;
-    private String categoryName;
+    private String category;
     private String productName;
     private String detail;
     private String averageRating;
@@ -42,7 +42,7 @@ public class ProductCardListResponseDTO {
         return ProductCardListResponseDTO.builder()
                 .productId(product.getProductId())
                 .isGreen(product.getIsGreen())
-                .categoryName(product.getCategoryName())
+                .category(product.getCategory())
                 .productName(product.getProductName())
                 .detail(product.getDetail())
                 .averageRating(String.format("%.1f", product.getAverageRating()))
@@ -72,7 +72,7 @@ public class ProductCardListResponseDTO {
         return ProductCardListResponseDTO.builder()
                 .productId(product.getProductId())
                 .isGreen(product.getIsGreen())
-                .categoryName(product.getCategoryName())
+                .category(product.getCategory())
                 .productName(product.getProductName())
                 .detail(product.getDetail())
                 .averageRating(String.format("%.1f", product.getAverageRating()))

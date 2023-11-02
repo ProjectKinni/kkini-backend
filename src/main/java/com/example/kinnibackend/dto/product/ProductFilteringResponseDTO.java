@@ -1,8 +1,6 @@
 package com.example.kinnibackend.dto.product;
 
-import com.example.kinnibackend.entity.Product;
 import com.example.kinnibackend.entity.ProductFilter;
-import jakarta.persistence.Column;
 import lombok.*;
 
 @Getter
@@ -13,9 +11,12 @@ import lombok.*;
 @RequiredArgsConstructor
 public class ProductFilteringResponseDTO {
     private Long productId;
+    private String productName;
     private Boolean isGreen;
+    private String category;
+
     private String searchTerm;
-    private String categoryName;
+
     private Boolean isLowCalorie;
     private Boolean isHighCalorie;
     private Boolean isSugarFree;
@@ -33,9 +34,10 @@ public class ProductFilteringResponseDTO {
 
     public Object[] toFilterConditionsArray(String searchTerm) {
         return new Object[]{
+                this.getSearchTerm(),
                 this.getIsGreen(),
-                searchTerm,
-                this.getCategoryName(),
+                this.getProductName(),
+                this.getCategory(),
                 this.getIsLowCalorie(),
                 this.getIsHighCalorie(),
                 this.getIsSugarFree(),
@@ -52,31 +54,12 @@ public class ProductFilteringResponseDTO {
                 this.getIsHighFat()
         };
     }
-    public Object[] toFilterConditionsArray() {
-        return new Object[]{
-                this.getIsGreen(),
-                searchTerm,
-                this.getCategoryName(),
-                this.getIsLowCalorie(),
-                this.getIsHighCalorie(),
-                this.getIsSugarFree(),
-                this.getIsLowSugar(),
-                this.getIsLowCarb(),
-                this.getIsHighCarb(),
-                this.getIsKeto(),
-                this.getIsLowTransFat(),
-                this.getIsHighProtein(),
-                this.getIsLowSodium(),
-                this.getIsLowCholesterol(),
-                this.getIsLowSaturatedFat(),
-                this.getIsLowFat(),
-                this.getIsHighFat()
-        };
-    }
+
     public static ProductFilteringResponseDTO fromEntity(ProductFilter productFilter){
         return ProductFilteringResponseDTO.builder()
                 .productId(productFilter.getProductId())
-                .categoryName(productFilter.getCategoryName())
+                .productName(productFilter.getProductName())
+                .category(productFilter.getCategory())
                 .isGreen(productFilter.getIsGreen())
                 .isLowCalorie(productFilter.getIsLowCalorie())
                 .isHighCalorie(productFilter.getIsHighCalorie())
@@ -94,34 +77,14 @@ public class ProductFilteringResponseDTO {
                 .isHighFat(productFilter.getIsHighFat())
                 .build();
     }
-    public ProductFilter toEntity() {
-        return ProductFilter.builder()
-                .productId(this.getProductId())
-                .categoryName(this.getCategoryName())
-                .isGreen(this.getIsGreen())
-                .isLowCalorie(this.getIsLowCalorie())
-                .isHighCalorie(this.getIsHighCalorie())
-                .isSugarFree(this.getIsSugarFree())
-                .isLowSugar(this.getIsLowSugar())
-                .isLowCarb(this.getIsLowCarb())
-                .isHighCarb(this.getIsHighCarb())
-                .isKeto(this.getIsKeto())
-                .isLowTransFat(this.getIsLowTransFat())
-                .isHighProtein(this.getIsHighProtein())
-                .isLowSodium(this.getIsLowSodium())
-                .isLowCholesterol(this.getIsLowCholesterol())
-                .isLowSaturatedFat(this.getIsLowSaturatedFat())
-                .isLowFat(this.getIsLowFat())
-                .isHighFat(this.getIsHighFat())
-                .build();
-    }
+
     public void merge(ProductFilteringResponseDTO additionalFilter) {
         if (additionalFilter != null) {
             if (additionalFilter.getIsGreen() != null) {
                 this.isGreen = additionalFilter.getIsGreen();
             }
-            if (additionalFilter.getCategoryName() != null) {
-                this.categoryName = additionalFilter.getCategoryName();
+            if (additionalFilter.getCategory() != null) {
+                this.category = additionalFilter.getCategory();
             }
             if (additionalFilter.getIsLowCalorie() != null) {
                 this.isLowCalorie = additionalFilter.getIsLowCalorie();
