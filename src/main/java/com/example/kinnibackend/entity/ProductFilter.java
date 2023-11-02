@@ -15,6 +15,9 @@ public class ProductFilter {
     @Column(name = "product_id")
     private Long productId;
 
+    @Column(name = "product_name", nullable = false)
+    private String productName;
+
     @OneToOne
     @JoinColumn(name = "product_id")
     @MapsId
@@ -23,8 +26,8 @@ public class ProductFilter {
     @Column(name = "is_green", columnDefinition = "boolean default false")
     private Boolean isGreen;
 
-    @Column(name = "category_name")
-    private String categoryName;
+    @Column(name = "category")
+    private String category;
 
     @Column(name = "is_low_calorie")
     private Boolean isLowCalorie;

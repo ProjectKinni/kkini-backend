@@ -3,10 +3,11 @@ package com.example.kinnibackend.controller.searchAndFiltering;
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
 import com.example.kinnibackend.dto.product.ProductFilteringResponseDTO;
 import com.example.kinnibackend.repository.review.ReviewRepository;
-import com.example.kinnibackend.service.product.ProductFilteringService;
+import com.example.kinnibackend.service.product.ProductFilterService;
 import com.example.kinnibackend.service.search.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,14 +25,14 @@ public class SearchAndFilteringController {
     private final ReviewRepository reviewRepository;
 
     @Autowired
-    private final ProductFilteringService productFilteringService;
+    private final ProductFilterService productFilterService;
 
     // 검색과 검색 결과의 필터링 기능
     @GetMapping("/search")
-    public ResponseEntity<List<ProductCardListResponseDTO>>
-        searchAndFilterProducts(@ModelAttribute ProductFilteringResponseDTO productFilteringResponseDTO, @RequestParam int page) {
-        List<ProductCardListResponseDTO> searchResults =
-                productFilteringService.filterProducts(productFilteringResponseDTO, page);
+    public ResponseEntity<Page<ProductCardListResponseDTO>>
+    searchAndFilterProducts(@ModelAttribute ProductFilteringResponseDTO productFilteringResponseDTO, @RequestParam int page) {
+        Page<ProductCardListResponseDTO> searchResults =
+                productFilterService.SearchProducts(productFilteringResponseDTO, page);
         return ResponseEntity.ok(searchResults);
     }
 

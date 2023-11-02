@@ -19,8 +19,8 @@ public class Product {
     @Column(name = "product_id")
     private Long productId;
 
-    @Column(name = "category_name")
-    private String categoryName;
+    @Column(name = "category")
+    private String category;
 
     @Column(name = "is_green", columnDefinition = "boolean default false")
     private Boolean isGreen;
