@@ -33,8 +33,8 @@ public class ReviewService {
     private final ProductRepository productRepository;
     private final AmazonS3 naverS3Client;
 
-    private final String BUCKET_NAME = "kkini-review-image-bucket";
-    private final String FOLDER_NAME = "image";
+    private final String BUCKET_NAME = "kkini-image-bucket";
+    private final String FOLDER_NAME = "review-image";
 
     public CreateReviewResponseDTO createReview(CreateReviewRequestDTO createReviewRequestDTO, Long userId) {
         Users user = userRepository.findByUserId(userId);
