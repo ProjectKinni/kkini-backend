@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/like")
-@CrossOrigin(origins = "http://223.130.138.156:3000") // 허용할 원본 출처 설정
+@CrossOrigin(origins = "http://223.130.139.40") // 허용할 원본 출처 설정
 public class ProductLikeController {
 
     private final ProductLikeService productLikeService;
