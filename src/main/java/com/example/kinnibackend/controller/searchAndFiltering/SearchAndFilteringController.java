@@ -33,7 +33,6 @@ public class SearchAndFilteringController {
         searchAndFilterProducts(@ModelAttribute ProductFilteringResponseDTO productFilteringResponseDTO, @RequestParam int page) {
         List<ProductCardListResponseDTO> searchResults =
 //                productFilteringService.filterProducts(productFilteringResponseDTO);
-//
                 productFilteringService.filterProducts(productFilteringResponseDTO, page);
         return ResponseEntity.ok(searchResults);
     }
