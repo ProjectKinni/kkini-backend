@@ -32,7 +32,7 @@ jobs:
         scp -o StrictHostKeyChecking=no -i deploy_key.pem build/libs/*.jar ${{ secrets.SERVER_URL }}:/root/backend/deploy
         ssh -o StrictHostKeyChecking=no -i deploy_key.pem ${{ secrets.SERVER_URL }} << EOF
           pkill -f 'java -jar'
-          nohup java -jar /path/to/deploy/your-application.jar > /root/backend/log/logfile.log 2>&1 &
+          nohup java -jar /root/backend/deploy/kinni-backend-0.0.1-SNAPSHOT.jar > /root/backend/log/logfile.log 2>&1 &
         EOF
       shell: bash
 
