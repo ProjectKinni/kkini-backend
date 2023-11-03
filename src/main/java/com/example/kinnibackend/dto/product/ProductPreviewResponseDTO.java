@@ -12,7 +12,7 @@ public class ProductPreviewResponseDTO {
     private String image;
     private Float averageRating;
     private Boolean isGreen;
-    private String categoryName;
+    private String category;
     private Double score;
 
     public ProductPreviewResponseDTO(Product entity){
@@ -21,7 +21,7 @@ public class ProductPreviewResponseDTO {
         this.image = entity.getImage();
         this.averageRating = entity.getAverageRating();
         this.isGreen = entity.getIsGreen();
-        this.categoryName = entity.getCategoryName();
+        this.category = entity.getCategory();
         this.score = entity.getScore();
     }
 
@@ -33,7 +33,7 @@ public class ProductPreviewResponseDTO {
                 .image(image)
                 .averageRating(averageRating)
                 .isGreen(isGreen)
-                .categoryName(categoryName)
+                .category(category)
                 .score(score)
                 .build();
     }

@@ -44,7 +44,7 @@ public class SearchService {
         // 카테고리명
         List<String> categoryNames = new ArrayList<>();
         for (Product product : productRepository.findByCategoryName(modifiedName)) {
-            categoryNames.add(product.getCategoryName());
+            categoryNames.add(product.getCategory());
         }
 
         // 상품명과 카테고리명을 결합

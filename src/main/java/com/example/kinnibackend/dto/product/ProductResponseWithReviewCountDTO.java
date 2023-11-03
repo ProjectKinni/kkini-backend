@@ -3,8 +3,6 @@ package com.example.kinnibackend.dto.product;
 import com.example.kinnibackend.entity.Product;
 import lombok.*;
 
-import java.util.List;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,7 +15,7 @@ public class ProductResponseWithReviewCountDTO {
     private String image;
     private Float averageRating;
     private Boolean isGreen;
-    private String categoryName;
+    private String category;
     private Double score;
     private long reviewCount;
 
@@ -27,7 +25,7 @@ public class ProductResponseWithReviewCountDTO {
         this.image = entity.getImage();
         this.averageRating = entity.getAverageRating();
         this.isGreen = entity.getIsGreen();
-        this.categoryName = entity.getCategoryName();
+        this.category = entity.getCategory();
         this.score = entity.getScore();
         this.reviewCount = reviewCount;
     }
@@ -38,7 +36,7 @@ public class ProductResponseWithReviewCountDTO {
                 .image(image)
                 .averageRating(averageRating)
                 .isGreen(isGreen)
-                .categoryName(categoryName)
+                .category(category)
                 .score(score)
                 .build();
     }
