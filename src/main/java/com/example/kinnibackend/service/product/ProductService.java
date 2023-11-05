@@ -33,17 +33,36 @@ public class ProductService {
     }
 
     public void updateProductAverageRating(Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(() ->
+                new RuntimeException("Product not found"));
+
         Optional<Double> averageRatingOpt = productRepository.findAverageRatingByProductId(productId);
+        Optional<Double> averageTasteRatingOpt = productRepository.findAverageTasteRatingByProductId(productId);
+        Optional<Double> averagePriceRatingOpt = productRepository.findAveragePriceRatingByProductId(productId);
+        Optional<Double> averageEcoRatingOpt = productRepository.findAverageEcoRatingByProductId(productId);
 
         averageRatingOpt.ifPresent(averageRating -> {
-            Product product = productRepository.findById(productId).orElseThrow(() ->
-                    new RuntimeException("Product not found"));
-
             float roundedAverageRating = (float) (Math.round(averageRating.floatValue() * 100.0) / 100.0);
             product.updateAverageRating(roundedAverageRating);  // 평균 평점 업데이트
-
-            productRepository.save(product);
         });
+
+        averageTasteRatingOpt.ifPresent(averageTasteRating -> {
+            float roundedAverageTasteRating = (float) (Math.round(averageTasteRating.floatValue() * 100.0) / 100.0);
+            product.updateAverageTasteRating(roundedAverageTasteRating);  // 평균 평점 업데이트
+        });
+
+        averagePriceRatingOpt.ifPresent(averagePriceRating -> {
+            float roundedAveragePriceRating = (float) (Math.round(averagePriceRating.floatValue() * 100.0) / 100.0);
+            product.updateAveragePriceRating(roundedAveragePriceRating);  // 평균 평점 업데이트
+        });
+
+        averageEcoRatingOpt.ifPresent(averageEcoRating -> {
+            float roundedAverageEcoRating = (float) (Math.round(averageEcoRating.floatValue() * 100.0) / 100.0);
+            product.updateAverageEcoRating(roundedAverageEcoRating);  // 평균 평점 업데이트
+        });
+
+        productRepository.save(product);
+
     }
 
     //Front 테스트 위해 임시로 쓸 로직

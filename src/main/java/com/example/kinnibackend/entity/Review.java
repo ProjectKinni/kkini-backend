@@ -29,6 +29,15 @@ public class Review {
     @Column(name = "rating", columnDefinition = "DECIMAL(2, 1)")
     private Double rating;
 
+    @Column(name = "taste_rating", columnDefinition = "DECIMAL(2, 1)")
+    private Double tasteRating;
+
+    @Column(name = "price_rating", columnDefinition = "DECIMAL(2, 1)")
+    private Double priceRating;
+
+    @Column(name = "eco_rating", columnDefinition = "DECIMAL(2, 1)")
+    private Double ecoRating;
+
     @Column(name = "content")
     private String content;
 

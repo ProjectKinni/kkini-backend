@@ -1,7 +1,6 @@
 package com.example.kinnibackend.controller.review;
 
 import com.example.kinnibackend.dto.review.*;
-import com.example.kinnibackend.entity.Product;
 import com.example.kinnibackend.service.product.ProductService;
 import com.example.kinnibackend.service.review.ReviewService;
 import lombok.RequiredArgsConstructor;
