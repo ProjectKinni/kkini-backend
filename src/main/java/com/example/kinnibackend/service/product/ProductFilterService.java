@@ -40,41 +40,6 @@ public class ProductFilterService {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductFilterService.class);
 
-    // 검색과 검색 결과 필터링 기능
-    public Page<ProductCardListResponseDTO> SearchProducts
-    (ProductFilteringResponseDTO productFilteringResponseDTO, int page) {
-        //paging
-        int pageSize = 15;
-        Pageable pageable = PageRequest.of(page, pageSize);
-
-        // 띄어쓰기 제거
-        String searchTerm = productFilteringResponseDTO.getSearchTerm().replace(" ", "");
-
-        // 띄어쓰기가 제거된 검색어로 필터링 조건 설정
-        Object[] filterConditions = productFilteringResponseDTO.toFilterConditionsArray(searchTerm); // searchTerm을 인자로 전달
-
-        System.out.println("Search term: " + searchTerm);
-
-        Page<ProductFilter> products =
-                productFilterRepository.filterProducts(searchTerm, filterConditions, pageable);
-
-        if (products == null || products.isEmpty()) {
-            return null;
-        }
-
-        List<ProductCardListResponseDTO> responseList = products.getContent().stream()
-                .filter(Objects::nonNull)
-                .map(product -> {
-                    ProductCardListResponseDTO response = ProductCardListResponseDTO.fromEntity(product);
-                    response.setReviewCount(reviewRepository.findTotalReviewCountByProductId(product.getProductId()));
-                    return response;
-                })
-                .collect(Collectors.toList());
-
-        return new PageImpl<>(responseList, pageable, products.getTotalElements());
-    }
-
-
     public List<ProductCardListResponseDTO> findTopKkiniPickRanking
             (Long userId, String categoryName, ProductFilteringResponseDTO filterDTO, int page, int size) {
 
@@ -169,28 +134,37 @@ public class ProductFilterService {
         return finalFilteredProducts.stream().distinct().collect(Collectors.toList());
     }
 
-
-    // 필터링 기능
     public List<ProductCardListResponseDTO> filterProducts(ProductFilteringResponseDTO productFilteringResponseDTO, int page) {
-        //paging
+        // Paging
         int pageSize = 15;
         Pageable pageable = PageRequest.of(page, pageSize);
 
+        logger.info("filterProducts 시작: criteria={}, page={}", productFilteringResponseDTO, page);
+
         // 필터링 조건 설정
-        Object[] filterConditions =
-                productFilteringResponseDTO.toFilterConditionsArray(productFilteringResponseDTO.getSearchTerm());
+        Object[] filterConditions = productFilteringResponseDTO.toFilterConditionsArray(productFilteringResponseDTO.getSearchTerm());
 
-        Page<ProductFilter> products = productFilterRepository.filterProducts(filterConditions, pageable);
+        // 로깅을 통해 필터링 조건 확인
+        logger.debug("필터링 조건: {}", (Object) filterConditions);
 
-        return (products == null || products.isEmpty())
-                ? Collections.emptyList()
-                : products.stream()
-                .filter(Objects::nonNull)
-                .map(product -> {
-                    ProductCardListResponseDTO dto = ProductCardListResponseDTO.fromEntity(product);
-                    dto.setReviewCount(reviewRepository.findTotalReviewCountByProductId(product.getProductId()));
-                    return dto;
-                })
-                .collect(Collectors.toList());
+        Page<ProductFilter> productFiltersPage = productFilterRepository.filterProducts(filterConditions, pageable);
+
+        // 로깅을 통해 결과 확인
+        if (productFiltersPage == null || productFiltersPage.isEmpty()) {
+            logger.info("검색 결과가 없습니다.");
+            return Collections.emptyList();
+        } else {
+            logger.info("검색 결과 수: {}", productFiltersPage.getTotalElements());
+            return productFiltersPage.stream()
+                    .filter(Objects::nonNull)
+                    .map(productFilter -> {
+                        logger.debug("처리 중인 ProductFilter: {}", productFilter);
+                        ProductCardListResponseDTO dto = ProductCardListResponseDTO.fromEntity(productFilter.getProduct());
+                        dto.setIsGreen(productFilter.getIsGreen()); // isGreen 값 설정
+                        dto.setReviewCount(reviewRepository.findTotalReviewCountByProductId(productFilter.getProductId()));
+                        return dto;
+                    })
+                    .collect(Collectors.toList());
+        }
     }
 }

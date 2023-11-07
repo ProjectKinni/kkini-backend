@@ -11,15 +11,15 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class ProductCardListResponseDTO {
+public class ProductAndFilteringResponseDTO {
     private Long productId;
     private Boolean isGreen;
     private String category;
     private String productName;
+
     private String detail;
     private String averageRating;
     private String makerName;
-
     private Double servingSize;
     private Double kcal;
     private Double carbohydrate;
@@ -35,36 +35,27 @@ public class ProductCardListResponseDTO {
     private String nutImage;
     private Double nutScore;
     private String productLink;
-
     private Long viewCount;
     private Long reviewCount;
 
-    public static ProductCardListResponseDTO fromEntity(Product product) {
-        return ProductCardListResponseDTO.builder()
-                .productId(product.getProductId())
-                .isGreen(product.getIsGreen())
-                .category(product.getCategory())
-                .productName(product.getProductName())
-                .detail(product.getDetail())
-                .averageRating(String.format("%.1f", product.getAverageRating()))
-                .makerName(product.getMakerName())
-                .servingSize(product.getServingSize())
-                .kcal(product.getKcal())
-                .carbohydrate(product.getCarbohydrate())
-                .protein(product.getProtein())
-                .fat(product.getFat())
-                .sodium(product.getSodium())
-                .cholesterol(product.getCholesterol())
-                .saturatedFat(product.getSaturatedFat())
-                .transFat(product.getTransFat())
-                .sugar(product.getSugar())
-                .score(product.getScore())
-                .image(product.getImage())
-                .nutImage(product.getNutImage())
-                .nutScore(product.getNutScore())
-                .productLink(product.getProductLink())
-                .build();
-    }
+
+    private String searchTerm;
+
+    private Boolean isLowCalorie;
+    private Boolean isHighCalorie;
+    private Boolean isSugarFree;
+    private Boolean isLowSugar;
+    private Boolean isLowCarb;
+    private Boolean isHighCarb;
+    private Boolean isKeto;
+    private Boolean isLowTransFat;
+    private Boolean isHighProtein;
+    private Boolean isLowSodium;
+    private Boolean isLowCholesterol;
+    private Boolean isLowSaturatedFat;
+    private Boolean isLowFat;
+    private Boolean isHighFat;
+
 
     public static ProductCardListResponseDTO fromEntity(Product product, ProductFilter productFilter) {
         Boolean isGreenValue = productFilter != null ? productFilter.getIsGreen() : null;
@@ -119,4 +110,5 @@ public class ProductCardListResponseDTO {
         }
         return true; // 모든 조건을 만족하면 true
     }
+
 }

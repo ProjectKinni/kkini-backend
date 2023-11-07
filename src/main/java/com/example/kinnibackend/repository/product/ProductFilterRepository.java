@@ -17,8 +17,8 @@ public interface ProductFilterRepository extends JpaRepository<ProductFilter, Lo
 
     @Query("SELECT p FROM ProductFilter p WHERE "
             + "(:isGreen IS NULL OR p.isGreen = :isGreen) AND "
-            + "(:category IS NULL OR p.category = :category) AND "
-            + "(:searchTerm IS NULL OR p.productName LIKE %:searchTerm% OR p.category LIKE %:searchTerm%) AND "
+            + "(:searchTerm is null or lower(p.productName) like lower(concat('%',:searchTerm,'%')) escape '!') AND"
+            + "(:category is null or p.category = :category) AND"
             + "(:isLowCalorie IS NULL OR p.isLowCalorie = :isLowCalorie) AND "
             + "(:isHighCalorie IS NULL OR p.isHighCalorie = :isHighCalorie) AND "
             + "(:isSugarFree IS NULL OR p.isSugarFree = :isSugarFree) AND "
@@ -55,11 +55,37 @@ public interface ProductFilterRepository extends JpaRepository<ProductFilter, Lo
             Pageable pageable
     );
 
+    // SQL 인젝션 공격 방지
+    static String escapeSpecialCharacters(String searchTerm) {
+        if (searchTerm != null) {
+            return searchTerm.replaceAll("([%_])", "\\\\$1");
+        }
+        return null;
+    }
+
     default Page<ProductFilter> filterProducts
             (String searchTerm, Object[] filterConditions, Pageable pageable) {
-        logger.info("toFilterConditionsArray 메소드 실행, searchTerm: {}", searchTerm);
+        String escapedSearchTerm = escapeSpecialCharacters(searchTerm);
+        logger.info("Filtering with searchTerm: {}", escapedSearchTerm);
+        logger.info("Filtering with category: {}", filterConditions[0]);
+        logger.info("Filtering with isGreen: {}", filterConditions[1]);
+        logger.info("Filtering with lowcal: {}", filterConditions[2]);
+        logger.info("Filtering with highcal: {}", filterConditions[3]);
+        logger.info("Filtering with sugarfree: {}", filterConditions[4]);
+        logger.info("Filtering with lowsugar: {}", filterConditions[5]);
+        logger.info("Filtering with lowcarb: {}", filterConditions[6]);
+        logger.info("Filtering with highcarb: {}", filterConditions[7]);
+        logger.info("Filtering with keto: {}", filterConditions[8]);
+        logger.info("Filtering with lowtransfat: {}", filterConditions[9]);
+        logger.info("Filtering with highprotein: {}", filterConditions[10]);
+        logger.info("Filtering with lowsodium: {}", filterConditions[11]);
+        logger.info("Filtering with lowchol: {}", filterConditions[12]);
+        logger.info("Filtering with lowsaturated: {}", filterConditions[13]);
+        logger.info("Filtering with lowfat: {}", filterConditions[14]);
+        logger.info("Filtering with highfat: {}", filterConditions[15]);
+
         return filterProducts(
-                searchTerm,
+                escapedSearchTerm,
                 (String) filterConditions[0],
                 (Boolean) filterConditions[1],
                 (Boolean) filterConditions[2],
