@@ -35,9 +35,6 @@ public class ProductFilterService {
     @Autowired
     private final ProductFilterRepository productFilterRepository;
 
-    @Autowired
-    private final ReviewRepository reviewRepository;
-
     private static final Logger logger = LoggerFactory.getLogger(ProductFilterService.class);
 
     // 필터링 로직

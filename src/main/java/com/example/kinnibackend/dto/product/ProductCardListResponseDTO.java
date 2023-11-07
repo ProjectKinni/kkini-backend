@@ -93,32 +93,4 @@ public class ProductCardListResponseDTO {
                 .productLink(product.getProductLink())
                 .build();
     }
-    public static ProductCardListResponseDTO fromCombinedDTO(CombinedSearchFilterDTO combinedDTO) {
-        return ProductCardListResponseDTO.builder()
-                .productId(combinedDTO.getProductId())
-                .isGreen(combinedDTO.getIsGreen())
-                .category(combinedDTO.getCategory())
-                .productName(combinedDTO.getProductName())
-                .detail(combinedDTO.getDetail())
-                .averageRating(combinedDTO.getAverageRating())
-                .makerName(combinedDTO.getMakerName())
-                .servingSize(combinedDTO.getServingSize())
-                .kcal(combinedDTO.getKcal())
-                .carbohydrate(combinedDTO.getCarbohydrate())
-                .protein(combinedDTO.getProtein())
-                .fat(combinedDTO.getFat())
-                .sodium(combinedDTO.getSodium())
-                .cholesterol(combinedDTO.getCholesterol())
-                .saturatedFat(combinedDTO.getSaturatedFat())
-                .transFat(combinedDTO.getTransFat())
-                .sugar(combinedDTO.getSugar())
-                .score(combinedDTO.getScore())
-                .image(combinedDTO.getImage())
-                .nutImage(combinedDTO.getNutImage())
-                .nutScore(combinedDTO.getNutScore())
-                .productLink(combinedDTO.getProductLink())
-                .viewCount(combinedDTO.getViewCount())
-                .reviewCount(combinedDTO.getReviewCount())
-                .build();
-    }
 }
