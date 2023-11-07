@@ -4,62 +4,58 @@ import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
 import com.example.kinnibackend.entity.Product;
 import com.example.kinnibackend.entity.productViewCount.ProductViewCount;
 import com.example.kinnibackend.entity.Users;
-import com.example.kinnibackend.exception.search.InvalidSearchTermException;
 import com.example.kinnibackend.exception.search.ProductNotFoundException;
 import com.example.kinnibackend.repository.product.ProductRepository;
 import com.example.kinnibackend.repository.product.ProductViewCountRepository;
 import com.example.kinnibackend.repository.review.ReviewRepository;
 import com.example.kinnibackend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class SearchService {
 
-    @Autowired
     private final ProductRepository productRepository;
     private final ProductViewCountRepository productViewCountRepository;
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
+    private static final Logger logger = LoggerFactory.getLogger(SearchService.class);
 
-    // 자동 완성 기능
-    public List<String> autoCompleteNames(String searchTerm) {
-        if (searchTerm == null || searchTerm.isEmpty()) {
-            throw new InvalidSearchTermException("검색어를 입력해주세요.");
+    // 검색과 자동완성 기능
+    public Page<ProductCardListResponseDTO> searchProducts(String input, int page) {
+        logger.info("searchAndAutoComplete 메소드 시작");
+
+        // 입력값 처리
+        String searchTerm = input != null ? input.trim() : "";
+        if (searchTerm.isEmpty()) {
+            logger.warn("searchTerm이 비어있습니다.");
+            return Page.empty(); // 또는 다른 방식으로 처리
         }
 
-        String modifiedName = searchTerm.replace(" ", "%"); // 공백을 %로 대체
+        // 페이지 설정
+        int pageSize = 15;
+        Pageable pageable = PageRequest.of(page, pageSize);
 
-        // 상품명
-        List<String> productNames = new ArrayList<>();
-        for (Product product : productRepository.findByProductName(modifiedName)) {
-            productNames.add(product.getProductName());
+        // 검색어가 주어진 경우, 자동 완성 로직을 적용해 검색 실행
+        Page<Product> searchResults = productRepository.findByProductNameContainingIgnoreCaseOrCategoryContainingIgnoreCase(
+                searchTerm.replace(" ", "%"), searchTerm.replace(" ", "%"), pageable);
+
+        if (searchResults.isEmpty()) {
+            logger.info("검색 결과가 없습니다.");
+            return Page.empty(pageable);
         }
 
-        // 카테고리명
-        List<String> categoryNames = new ArrayList<>();
-        for (Product product : productRepository.findByCategoryName(modifiedName)) {
-            categoryNames.add(product.getCategory());
-        }
+        // 결과를 DTO로 변환
+        Page<ProductCardListResponseDTO> responsePage = searchResults.map(ProductCardListResponseDTO::fromEntity);
 
-        // 상품명과 카테고리명을 결합
-        List<String> combinedNames = new ArrayList<>();
-        combinedNames.addAll(productNames);
-        combinedNames.addAll(categoryNames);
-
-        // 중복 제거
-        List<String> distinctNames = new ArrayList<>();
-        for (String name : combinedNames) {
-            if (!distinctNames.contains(name)) {
-                distinctNames.add(name);
-            }
-        }
-        return distinctNames;
+        logger.info("searchAndAutoComplete 메소드 종료, 결과 개수: {}", responsePage.getTotalElements());
+        return responsePage;
     }
 
     // 상품 리스트 -> 상품 상세
@@ -99,5 +95,4 @@ public class SearchService {
             }
         }
     }
-
 }

@@ -17,8 +17,8 @@ public interface ProductFilterRepository extends JpaRepository<ProductFilter, Lo
 
     @Query("SELECT p FROM ProductFilter p WHERE "
             + "(:isGreen IS NULL OR p.isGreen = :isGreen) AND "
-            + "(:category IS NULL OR p.category = :category) AND "
-            + "(:searchTerm IS NULL OR p.productName LIKE %:searchTerm% OR p.category LIKE %:searchTerm%) AND "
+            + "(:searchTerm is null or lower(p.productName) like lower(concat('%',:searchTerm,'%')) escape '!') AND"
+            + "(:category is null or p.category = :category) AND"
             + "(:isLowCalorie IS NULL OR p.isLowCalorie = :isLowCalorie) AND "
             + "(:isHighCalorie IS NULL OR p.isHighCalorie = :isHighCalorie) AND "
             + "(:isSugarFree IS NULL OR p.isSugarFree = :isSugarFree) AND "
@@ -54,52 +54,4 @@ public interface ProductFilterRepository extends JpaRepository<ProductFilter, Lo
             @Param("isHighFat") Boolean isHighFat,
             Pageable pageable
     );
-
-    default Page<ProductFilter> filterProducts
-            (String searchTerm, Object[] filterConditions, Pageable pageable) {
-        logger.info("toFilterConditionsArray 메소드 실행, searchTerm: {}", searchTerm);
-        return filterProducts(
-                searchTerm,
-                (String) filterConditions[0],
-                (Boolean) filterConditions[1],
-                (Boolean) filterConditions[2],
-                (Boolean) filterConditions[3],
-                (Boolean) filterConditions[4],
-                (Boolean) filterConditions[5],
-                (Boolean) filterConditions[6],
-                (Boolean) filterConditions[7],
-                (Boolean) filterConditions[8],
-                (Boolean) filterConditions[9],
-                (Boolean) filterConditions[10],
-                (Boolean) filterConditions[11],
-                (Boolean) filterConditions[12],
-                (Boolean) filterConditions[13],
-                (Boolean) filterConditions[14],
-                (Boolean) filterConditions[15],
-                pageable
-        );
-    }
-    default Page<ProductFilter> filterProducts
-            (Object[] filterConditions, Pageable pageable) {
-        return filterProducts(
-                null,
-                (String) filterConditions[0],
-                (Boolean) filterConditions[1],
-                (Boolean) filterConditions[2],
-                (Boolean) filterConditions[3],
-                (Boolean) filterConditions[4],
-                (Boolean) filterConditions[5],
-                (Boolean) filterConditions[6],
-                (Boolean) filterConditions[7],
-                (Boolean) filterConditions[8],
-                (Boolean) filterConditions[9],
-                (Boolean) filterConditions[10],
-                (Boolean) filterConditions[11],
-                (Boolean) filterConditions[12],
-                (Boolean) filterConditions[13],
-                (Boolean) filterConditions[14],
-                (Boolean) filterConditions[15],
-                pageable
-        );
-    }
 }

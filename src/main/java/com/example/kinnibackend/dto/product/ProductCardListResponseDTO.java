@@ -64,14 +64,13 @@ public class ProductCardListResponseDTO {
                 .productLink(product.getProductLink())
                 .build();
     }
-    public static ProductCardListResponseDTO fromEntity(ProductFilter productFilter){
-        if (productFilter.getProduct() == null) {
-            throw new IllegalArgumentException("Product cannot be null when creating ProductCardListResponseDTO");
-        }
-        Product product = productFilter.getProduct();
+
+    public static ProductCardListResponseDTO fromEntity(Product product, ProductFilter productFilter) {
+        Boolean isGreenValue = productFilter != null ? productFilter.getIsGreen() : null;
+
         return ProductCardListResponseDTO.builder()
                 .productId(product.getProductId())
-                .isGreen(product.getIsGreen())
+                .isGreen(isGreenValue)
                 .category(product.getCategory())
                 .productName(product.getProductName())
                 .detail(product.getDetail())

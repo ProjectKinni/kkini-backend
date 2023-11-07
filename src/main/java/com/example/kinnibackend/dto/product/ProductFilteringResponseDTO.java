@@ -32,29 +32,6 @@ public class ProductFilteringResponseDTO {
     private Boolean isLowFat;
     private Boolean isHighFat;
 
-    public Object[] toFilterConditionsArray(String searchTerm) {
-        return new Object[]{
-                this.getSearchTerm(),
-                this.getIsGreen(),
-                this.getProductName(),
-                this.getCategory(),
-                this.getIsLowCalorie(),
-                this.getIsHighCalorie(),
-                this.getIsSugarFree(),
-                this.getIsLowSugar(),
-                this.getIsLowCarb(),
-                this.getIsHighCarb(),
-                this.getIsKeto(),
-                this.getIsLowTransFat(),
-                this.getIsHighProtein(),
-                this.getIsLowSodium(),
-                this.getIsLowCholesterol(),
-                this.getIsLowSaturatedFat(),
-                this.getIsLowFat(),
-                this.getIsHighFat()
-        };
-    }
-
     public static ProductFilteringResponseDTO fromEntity(ProductFilter productFilter){
         return ProductFilteringResponseDTO.builder()
                 .productId(productFilter.getProductId())
@@ -76,58 +53,5 @@ public class ProductFilteringResponseDTO {
                 .isLowFat(productFilter.getIsLowFat())
                 .isHighFat(productFilter.getIsHighFat())
                 .build();
-    }
-
-    public void merge(ProductFilteringResponseDTO additionalFilter) {
-        if (additionalFilter != null) {
-            if (additionalFilter.getIsGreen() != null) {
-                this.isGreen = additionalFilter.getIsGreen();
-            }
-            if (additionalFilter.getCategory() != null) {
-                this.category = additionalFilter.getCategory();
-            }
-            if (additionalFilter.getIsLowCalorie() != null) {
-                this.isLowCalorie = additionalFilter.getIsLowCalorie();
-            }
-            if (additionalFilter.getIsHighCalorie() != null) {
-                this.isHighCalorie = additionalFilter.getIsHighCalorie();
-            }
-            if (additionalFilter.getIsSugarFree() != null) {
-                this.isSugarFree = additionalFilter.getIsSugarFree();
-            }
-            if (additionalFilter.getIsLowSugar() != null) {
-                this.isLowSugar = additionalFilter.getIsLowSugar();
-            }
-            if (additionalFilter.getIsLowCarb() != null) {
-                this.isLowCarb = additionalFilter.getIsLowCarb();
-            }
-            if (additionalFilter.getIsHighCarb() != null) {
-                this.isHighCarb = additionalFilter.getIsHighCarb();
-            }
-            if (additionalFilter.getIsKeto() != null) {
-                this.isKeto = additionalFilter.getIsKeto();
-            }
-            if (additionalFilter.getIsLowTransFat() != null) {
-                this.isLowTransFat = additionalFilter.getIsLowTransFat();
-            }
-            if (additionalFilter.getIsHighProtein() != null) {
-                this.isHighProtein = additionalFilter.getIsHighProtein();
-            }
-            if (additionalFilter.getIsLowSodium() != null) {
-                this.isLowSodium = additionalFilter.getIsLowSodium();
-            }
-            if (additionalFilter.getIsLowCholesterol() != null) {
-                this.isLowCholesterol = additionalFilter.getIsLowCholesterol();
-            }
-            if (additionalFilter.getIsLowSaturatedFat() != null) {
-                this.isLowSaturatedFat = additionalFilter.getIsLowSaturatedFat();
-            }
-            if (additionalFilter.getIsLowFat() != null) {
-                this.isLowFat = additionalFilter.getIsLowFat();
-            }
-            if (additionalFilter.getIsHighFat() != null) {
-                this.isHighFat = additionalFilter.getIsHighFat();
-            }
-        }
     }
 }

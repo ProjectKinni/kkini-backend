@@ -35,17 +35,18 @@ public class ProductController {
                 productFilterService.findTopKkiniPickRanking(userId, categoryName, filterDTO, 0, 12);
         return allProducts.stream().limit(12).collect(Collectors.toList());  // 상위 12개만 추출
     }
-    @GetMapping("/kkini-pick")
-    public ResponseEntity<List<ProductCardListResponseDTO>> getFilteredKkiniPick(
-            @RequestParam Long userId,
-            @ModelAttribute ProductFilteringResponseDTO userFilteringCondition,
-            @RequestParam(defaultValue = "0") int page) {
 
-        List<ProductCardListResponseDTO> products =
-                productFilterService.getFilteredProductsByUserLikes(userId, userFilteringCondition, page);
-
-        return ResponseEntity.ok(products);
-    }
+//    @GetMapping("/kkini-pick")
+//    public ResponseEntity<List<ProductCardListResponseDTO>> getFilteredKkiniPick(
+//            @RequestParam Long userId,
+//            @ModelAttribute ProductFilteringResponseDTO userFilteringCondition,
+//            @RequestParam(defaultValue = "0") int page) {
+//
+//        List<ProductCardListResponseDTO> products =
+//                productFilterService.getFilteredProductsByUserLikes(userId, userFilteringCondition, page);
+//
+//        return ResponseEntity.ok(products);
+//    }
 
     //상위 12 끼니랭킹
     @GetMapping("kkini-ranking/top")
