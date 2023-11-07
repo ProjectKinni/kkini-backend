@@ -1,15 +1,18 @@
 package com.example.kinnibackend.controller.searchAndFiltering;
 
+import com.example.kinnibackend.dto.product.CombinedSearchFilterDTO;
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
-import com.example.kinnibackend.entity.ProductFilterCriteria;
+import com.example.kinnibackend.dto.product.ProductFilteringResponseDTO;
 import com.example.kinnibackend.repository.review.ReviewRepository;
+import com.example.kinnibackend.service.product.ProductFilterService;
 import com.example.kinnibackend.service.search.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,36 +28,26 @@ public class SearchAndFilteringController {
     @Autowired
     private final SearchService searchService;
     private final ReviewRepository reviewRepository;
+    private final ProductFilterService productFilterService;
 
     static final Logger logger = LoggerFactory.getLogger(SearchAndFilteringController.class);
 
     @GetMapping("/search")
-    public ResponseEntity<Page<ProductCardListResponseDTO>> searchAndFilterProducts(
-            @RequestParam(value = "searchTerm", required = false) String searchTerm,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            ProductFilterCriteria criteria) {
+    public ResponseEntity<?> searchAndFilterProducts(
+            @RequestParam(required = false) String searchTerm,
+            @ModelAttribute CombinedSearchFilterDTO filters,
+            @RequestParam(defaultValue = "0") int page) {
+        logger.info("Product 검색 및 필터링 요청 받음, 검색어: {}, 페이지: {}", searchTerm, page);
 
-        // searchTerm이 비어 있거나 null인 경우 적절한 처리 수행
-        if (searchTerm == null || searchTerm.trim().isEmpty()) {
-            // 여기서는 단순히 빈 ResponseEntity를 반환하지만,
-            // 필요에 따라 다른 처리를 수행할 수 있습니다.
-            return ResponseEntity.ok(Page.empty());
-        }
-
-        // 검색 기능 수행
+        // 첫 번째 단계: 검색 및 자동완성
         Page<ProductCardListResponseDTO> searchResults = searchService.searchProducts(searchTerm, page);
-        if (searchResults.isEmpty()) {
-            // 검색 결과가 없는 경우, ResponseEntity를 사용하여 상태와 함께 빈 페이지 반환
-            return ResponseEntity.ok(Page.empty());
+
+        // 필터링이 요청되었는지 확인 (CombinedSearchFilterDTO로 변경됨)
+        if (filters != null && filters.hasFilters()) {
+            List<ProductCardListResponseDTO> filteredPage = productFilterService.filterProducts(filters, page);
+            return ResponseEntity.ok(filteredPage);
         }
-
-        // 전체 검색 결과를 가져와서 필터링
-        List<ProductCardListResponseDTO> allSearchResults = searchResults.getContent();
-        Pageable pageable = searchResults.getPageable();
-        Page<ProductCardListResponseDTO> filteredResults = searchService.filterSearchResults(allSearchResults, criteria, pageable);
-
-        // 필터링된 결과와 함께 ResponseEntity 반환
-        return ResponseEntity.ok(filteredResults);
+        return ResponseEntity.ok(searchResults);
     }
 
     // 상품리스트 -> 상품 상세 정보

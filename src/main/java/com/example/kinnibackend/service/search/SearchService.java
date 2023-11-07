@@ -2,7 +2,6 @@ package com.example.kinnibackend.service.search;
 
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
 import com.example.kinnibackend.entity.Product;
-import com.example.kinnibackend.entity.ProductFilterCriteria;
 import com.example.kinnibackend.entity.productViewCount.ProductViewCount;
 import com.example.kinnibackend.entity.Users;
 import com.example.kinnibackend.exception.search.ProductNotFoundException;
@@ -14,13 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -61,30 +56,6 @@ public class SearchService {
 
         logger.info("searchAndAutoComplete 메소드 종료, 결과 개수: {}", responsePage.getTotalElements());
         return responsePage;
-    }
-
-    // 검색 결과 필터링 메소드
-    public Page<ProductCardListResponseDTO> filterSearchResults(
-            List<ProductCardListResponseDTO> allResults,
-            ProductFilterCriteria criteria,
-            Pageable pageable) {
-
-        // 결과를 필터링하는 로직
-        List<ProductCardListResponseDTO> filteredResults = allResults.stream()
-                .filter(dto -> dto.matchesCriteria(criteria)) // matchesCriteria 메소드로 필터링
-                .collect(Collectors.toList());
-
-        // 페이징 처리를 위한 준비
-        int totalFiltered = filteredResults.size(); // 'long' 대신 'int'를 사용해야 할 수 있습니다.
-        int start = (int) pageable.getOffset(); // 'long'에서 'int'로 캐스팅
-        int end = (int) Math.min((start + pageable.getPageSize()), totalFiltered); // 'long'에서 'int'로 캐스팅
-
-        // 페이지 요청에 맞는 sublist를 생성
-        List<ProductCardListResponseDTO> pageSubList = filteredResults
-                .subList(start, end); // 여기서 'int' 타입을 사용합니다.
-
-        // Page 객체를 생성하여 반환
-        return new PageImpl<>(pageSubList, pageable, totalFiltered);
     }
 
     // 상품 리스트 -> 상품 상세

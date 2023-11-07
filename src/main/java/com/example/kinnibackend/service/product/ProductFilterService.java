@@ -1,5 +1,6 @@
 package com.example.kinnibackend.service.product;
 
+import com.example.kinnibackend.dto.product.CombinedSearchFilterDTO;
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
 import com.example.kinnibackend.dto.product.ProductFilteringResponseDTO;
 import com.example.kinnibackend.dto.productLike.ProductLikeDTO;
@@ -14,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,6 +39,37 @@ public class ProductFilterService {
     private final ReviewRepository reviewRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(ProductFilterService.class);
+
+    public List<ProductCardListResponseDTO> filterProducts(CombinedSearchFilterDTO combinedSearchFilterDTO, int page) {
+        // Paging
+        int pageSize = 15;
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        logger.info("filterProducts 시작: criteria={}, page={}", combinedSearchFilterDTO, page);
+
+        // CombinedSearchFilterDTO의 조건을 사용하여 필터 조건 설정
+        Object[] filterConditions = combinedSearchFilterDTO.toFilterConditionsArray();
+
+        // 로깅을 통해 필터링 조건 확인
+        logger.debug("필터링 조건: {}", (Object) filterConditions);
+        Page<ProductFilter> productsPage = productFilterRepository.filterProducts(filterConditions, pageable);
+
+        // 로깅을 통해 결과 확인
+        if (productsPage == null || productsPage.isEmpty()) {
+            logger.info("검색 결과가 없습니다.");
+            return Collections.emptyList();
+        } else {
+            logger.info("검색 결과 수: {}", productsPage.getTotalElements());
+            return productsPage.getContent().stream()
+                    .map(product -> {
+                        // ProductCardListResponseDTO로의 변환 로직
+                        ProductCardListResponseDTO dto = combinedSearchFilterDTO.toProductCardListResponseDTO();
+                        dto.setReviewCount(reviewRepository.findTotalReviewCountByProductId(product.getProductId()));
+                        return dto;
+                    })
+                    .collect(Collectors.toList());
+        }
+    }
 
     public List<ProductCardListResponseDTO> findTopKkiniPickRanking
             (Long userId, String categoryName, ProductFilteringResponseDTO filterDTO, int page, int size) {
@@ -85,86 +116,52 @@ public class ProductFilterService {
         return filteredProductDTOs;
     }
 
-    public List<ProductCardListResponseDTO> getFilteredProductsByUserLikes(Long userId, ProductFilteringResponseDTO additionalFilter, int page) {
-        logger.info("Entering getFilteredProductsByUserLikes for userId: {}", userId);
-
-        List<ProductLikeDTO> likedProductDTOs = productLikeRepository.findByUsersUserId(userId)
-                .stream()
-                .map(pl -> ProductLikeDTO.fromEntity(pl.getProduct(), pl.getUsers()))
-                .collect(Collectors.toList());
-
-        if (likedProductDTOs == null || likedProductDTOs.isEmpty()) {
-            logger.warn("No liked products found for userId: {}", userId);
-            return Collections.emptyList();
-        }
-
-        List<ProductCardListResponseDTO> finalFilteredProducts = new ArrayList<>();
-
-        for (ProductLikeDTO likedProductDTO : likedProductDTOs) {
-            logger.info("Processing liked product with id: {}", likedProductDTO.getProductId());
-
-            Optional<ProductFilter> optionalProductFilter =
-                    productFilterRepository.findById(likedProductDTO.getProductId());
-
-            if (!optionalProductFilter.isPresent()) {
-                logger.warn("No product filter found for productId: {}", likedProductDTO.getProductId());
-                continue;
-            }
-
-            ProductFilter productFilter = optionalProductFilter.get();
-            logger.info("Converting ProductFilter to ProductFilteringResponseDTO for productId: {}", likedProductDTO.getProductId());
-            ProductFilteringResponseDTO baseFilteringDTO = ProductFilteringResponseDTO.fromEntity(productFilter);
-            logger.info("Successfully converted ProductFilter to ProductFilteringResponseDTO for productId: {}", likedProductDTO.getProductId());
-
-            if (additionalFilter != null) {
-                logger.info("Merging additional filter with base filter for productId: {}", likedProductDTO.getProductId());
-                baseFilteringDTO.merge(additionalFilter);
-                logger.info("Merged additional filter with base filter for productId: {}", likedProductDTO.getProductId());
-            }
-
-            logger.info("Filtering products with the merged filter for productId: {}", likedProductDTO.getProductId());
-            List<ProductCardListResponseDTO> filteredProducts = filterProducts(baseFilteringDTO, page);
-            logger.info("Finished filtering products with the merged filter for productId: {}", likedProductDTO.getProductId());
-
-            if (filteredProducts != null && !filteredProducts.isEmpty()) {
-                finalFilteredProducts.addAll(filteredProducts);
-            }
-        }
-
-        return finalFilteredProducts.stream().distinct().collect(Collectors.toList());
-    }
-
-    public List<ProductCardListResponseDTO> filterProducts(ProductFilteringResponseDTO productFilteringResponseDTO, int page) {
-        // Paging
-        int pageSize = 15;
-        Pageable pageable = PageRequest.of(page, pageSize);
-
-        logger.info("filterProducts 시작: criteria={}, page={}", productFilteringResponseDTO, page);
-
-        // 필터링 조건 설정
-        Object[] filterConditions = productFilteringResponseDTO.toFilterConditionsArray(productFilteringResponseDTO.getSearchTerm());
-
-        // 로깅을 통해 필터링 조건 확인
-        logger.debug("필터링 조건: {}", (Object) filterConditions);
-
-        Page<ProductFilter> productFiltersPage = productFilterRepository.filterProducts(filterConditions, pageable);
-
-        // 로깅을 통해 결과 확인
-        if (productFiltersPage == null || productFiltersPage.isEmpty()) {
-            logger.info("검색 결과가 없습니다.");
-            return Collections.emptyList();
-        } else {
-            logger.info("검색 결과 수: {}", productFiltersPage.getTotalElements());
-            return productFiltersPage.stream()
-                    .filter(Objects::nonNull)
-                    .map(productFilter -> {
-                        logger.debug("처리 중인 ProductFilter: {}", productFilter);
-                        ProductCardListResponseDTO dto = ProductCardListResponseDTO.fromEntity(productFilter.getProduct());
-                        dto.setIsGreen(productFilter.getIsGreen()); // isGreen 값 설정
-                        dto.setReviewCount(reviewRepository.findTotalReviewCountByProductId(productFilter.getProductId()));
-                        return dto;
-                    })
-                    .collect(Collectors.toList());
-        }
-    }
+//    public List<ProductCardListResponseDTO> getFilteredProductsByUserLikes(Long userId, ProductFilteringResponseDTO additionalFilter, int page) {
+//        logger.info("Entering getFilteredProductsByUserLikes for userId: {}", userId);
+//
+//        List<ProductLikeDTO> likedProductDTOs = productLikeRepository.findByUsersUserId(userId)
+//                .stream()
+//                .map(pl -> ProductLikeDTO.fromEntity(pl.getProduct(), pl.getUsers()))
+//                .collect(Collectors.toList());
+//
+//        if (likedProductDTOs == null || likedProductDTOs.isEmpty()) {
+//            logger.warn("No liked products found for userId: {}", userId);
+//            return Collections.emptyList();
+//        }
+//
+//        List<ProductCardListResponseDTO> finalFilteredProducts = new ArrayList<>();
+//
+//        for (ProductLikeDTO likedProductDTO : likedProductDTOs) {
+//            logger.info("Processing liked product with id: {}", likedProductDTO.getProductId());
+//
+//            Optional<ProductFilter> optionalProductFilter =
+//                    productFilterRepository.findById(likedProductDTO.getProductId());
+//
+//            if (!optionalProductFilter.isPresent()) {
+//                logger.warn("No product filter found for productId: {}", likedProductDTO.getProductId());
+//                continue;
+//            }
+//
+//            ProductFilter productFilter = optionalProductFilter.get();
+//            logger.info("Converting ProductFilter to ProductFilteringResponseDTO for productId: {}", likedProductDTO.getProductId());
+//            ProductFilteringResponseDTO baseFilteringDTO = ProductFilteringResponseDTO.fromEntity(productFilter);
+//            logger.info("Successfully converted ProductFilter to ProductFilteringResponseDTO for productId: {}", likedProductDTO.getProductId());
+//
+//            if (additionalFilter != null) {
+//                logger.info("Merging additional filter with base filter for productId: {}", likedProductDTO.getProductId());
+//                baseFilteringDTO.merge(additionalFilter);
+//                logger.info("Merged additional filter with base filter for productId: {}", likedProductDTO.getProductId());
+//            }
+//
+//            logger.info("Filtering products with the merged filter for productId: {}", likedProductDTO.getProductId());
+//            List<ProductCardListResponseDTO> filteredProducts = filterProducts(baseFilteringDTO, page);
+//            logger.info("Finished filtering products with the merged filter for productId: {}", likedProductDTO.getProductId());
+//
+//            if (filteredProducts != null && !filteredProducts.isEmpty()) {
+//                finalFilteredProducts.addAll(filteredProducts);
+//            }
+//        }
+//
+//        return finalFilteredProducts.stream().distinct().collect(Collectors.toList());
+//    }
 }
