@@ -1,0 +1,41 @@
+name: Build and Deploy Spring Boot Application
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'
+        distribution: 'adopt'
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Build with Gradle
+      run: ./gradlew build
+
+    - name: Deploy to Server
+      env:
+        DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+      run: |
+        echo "$DEPLOY_KEY" > deploy_key.pem
+        chmod 600 deploy_key.pem
+        scp -o StrictHostKeyChecking=no -i deploy_key.pem build/libs/*.jar ${{ secrets.SERVER_URL }}:/path/to/deploy
+        ssh -o StrictHostKeyChecking=no -i deploy_key.pem ${{ secrets.SERVER_URL }} << EOF
+          pkill -f 'java -jar'
+          nohup java -jar /path/to/deploy/your-application.jar > /root/backend/log/logfile.log 2>&1 &
+        EOF
+      shell: bash
+
+    - name: Clean up SSH key
+      if: always()
+      run: rm -f deploy_key.pem
