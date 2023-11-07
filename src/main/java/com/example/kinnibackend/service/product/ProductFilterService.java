@@ -40,33 +40,50 @@ public class ProductFilterService {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductFilterService.class);
 
+    // 필터링 로직
     public List<ProductCardListResponseDTO> filterProducts(CombinedSearchFilterDTO combinedSearchFilterDTO, int page) {
-        // Paging
+
         int pageSize = 15;
         Pageable pageable = PageRequest.of(page, pageSize);
 
         logger.info("filterProducts 시작: criteria={}, page={}", combinedSearchFilterDTO, page);
 
-        // CombinedSearchFilterDTO의 조건을 사용하여 필터 조건 설정
-        Object[] filterConditions = combinedSearchFilterDTO.toFilterConditionsArray();
-
-        // 로깅을 통해 필터링 조건 확인
-        logger.debug("필터링 조건: {}", (Object) filterConditions);
-        Page<ProductFilter> productsPage = productFilterRepository.filterProducts(filterConditions, pageable);
-
-        // 로깅을 통해 결과 확인
+        Page<ProductFilter> productsPage = productFilterRepository.filterProducts(
+                combinedSearchFilterDTO.getSearchTerm(),
+                combinedSearchFilterDTO.getCategory(),
+                combinedSearchFilterDTO.getIsGreen(),
+                combinedSearchFilterDTO.getIsLowCalorie(),
+                combinedSearchFilterDTO.getIsHighCalorie(),
+                combinedSearchFilterDTO.getIsSugarFree(),
+                combinedSearchFilterDTO.getIsLowSugar(),
+                combinedSearchFilterDTO.getIsLowCarb(),
+                combinedSearchFilterDTO.getIsHighCarb(),
+                combinedSearchFilterDTO.getIsKeto(),
+                combinedSearchFilterDTO.getIsLowTransFat(),
+                combinedSearchFilterDTO.getIsHighProtein(),
+                combinedSearchFilterDTO.getIsLowSodium(),
+                combinedSearchFilterDTO.getIsLowCholesterol(),
+                combinedSearchFilterDTO.getIsLowSaturatedFat(),
+                combinedSearchFilterDTO.getIsLowFat(),
+                combinedSearchFilterDTO.getIsHighFat(),
+                pageable
+        );
         if (productsPage == null || productsPage.isEmpty()) {
             logger.info("검색 결과가 없습니다.");
             return Collections.emptyList();
         } else {
             logger.info("검색 결과 수: {}", productsPage.getTotalElements());
             return productsPage.getContent().stream()
-                    .map(product -> {
-                        // ProductCardListResponseDTO로의 변환 로직
-                        ProductCardListResponseDTO dto = combinedSearchFilterDTO.toProductCardListResponseDTO();
-                        dto.setReviewCount(reviewRepository.findTotalReviewCountByProductId(product.getProductId()));
-                        return dto;
+                    .map(productFilter -> {
+                        Product product = productRepository.findByProductId(productFilter.getProductId());
+                        if (product == null) {
+                            return null;
+                        }
+                        CombinedSearchFilterDTO combinedDTO =
+                                CombinedSearchFilterDTO.combineProductFilterWithProduct(productFilter, product);
+                        return combinedDTO.toProductCardListResponseDTO();
                     })
+                    .filter(Objects::nonNull)
                     .collect(Collectors.toList());
         }
     }
