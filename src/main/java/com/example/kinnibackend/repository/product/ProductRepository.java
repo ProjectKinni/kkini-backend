@@ -25,6 +25,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT COALESCE(AVG(r.rating), 0) FROM Review r WHERE r.product.productId = :productId")
     Optional<Double> findAverageRatingByProductId(@Param("productId") Long productId);
 
+    @Query("SELECT COALESCE(AVG(r.priceRating), 0) FROM Review r WHERE r.product.productId = :productId")
+    Optional<Double> findAveragePriceRatingByProductId(@Param("productId") Long productId);
+
+    @Query("SELECT COALESCE(AVG(r.ecoRating), 0) FROM Review r WHERE r.product.productId = :productId")
+    Optional<Double> findAverageEcoRatingByProductId(@Param("productId") Long productId);
+
+    @Query("SELECT COALESCE(AVG(r.tasteRating), 0) FROM Review r WHERE r.product.productId = :productId")
+    Optional<Double> findAverageTasteRatingByProductId(@Param("productId") Long productId);
+
     //임시로 쓸 로직
     @Query("SELECT p FROM Product p ORDER BY p.productId DESC")
     List<Product> findAllByDesc();

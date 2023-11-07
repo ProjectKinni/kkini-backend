@@ -34,6 +34,15 @@ public class Product {
     @Column(name = "average_rating")
     private Float averageRating = 0.0f;
 
+    @Column(name = "average_taste_rating")
+    private Float averageTasteRating = 0.0f;
+
+    @Column(name = "average_price_rating")
+    private Float averagePriceRating = 0.0f;
+
+    @Column(name = "average_eco_rating")
+    private Float averageEcoRating = 0.0f;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDateTime createdAt;
@@ -92,5 +101,14 @@ public class Product {
 
     public void updateAverageRating(Float averageRating){
         this.averageRating = averageRating;
+    }
+    public void updateAverageTasteRating(Float averageTasteRating){
+        this.averageTasteRating = averageTasteRating;
+    }
+    public void updateAveragePriceRating(Float averagePriceRating){
+        this.averagePriceRating = averagePriceRating;
+    }
+    public void updateAverageEcoRating(Float averageEcoRating){
+        this.averageEcoRating = averageEcoRating;
     }
 }
