@@ -37,9 +37,7 @@ public class SearchService {
             logger.warn("searchTerm이 비어있습니다.");
             return Page.empty(); // 또는 다른 방식으로 처리
         }
-
-        // 페이지 설정
-        int pageSize = 15;
+        int pageSize = 10;
         Pageable pageable = PageRequest.of(page, pageSize);
 
         // 검색어가 주어진 경우, 자동 완성 로직을 적용해 검색 실행
