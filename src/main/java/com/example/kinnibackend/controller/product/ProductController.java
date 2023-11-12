@@ -1,11 +1,12 @@
 package com.example.kinnibackend.controller.product;
 
-import com.example.kinnibackend.dto.product.*;
+import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
+import com.example.kinnibackend.dto.product.ProductFilteringResponseDTO;
+import com.example.kinnibackend.dto.product.ProductPreviewResponseDTO;
+import com.example.kinnibackend.dto.product.ProductResponseWithReviewCountDTO;
 import com.example.kinnibackend.service.product.ProductFilterService;
 import com.example.kinnibackend.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,21 +33,20 @@ public class ProductController {
             @RequestParam(required = false) String categoryName,
             ProductFilteringResponseDTO filterDTO) {
         List<ProductCardListResponseDTO> allProducts =
-                productFilterService.findTopKkiniPickRanking(userId, categoryName, filterDTO, 0, 12);
+                productFilterService.findTopKkiniPickRanking(userId, categoryName, filterDTO, 0);
         return allProducts.stream().limit(12).collect(Collectors.toList());  // 상위 12개만 추출
     }
 
-//    @GetMapping("/kkini-pick")
-//    public ResponseEntity<List<ProductCardListResponseDTO>> getFilteredKkiniPick(
-//            @RequestParam Long userId,
-//            @ModelAttribute ProductFilteringResponseDTO userFilteringCondition,
-//            @RequestParam(defaultValue = "0") int page) {
-//
-//        List<ProductCardListResponseDTO> products =
-//                productFilterService.getFilteredProductsByUserLikes(userId, userFilteringCondition, page);
-//
-//        return ResponseEntity.ok(products);
-//    }
+    @GetMapping("/kkini-pick")
+    public ResponseEntity<List<ProductCardListResponseDTO>> getFilteredKkiniPick(
+            @RequestParam Long userId,
+            @RequestParam int page) {
+
+        List<ProductCardListResponseDTO> products =
+                productFilterService.findTopKkiniPickRanking(userId, page);
+
+        return ResponseEntity.ok(products);
+    }
 
     //상위 12 끼니랭킹
     @GetMapping("kkini-ranking/top")
