@@ -16,7 +16,10 @@ public class ProductCardListResponseDTO {
     private String category;
     private String productName;
     private String detail;
-    private String averageRating;
+    private Float averageRating;
+    private Float averageTasteRating;
+    private Float averagePriceRating;
+    private Float averageEcoRating;
     private String makerName;
 
     private Double servingSize;
@@ -45,7 +48,10 @@ public class ProductCardListResponseDTO {
                 .category(product.getCategory())
                 .productName(product.getProductName())
                 .detail(product.getDetail())
-                .averageRating(String.format("%.1f", product.getAverageRating()))
+                .averageRating(product.getAverageRating())
+                .averageTasteRating(product.getAverageTasteRating())
+                .averagePriceRating(product.getAveragePriceRating())
+                .averageEcoRating(product.getAverageEcoRating())
                 .makerName(product.getMakerName())
                 .servingSize(product.getServingSize())
                 .kcal(product.getKcal())
@@ -74,7 +80,10 @@ public class ProductCardListResponseDTO {
                 .category(product.getCategory())
                 .productName(product.getProductName())
                 .detail(product.getDetail())
-                .averageRating(String.format("%.1f", product.getAverageRating()))
+                .averageRating(product.getAverageRating())
+                .averageTasteRating(product.getAverageRating())
+                .averagePriceRating(product.getAveragePriceRating())
+                .averageEcoRating(product.getAverageEcoRating())
                 .makerName(product.getMakerName())
                 .servingSize(product.getServingSize())
                 .kcal(product.getKcal())

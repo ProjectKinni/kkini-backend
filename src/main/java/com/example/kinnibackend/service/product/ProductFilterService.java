@@ -38,14 +38,15 @@ public class ProductFilterService {
     private static final Logger logger = LoggerFactory.getLogger(ProductFilterService.class);
 
     // 필터링 로직
-    public List<ProductCardListResponseDTO> filterProducts(CombinedSearchFilterDTO combinedSearchFilterDTO, int page) {
+    public List<ProductCardListResponseDTO> filterProducts
+    (CombinedSearchFilterDTO combinedSearchFilterDTO, String searchTerm,int page) {
 
         int pageSize = 10;
         Pageable pageable = PageRequest.of(page, pageSize);
-
-        logger.info("filterProducts 시작: criteria={}, page={}", combinedSearchFilterDTO, page);
+        logger.info("filterProducts 시작: criteria={}, searchTerm={}, page={}", combinedSearchFilterDTO, searchTerm, page);
 
         Page<ProductFilter> productsPage = productFilterRepository.filterProducts(
+                searchTerm,
                 combinedSearchFilterDTO.getCategory(),
                 combinedSearchFilterDTO.getIsGreen(),
                 combinedSearchFilterDTO.getIsLowCalorie(),
@@ -101,6 +102,7 @@ public class ProductFilterService {
 
         for (ProductFilter likedProductFilter : likedProductFilters) {
             Page<ProductFilter> similarProductFilters = productFilterRepository.filterProducts(
+                    likedProductFilter.getProductName(),
                     likedProductFilter.getCategory(), likedProductFilter.getIsGreen(),
                     likedProductFilter.getIsLowCalorie(),likedProductFilter.getIsHighCalorie(),
                     likedProductFilter.getIsSugarFree(), likedProductFilter.getIsLowSugar(),

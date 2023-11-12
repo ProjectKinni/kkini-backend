@@ -35,14 +35,14 @@ public class SearchService {
         String searchTerm = input != null ? input.trim() : "";
         if (searchTerm.isEmpty()) {
             logger.warn("searchTerm이 비어있습니다.");
-            return Page.empty(); // 또는 다른 방식으로 처리
+            return Page.empty();
         }
         int pageSize = 10;
         Pageable pageable = PageRequest.of(page, pageSize);
 
         // 검색어가 주어진 경우, 자동 완성 로직을 적용해 검색 실행
         Page<Product> searchResults = productRepository.findByProductNameContainingIgnoreCaseOrCategoryContainingIgnoreCase(
-                searchTerm.replace(" ", "%"), searchTerm.replace(" ", "%"), pageable);
+                searchTerm, pageable);
 
         if (searchResults.isEmpty()) {
             logger.info("검색 결과가 없습니다.");
