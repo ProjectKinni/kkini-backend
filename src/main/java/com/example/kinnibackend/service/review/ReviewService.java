@@ -70,7 +70,7 @@ public class ReviewService {
     }
 
     public List<GetReviewResponseDTO> getReviews(int page) {
-        int pageSize = 20;
+        int pageSize = 10;
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
         List<Review> reviews = reviewRepository.findAllByOrderByCreatedAtDesc(pageable);
 
