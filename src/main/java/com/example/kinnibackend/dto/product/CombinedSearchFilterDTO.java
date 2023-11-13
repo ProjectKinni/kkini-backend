@@ -141,29 +141,6 @@ public class CombinedSearchFilterDTO {
         return hasFilters;
     }
 
-    public static CombinedSearchFilterDTO fromProductFilter(ProductFilter productFilter) {
-        return CombinedSearchFilterDTO.builder()
-                .productId(productFilter.getProductId())
-                .productName(productFilter.getProductName())
-                .category(productFilter.getCategory())
-                .isGreen(productFilter.getIsGreen())
-                .isLowCalorie(productFilter.getIsLowCalorie())
-                .isHighCalorie(productFilter.getIsHighCalorie())
-                .isSugarFree(productFilter.getIsSugarFree())
-                .isLowSugar(productFilter.getIsLowSugar())
-                .isLowCarb(productFilter.getIsLowCarb())
-                .isHighCarb(productFilter.getIsHighCarb())
-                .isKeto(productFilter.getIsKeto())
-                .isLowTransFat(productFilter.getIsLowTransFat())
-                .isHighProtein(productFilter.getIsHighProtein())
-                .isLowSodium(productFilter.getIsLowSodium())
-                .isLowCholesterol(productFilter.getIsLowCholesterol())
-                .isLowSaturatedFat(productFilter.getIsLowSaturatedFat())
-                .isLowFat(productFilter.getIsLowFat())
-                .isHighFat(productFilter.getIsHighFat())
-                .build();
-    }
-
     public static CombinedSearchFilterDTO combineProductFilterWithProduct(ProductFilter productFilter, Product product) {
 
         return CombinedSearchFilterDTO.builder()
@@ -181,6 +158,10 @@ public class CombinedSearchFilterDTO {
                 .sodium(product.getSodium())
                 .cholesterol(product.getCholesterol())
                 .saturatedFat(product.getSaturatedFat())
+                .averageEcoRating(product.getAverageEcoRating())
+                .averageRating(product.getAverageRating())
+                .averagePriceRating(product.getAveragePriceRating())
+                .averageTasteRating(product.getAverageTasteRating())
                 .transFat(product.getTransFat())
                 .sugar(product.getSugar())
                 .score(product.getScore())
