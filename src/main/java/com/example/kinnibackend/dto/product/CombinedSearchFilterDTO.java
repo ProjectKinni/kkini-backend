@@ -20,7 +20,10 @@ public class CombinedSearchFilterDTO {
     private String productName;
 
     private String detail;
-    private String averageRating;
+    private Float averageRating;
+    private Float averageTasteRating;
+    private Float averagePriceRating;
+    private Float averageEcoRating;
     private String makerName;
     private Double servingSize;
     private Double kcal;
@@ -68,6 +71,9 @@ public class CombinedSearchFilterDTO {
                 .productName(this.productName)
                 .detail(this.detail)
                 .averageRating(this.averageRating)
+                .averageTasteRating(this.getAverageTasteRating())
+                .averagePriceRating(this.getAveragePriceRating())
+                .averageEcoRating(this.getAverageEcoRating())
                 .makerName(this.makerName)
                 .servingSize(this.servingSize)
                 .kcal(this.kcal)
@@ -108,7 +114,8 @@ public class CombinedSearchFilterDTO {
                 this.isLowCholesterol,
                 this.isLowSaturatedFat,
                 this.isLowFat,
-                this.isHighFat
+                this.isHighFat,
+                this.score
         };
     }
     public boolean hasFilters() {

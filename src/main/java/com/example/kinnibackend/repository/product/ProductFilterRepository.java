@@ -17,6 +17,7 @@ public interface ProductFilterRepository extends JpaRepository<ProductFilter, Lo
 
     // 검색결과 필터링 로직
     @Query("SELECT p FROM ProductFilter p WHERE "
+            +"(:searchTerm IS NULL OR LOWER(p.productName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) AND "
             + "(:isGreen IS NULL OR p.isGreen = :isGreen) AND "
             + "(:category is null or p.category = :category) AND"
             + "(:isLowCalorie IS NULL OR p.isLowCalorie = :isLowCalorie) AND "
@@ -33,8 +34,10 @@ public interface ProductFilterRepository extends JpaRepository<ProductFilter, Lo
             + "(:isLowSaturatedFat IS NULL OR p.isLowSaturatedFat = :isLowSaturatedFat) AND "
             + "(:isLowFat IS NULL OR p.isLowFat = :isLowFat) AND "
             + "(:isHighFat IS NULL OR p.isHighFat = :isHighFat)"
+            + "ORDER BY p.score DESC, p.productId DESC"
     )
     Page<ProductFilter> filterProducts(
+            @Param("searchTerm") String searchTerm,
             @Param("category") String category,
             @Param("isGreen") Boolean isGreen,
             @Param("isLowCalorie") Boolean isLowCalorie,

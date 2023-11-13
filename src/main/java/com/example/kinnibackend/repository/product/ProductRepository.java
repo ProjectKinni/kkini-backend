@@ -13,9 +13,12 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-
+    @Query("SELECT p FROM Product p " +
+            "WHERE LOWER(p.productName) LIKE LOWER(CONCAT('%',:searchTerm,'%')) " +
+            "OR LOWER(p.category) LIKE LOWER(CONCAT('%',:searchTerm,'%')) " +
+            "ORDER BY p.score DESC, p.updatedAt DESC, p.productId DESC")
     Page<Product> findByProductNameContainingIgnoreCaseOrCategoryContainingIgnoreCase
-            (String productName, String category, Pageable pageable);
+            ( @Param("searchTerm")String searchTerm, Pageable pageable);
 
     // 상품 ID로 상품 찾기
     @Query("SELECT p FROM Product p WHERE p.productId = :productId ORDER BY p.productId DESC")
@@ -37,8 +40,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     //임시로 쓸 로직
     @Query("SELECT p FROM Product p ORDER BY p.productId DESC")
     List<Product> findAllByDesc();
-
-    // 끼니 PICK 정렬
 
     //Top 12 끼니랭킹
     @Query("SELECT p FROM Product p ORDER BY p.score DESC, p.updatedAt DESC, p.productId DESC")

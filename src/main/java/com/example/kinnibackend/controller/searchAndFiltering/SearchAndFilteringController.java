@@ -45,7 +45,8 @@ public class SearchAndFilteringController {
 
         // 필터링이 요청되었는지 확인 (CombinedSearchFilterDTO로 변경됨)
         if (filters != null && filters.hasFilters()) {
-            List<ProductCardListResponseDTO> filteredPage = productFilterService.filterProducts(filters, page);
+            List<ProductCardListResponseDTO> filteredPage =
+                    productFilterService.filterProducts(filters, searchTerm, page);
             return ResponseEntity.ok(filteredPage);
         }
         return ResponseEntity.ok(searchResults);

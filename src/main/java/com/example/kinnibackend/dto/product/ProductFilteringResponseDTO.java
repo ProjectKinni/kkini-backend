@@ -32,6 +32,8 @@ public class ProductFilteringResponseDTO {
     private Boolean isLowFat;
     private Boolean isHighFat;
 
+    private Double score;
+
     public static ProductFilteringResponseDTO fromEntity(ProductFilter productFilter){
         return ProductFilteringResponseDTO.builder()
                 .productId(productFilter.getProductId())
@@ -52,6 +54,7 @@ public class ProductFilteringResponseDTO {
                 .isLowSaturatedFat(productFilter.getIsLowSaturatedFat())
                 .isLowFat(productFilter.getIsLowFat())
                 .isHighFat(productFilter.getIsHighFat())
+                .score(productFilter.getScore())
                 .build();
     }
 }

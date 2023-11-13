@@ -70,4 +70,7 @@ public class ProductFilter {
 
     @Column(name = "is_high_fat")
     private Boolean isHighFat;
+
+    @Column(name = "score")
+    private Double score;
 }
