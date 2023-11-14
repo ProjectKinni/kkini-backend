@@ -33,7 +33,8 @@ public class ProductController {
             @RequestParam(required = false) String categoryName,
             ProductFilteringResponseDTO filterDTO) {
         List<ProductCardListResponseDTO> allProducts =
-                productFilterService.findTopKkiniPickRanking(userId, categoryName, filterDTO, 0);
+                productFilterService.findTopKkiniPickRanking(userId, 0);
+        System.out.println(allProducts.size());
         return allProducts.stream().limit(12).collect(Collectors.toList());  // 상위 12개만 추출
     }
 
