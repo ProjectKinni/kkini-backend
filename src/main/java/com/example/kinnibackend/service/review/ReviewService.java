@@ -117,12 +117,6 @@ public class ReviewService {
     public UpdateReviewResponseDTO updateReviewByReviewId(Long reviewId, CreateReviewRequestDTO updateInfo) {
         Optional<Review> optionalReview = reviewRepository.findById(reviewId);
 
-        if (!optionalReview.isPresent()) {
-            return UpdateReviewResponseDTO.builder()
-                    .message("리뷰가 존재하지 않습니다.")
-                    .build();
-        }
-
         Review review = optionalReview.get();
         MultipartFile[] images = {updateInfo.getImage1(), updateInfo.getImage2(), updateInfo.getImage3(), updateInfo.getImage4()};
         String[] imageUrls = new String[4];
@@ -168,6 +162,4 @@ public class ReviewService {
         List<Review> reviews = reviewRepository.findByUsers_UserIdAndProduct_ProductId(userId, productId);
         return !reviews.isEmpty();
     }
-
-
 }
