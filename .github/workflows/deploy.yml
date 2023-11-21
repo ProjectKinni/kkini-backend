@@ -1,8 +1,8 @@
 name: Build and Deploy Spring Boot Application
 
-on:
-  push:
-    branches: [ master ]
+# on:
+#   push:
+#     branches: [ master ]
 
 jobs:
   build-and-deploy:
