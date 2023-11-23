@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @Builder
 public class CreateReviewRequestDTO {
+    private Long userId;
     private Long productId;
     private Double rating;
     private Double tasteRating;

@@ -2,7 +2,6 @@ package com.example.kinnibackend.controller.searchAndFiltering;
 
 import com.example.kinnibackend.dto.product.CombinedSearchFilterDTO;
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;
-import com.example.kinnibackend.dto.product.ProductFilteringResponseDTO;
 import com.example.kinnibackend.repository.review.ReviewRepository;
 import com.example.kinnibackend.service.product.ProductFilterService;
 import com.example.kinnibackend.service.search.SearchService;
@@ -11,8 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
