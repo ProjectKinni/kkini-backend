@@ -26,6 +26,7 @@ spring:
           google:
             client-id: ${google-id}
             client-secret: ${google-secret}
+            redirect-uri: "https://kkini.net/login/oauth2/code/google"
             scope:
               - email
               - profile
