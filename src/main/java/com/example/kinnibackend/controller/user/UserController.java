@@ -3,7 +3,6 @@ package com.example.kinnibackend.controller.user;
 import com.example.kinnibackend.config.jwt.TokenProvider;
 import com.example.kinnibackend.dto.user.GetUserInfoDTO;
 import com.example.kinnibackend.dto.user.UserUpdateDTO;
-import com.example.kinnibackend.entity.Users;
 import com.example.kinnibackend.service.user.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000") // 허용할 도메인을 설정
+@CrossOrigin(origins = "https://kkini.net") // 허용할 도메인을 설정
 public class UserController {
 
     private final TokenProvider tokenProvider;
