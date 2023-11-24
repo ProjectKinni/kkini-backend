@@ -43,11 +43,6 @@ public class WebOAuthSecurityConfig {
 
         http.authorizeHttpRequests(authorize -> {
             authorize
-//                    .requestMatchers(new AntPathRequestMatcher("/api/token")).permitAll()
-//                    .requestMatchers(new AntPathRequestMatcher("/logout")).permitAll()
-//                    .requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated()
-//                    .requestMatchers(new AntPathRequestMatcher("/getUserInfo")).hasAuthority("USER")
-//                    .requestMatchers(new AntPathRequestMatcher("/main")).hasRole("ADMIN")
                     .anyRequest().permitAll();
         });
 
