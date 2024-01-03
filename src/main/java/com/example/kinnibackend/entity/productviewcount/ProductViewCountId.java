@@ -1,4 +1,4 @@
-package com.example.kinnibackend.entity.productViewCount;
+package com.example.kinnibackend.entity.productviewcount;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,15 +1,14 @@
 package com.example.kinnibackend.service.user;
 
+import com.example.kinnibackend.dto.user.GetUserInfoDTO;
 import com.example.kinnibackend.dto.user.UserUpdateDTO;
 import com.example.kinnibackend.entity.Users;
 import com.example.kinnibackend.repository.product.ProductViewCountRepository;
-import com.example.kinnibackend.repository.productlike.ProductLikeRepository;
 import com.example.kinnibackend.repository.review.ReviewRepository;
 import com.example.kinnibackend.repository.token.RefreshTokenRepository;
 import com.example.kinnibackend.repository.user.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import com.example.kinnibackend.dto.user.GetUserInfoDTO;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,7 +19,7 @@ public class UserService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final ProductViewCountRepository productViewCountRepository;
     private final ReviewRepository reviewRepository;
-    private final ProductLikeRepository productLikeRepository;
+    private final com.example.kinnibackend.repository.productlike.ProductLikeRepository productLikeRepository;
 
     public GetUserInfoDTO getUserInfoByUserId(Long userId) {
 

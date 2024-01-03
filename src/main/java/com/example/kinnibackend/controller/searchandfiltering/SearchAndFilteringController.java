@@ -1,4 +1,4 @@
-package com.example.kinnibackend.controller.searchAndFiltering;
+package com.example.kinnibackend.controller.searchandfiltering;
 
 import com.example.kinnibackend.dto.product.CombinedSearchFilterDTO;
 import com.example.kinnibackend.dto.product.ProductCardListResponseDTO;

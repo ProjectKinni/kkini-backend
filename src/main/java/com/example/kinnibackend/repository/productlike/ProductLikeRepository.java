@@ -1,4 +1,4 @@
-package com.example.kinnibackend.repository.productLike;
+package com.example.kinnibackend.repository.productlike;
 
 import com.example.kinnibackend.entity.like.LikeId;
 import com.example.kinnibackend.entity.like.ProductLike;

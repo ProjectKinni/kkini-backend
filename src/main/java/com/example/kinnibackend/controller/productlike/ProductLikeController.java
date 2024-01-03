@@ -1,7 +1,6 @@
-package com.example.kinnibackend.controller.productLike;
+package com.example.kinnibackend.controller.productlike;
 
 import com.example.kinnibackend.entity.like.ProductLike;
-import com.example.kinnibackend.service.productlike.ProductLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "http://localhost:3000") // 허용할 원본 출처 설정
 public class ProductLikeController {
 
-    private final ProductLikeService productLikeService;
+    private final com.example.kinnibackend.service.productlike.ProductLikeService productLikeService;
 
     @GetMapping("/{userId}/{productId}")
     public ResponseEntity<Boolean> getLikeStatus(@PathVariable Long userId, @PathVariable Long productId) {

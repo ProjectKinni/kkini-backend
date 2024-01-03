@@ -1,12 +1,11 @@
-package com.example.kinnibackend.service.productLike;
+package com.example.kinnibackend.service.productlike;
 
-import com.example.kinnibackend.dto.productLike.ProductLikeDTO;
-import com.example.kinnibackend.entity.like.LikeId;
-import com.example.kinnibackend.entity.like.ProductLike;
 import com.example.kinnibackend.entity.Product;
 import com.example.kinnibackend.entity.Users;
+import com.example.kinnibackend.entity.like.LikeId;
+import com.example.kinnibackend.entity.like.ProductLike;
 import com.example.kinnibackend.repository.product.ProductRepository;
-import com.example.kinnibackend.repository.productLike.ProductLikeRepository;
+import com.example.kinnibackend.repository.productlike.ProductLikeRepository;
 import com.example.kinnibackend.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

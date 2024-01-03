@@ -1,6 +1,6 @@
 package com.example.kinnibackend.controller.review;
 
-import com.example.kinnibackend.controller.searchAndFiltering.SearchAndFilteringController;
+import com.example.kinnibackend.controller.searchandfiltering.SearchAndFilteringController;
 import com.example.kinnibackend.dto.review.*;
 import com.example.kinnibackend.service.product.ProductService;
 import com.example.kinnibackend.service.review.ReviewService;

@@ -1,4 +1,4 @@
-package com.example.kinnibackend.dto.productLike;
+package com.example.kinnibackend.dto.productlike;
 
 import com.example.kinnibackend.entity.Product;
 import com.example.kinnibackend.entity.Users;
