@@ -40,6 +40,6 @@ jobs:
         username: ubuntu
         key: ${{ secrets.DEPLOY_KEY }}
         script: |
-          docker load < ~/backend/image.tar
-          docker stop backend || true
-          docker run --rm -d -p 80:8080 --name backend backend
+          sudo docker load < ~/backend/image.tar
+          sudo docker stop backend || true
+          sudo docker run --rm -d -p 80:8080 --name backend backend
