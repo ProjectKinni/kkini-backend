@@ -28,7 +28,7 @@ jobs:
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.SERVER_URL }}
-        username: 'ubuntu'
+        username: ubuntu
         key: ${{ secrets.DEPLOY_KEY }}
         source: "image.tar"
         target: "~/backend"
@@ -37,7 +37,7 @@ jobs:
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SERVER_URL }}
-        username: 'ubuntu'
+        username: ubuntu
         key: ${{ secrets.DEPLOY_KEY }}
         script: |
           docker load < ~/backend/image.tar
