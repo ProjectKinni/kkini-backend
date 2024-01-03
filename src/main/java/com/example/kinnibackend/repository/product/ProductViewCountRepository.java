@@ -1,7 +1,7 @@
 package com.example.kinnibackend.repository.product;
 
-import com.example.kinnibackend.entity.productViewCount.ProductViewCount;
-import com.example.kinnibackend.entity.productViewCount.ProductViewCountId;
+import com.example.kinnibackend.entity.productviewcount.ProductViewCount;
+import com.example.kinnibackend.entity.productviewcount.ProductViewCountId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

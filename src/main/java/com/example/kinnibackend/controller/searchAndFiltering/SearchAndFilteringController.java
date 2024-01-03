@@ -36,7 +36,6 @@ public class SearchAndFilteringController {
             @RequestParam int page) {
         logger.info("Product 검색 및 필터링 요청 받음, 검색어: {}, 페이지: {}", searchTerm, page);
 
-
         // 첫 번째 단계: 검색 및 자동완성
         Page<ProductCardListResponseDTO> searchResults = searchService.searchProducts(searchTerm, page);
 

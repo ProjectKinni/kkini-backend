@@ -1,7 +1,7 @@
 package com.example.kinnibackend.controller.productLike;
 
 import com.example.kinnibackend.entity.like.ProductLike;
-import com.example.kinnibackend.service.productLike.ProductLikeService;
+import com.example.kinnibackend.service.productlike.ProductLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
