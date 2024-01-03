@@ -40,6 +40,12 @@ jobs:
         username: ubuntu
         key: ${{ secrets.DEPLOY_KEY }}
         script: |
-          sudo docker load < ~/backend/image.tar
+          # 기존 컨테이너 정지 및 제거
           sudo docker stop backend || true
+          sudo docker rm backend || true
+
+          # 기존 이미지 제거
+          sudo docker rmi backend || true
+          # 컨테이너 실행
+          sudo docker load < ~/backend/image.tar
           sudo docker run --rm -d -p 80:8080 --name backend backend
