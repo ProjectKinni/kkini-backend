@@ -20,32 +20,35 @@ jobs:
       run: ./gradlew build -x test
 
     - name: Build Docker Image
-      run: |
-        docker build -t backend .
-        docker save backend > image.tar
+      run: docker build -t backend .
 
-    - name: Copy Docker Image to EC2
-      uses: appleboy/scp-action@master
+    - name: Login to Docker Hub
+      run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
+    - name: Push Docker Image to Docker Hub
+      run: |
+        docker tag backend ${{ secrets.DOCKER_HUB_USERNAME }}/backend:latest
+        docker push ${{ secrets.DOCKER_HUB_USERNAME }}/backend:latest
+
+    - name: Set up gcloud
+      uses: google-github-actions/setup-gcloud@v2
       with:
-        host: ${{ secrets.SERVER_URL }}
-        username: ubuntu
-        key: ${{ secrets.DEPLOY_KEY }}
-        source: "image.tar"
-        target: "~/backend"
-      
-    - name: Login to EC2 and deploy
+        version: 'latest'
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+    - name: SSH to GCP and deploy
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.SERVER_URL }}
-        username: ubuntu
-        key: ${{ secrets.DEPLOY_KEY }}
+        host: ${{ secrets.GCP_SERVER_URL }}
+        username: ${{ secrets.GCP_SSH_USERNAME }}
+        key: ${{ secrets.GCP_SSH_KEY }}
         script: |
           # 기존 컨테이너 정지 및 제거
           sudo docker stop backend || true
           sudo docker rm backend || true
 
-          # 기존 이미지 제거
-          sudo docker rmi backend || true
+          # Docker Hub에서 최신 이미지 가져오기
+          sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/backend:latest
+
           # 컨테이너 실행
-          sudo docker load < ~/backend/image.tar
-          sudo docker run --rm -d -p 80:8080 --name backend backend
+          sudo docker run --rm -d -p 80:8080 --name backend ${{ secrets.DOCKER_HUB_USERNAME }}/backend:latest
