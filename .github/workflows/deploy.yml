@@ -46,6 +46,7 @@ jobs:
           # 기존 컨테이너 정지 및 제거
           sudo docker stop backend || true
           sudo docker rm backend || true
+          sudo docker rmi ${{ secrets.DOCKER_HUB_USERNAME }}/backend
 
           # Docker Hub에서 최신 이미지 가져오기
           sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/backend:latest
