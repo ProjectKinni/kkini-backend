@@ -24,7 +24,6 @@ jobs:
         echo "google.client-id=${{ secrets.GOOGLE_CLIENT_ID }}" >> $GITHUB_ENV
         echo "google.client-secret=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> $GITHUB_ENV
     - name: Run application
-      run: ./gradlew bootRun
       env:
         GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
         GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
