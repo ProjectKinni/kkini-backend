@@ -40,31 +40,33 @@ public class ReviewService {
         Users user = userRepository.findByUserId(userId);
         Product product = productRepository.findByProductId(createReviewRequestDTO.getProductId());
 
-        MultipartFile[] images = {createReviewRequestDTO.getImage1(), createReviewRequestDTO.getImage2(), createReviewRequestDTO.getImage3(), createReviewRequestDTO.getImage4()};
-        String[] imageUrls = new String[4];
+//        MultipartFile[] images = {createReviewRequestDTO.getImage1(), createReviewRequestDTO.getImage2(), createReviewRequestDTO.getImage3(), createReviewRequestDTO.getImage4()};
+//        String[] imageUrls = new String[4];
 
         // 이미지를 S3에 업로드하고 URL을 가져옵니다.
-        for (int i = 0; i < images.length; i++) {
-            MultipartFile image = images[i];
-            if (image != null) {
-                String objectName = FOLDER_NAME + "/" + userId + "_" + createReviewRequestDTO.getProductId() + "_" + (i + 1);
+//        for (int i = 0; i < images.length; i++) {
+//            MultipartFile image = images[i];
+//            if (image != null) {
+//                String objectName = FOLDER_NAME + "/" + userId + "_" + createReviewRequestDTO.getProductId() + "_" + (i + 1);
+//
+//                try {
+//                    File tempFile = File.createTempFile("image", ".jpg");
+//                    image.transferTo(tempFile);
+//
+//                    naverS3Client.putObject(new PutObjectRequest(BUCKET_NAME, objectName, tempFile)
+//                            .withCannedAcl(CannedAccessControlList.PublicRead));
+//                    imageUrls[i] = naverS3Client.getUrl(BUCKET_NAME, objectName).toString();
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    // 에러 처리 로직
+//                }
+//            }
+//        }
 
-                try {
-                    File tempFile = File.createTempFile("image", ".jpg");
-                    image.transferTo(tempFile);
-
-                    naverS3Client.putObject(new PutObjectRequest(BUCKET_NAME, objectName, tempFile)
-                            .withCannedAcl(CannedAccessControlList.PublicRead));
-                    imageUrls[i] = naverS3Client.getUrl(BUCKET_NAME, objectName).toString();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    // 에러 처리 로직
-                }
-            }
-        }
-
-        Review review = createReviewRequestDTO.toEntity(user, product, imageUrls[0], imageUrls[1], imageUrls[2], imageUrls[3]);
+        // s3가 없어 Null 넣어주기
+//        Review review = createReviewRequestDTO.toEntity(user, product, imageUrls[0], imageUrls[1], imageUrls[2], imageUrls[3]);
+        Review review = createReviewRequestDTO.toEntity(user, product, null, null, null, null);
 
         return CreateReviewResponseDTO.fromEntity(reviewRepository.save(review));
     }
